@@ -23,7 +23,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.error import HTTPError
 import urllib.parse
 import urllib.request
-
+import hashlib
+import html
 # ---------------------------------------------------------------------------
 # Logging — always write to stderr so crashes are visible
 # ---------------------------------------------------------------------------
@@ -156,7 +157,10 @@ class OneMBrainProxyHandler(BaseHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         try:
             body = self._read_body()
-            self._proxy("POST", body)
+            if self.path == "/v1/ingest/url":
+                self._ingest_url(body)
+            else:
+                self._proxy("POST", body)
         except Exception:  # noqa: BLE001
             logger.error("Unhandled error in do_POST:\n%s", traceback.format_exc())
             self._send_internal_error()
@@ -186,6 +190,136 @@ class OneMBrainProxyHandler(BaseHTTPRequestHandler):
             self.wfile.write(body)
         except Exception:  # noqa: BLE001
             pass  # Connection already broken — nothing we can do
+
+    # ------------------------------------------------------------------
+    # URL Ingestion Implementation
+    # ------------------------------------------------------------------
+
+    def _html_to_text(self, html_content: str) -> str:
+        """Convert HTML to clean Markdown text."""
+        import html2text  # type: ignore
+        text_maker = html2text.HTML2Text()
+        text_maker.ignore_links = True
+        text_maker.ignore_images = True
+        text_maker.body_width = 0
+        return text_maker.handle(html_content)
+
+    def _chunk_text(self, text: str, max_chars: int) -> list[str]:
+        """Split text into paragraphs, respecting max_chars."""
+        paragraphs = text.split("\n\n")
+        chunks = []
+        current_chunk = ""
+        for p in paragraphs:
+            p = p.strip()
+            if not p:
+                continue
+            if len(current_chunk) + len(p) + 2 <= max_chars:
+                current_chunk += ("\n\n" + p) if current_chunk else p
+            else:
+                if current_chunk:
+                    chunks.append(current_chunk)
+                current_chunk = p
+        if current_chunk:
+            chunks.append(current_chunk)
+        return chunks
+
+    def _remember(self, content: str, url: str, agent_id: str, chunk_hash: str) -> dict | None:
+        """Helper to post a memory to the Node.js API."""
+        target_url = CONFIG["api_url"] + "/v1/memories"
+        payload = {
+            "content": content,
+            "type": "episodic",
+            "metadata": {
+                "source": "web_ingest",
+                "url": url,
+                "chunkHash": chunk_hash
+            }
+        }
+        data = json.dumps(payload).encode("utf-8")
+        headers = {
+            "Content-Type": "application/json",
+            "X-API-Key": CONFIG.get("api_key", ""),
+            "X-Agent-Id": agent_id
+        }
+        
+        req = urllib.request.Request(target_url, data=data, headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req) as resp:
+                resp_body = resp.read()
+                return json.loads(resp_body).get("data")
+        except Exception as exc:
+            logger.error("Failed to store memory chunk: %s", exc)
+            return None
+
+    def _ingest_url(self, body: bytes) -> None:
+        """6-step URL ingestion pipeline."""
+        try:
+            data = json.loads(body)
+        except Exception:
+            data = {}
+            
+        url = data.get("url")
+        agent_id = data.get("agentId") or self.headers.get("x-agent-id", "")
+        max_chunk_chars = data.get("maxChunkChars", 1800)
+        
+        if not url:
+            self._send_error_response(400, "url is required")
+            return
+            
+        # 1. Fetch
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "1MBrain/1.0"})
+            with urllib.request.urlopen(req) as resp:
+                html_content = resp.read().decode("utf-8", errors="ignore")
+        except Exception as exc:
+            logger.error("Failed to fetch URL %s: %s", url, exc)
+            self._send_error_response(500, f"Failed to fetch URL: {exc}")
+            return
+            
+        # 2. HTML to Text
+        text = self._html_to_text(html_content)
+        
+        # 3. Chunk
+        chunks = self._chunk_text(text, max_chunk_chars)
+        
+        # 4 & 5. Extract and Store
+        stored_count = 0
+        memory_ids = []
+        for chunk in chunks:
+            chunk_hash = hashlib.md5(chunk.encode("utf-8")).hexdigest()
+            mem = self._remember(chunk, url, agent_id, chunk_hash)
+            if mem and "id" in mem:
+                stored_count += 1
+                memory_ids.append(mem["id"])
+                
+        # 6. Return Response
+        resp_data = {
+            "success": True,
+            "data": {
+                "url": url,
+                "title": url,
+                "storedCount": stored_count,
+                "memoryIds": memory_ids,
+                "deduplicated": True
+            }
+        }
+        resp_body = json.dumps(resp_data).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(resp_body)))
+        self.end_headers()
+        self.wfile.write(resp_body)
+        
+    def _send_error_response(self, status: int, message: str) -> None:
+        body = json.dumps({"success": False, "error": message}).encode("utf-8")
+        try:
+            self.send_response(status)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception:  # noqa: BLE001
+            pass
 
 
 # ---------------------------------------------------------------------------

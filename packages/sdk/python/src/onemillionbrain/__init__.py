@@ -29,4 +29,4 @@ __all__ = [
     "AGENT_SYSTEM_PROMPT",
 ]
 
-__version__ = "0.1.0"
+__version__ = "0.1.3"
