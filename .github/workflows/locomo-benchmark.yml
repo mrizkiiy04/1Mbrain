@@ -1,0 +1,79 @@
+name: LOCOMO Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      answerer_model:
+        description: 'Answerer Model'
+        required: false
+        default: 'gpt-4o-mini'
+      judge_model:
+        description: 'Judge Model'
+        required: false
+        default: 'gpt-4o-mini'
+  push:
+    branches:
+      - main
+
+jobs:
+  locomo-benchmark:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout 1MBrain Code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Start 1MBrain Server
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          npm install
+          npm run build
+          # Start the 1MBrain API background server on port 3000
+          npm run start --workspace=@1mbrain/api &
+          echo "Waiting for 1MBrain Server to start..."
+          sleep 10
+          
+      - name: Clone memory-benchmarks
+        run: |
+          git clone https://github.com/mem0ai/memory-benchmarks.git memory-benchmarks
+          
+      - name: Install Benchmark Dependencies
+        run: |
+          cd memory-benchmarks
+          pip install -r requirements.txt
+          pip install httpx openai
+          
+      - name: Inject 1MBrain Client Adapter
+        run: |
+          # Copy our mock Mem0Client to overwrite the native Mem0 client
+          cp packages/benchmarks/scripts/inject-locomo-client.py memory-benchmarks/benchmarks/common/mem0_client.py
+          
+      - name: Run LOCOMO Benchmark
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ONEMBRAIN_HOST: "http://localhost:3000"
+          ONEMBRAIN_API_KEY: "locomo-benchmark-key"
+        run: |
+          cd memory-benchmarks
+          # We pass in gpt-4o-mini to save cost as previously agreed.
+          # Use predict-only if you want to skip judge phase, otherwise it does the full run.
+          ANSWERER="${{ github.event.inputs.answerer_model || 'gpt-4o-mini' }}"
+          JUDGE="${{ github.event.inputs.judge_model || 'gpt-4o-mini' }}"
+          
+          python -m benchmarks.locomo.run \
+            --project-name "1mbrain-locomo-ci" \
+            --answerer-model "$ANSWERER" \
+            --judge-model "$JUDGE"
