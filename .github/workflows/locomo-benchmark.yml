@@ -40,7 +40,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           npm install
-          npm run build
+          npm run typecheck
           # Start the 1MBrain API background server on port 3000
           npm run start --workspace=@1mbrain/api &
           echo "Waiting for 1MBrain Server to start..."
