@@ -78,4 +78,5 @@ jobs:
           python -m benchmarks.locomo.run \
             --project-name "1mbrain-locomo-ci" \
             --answerer-model "$ANSWERER" \
-            --judge-model "$JUDGE"
+            --judge-model "$JUDGE" \
+            --max-workers 1
