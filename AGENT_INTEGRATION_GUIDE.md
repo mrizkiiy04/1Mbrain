@@ -63,6 +63,12 @@ If you are using the `HermesMemoryAdapter` from `@1mbrain/sdk/hermes`, the `buil
 ## 4. Code Examples
 
 ### TypeScript (Generic)
+
+**Installation:**
+```bash
+npm install @1mbrain/sdk
+```
+
 ```typescript
 import { OneMBrainClient } from '@1mbrain/sdk';
 
@@ -84,9 +90,19 @@ const results = await client.recall({ query: 'UI preferences' });
 if (results.confidence === 'low') {
   console.log("No relevant memory found.");
 }
+
+// Ingest URL (Auto-fetch, chunk, and store)
+const ingestResult = await client.ingestUrl({ url: 'https://kompas.com/tech' });
+console.log(`Stored ${ingestResult.storedCount} facts!`);
 ```
 
 ### Python
+
+**Installation:**
+```bash
+pip install onemillionbrain
+```
+
 ```python
 from onemillionbrain import OneMBrainClient
 
@@ -106,6 +122,10 @@ client.remember(
 results = client.recall(query="UI preferences")
 if not results:
     print("No relevant memory found.")
+
+# Ingest URL (Auto-fetch, chunk, and store)
+ingest_result = client.ingest_url("https://kompas.com/tech")
+print(f"Stored {ingest_result['storedCount']} facts!")
 ```
 
 ## 5. Contact & Contribution

@@ -1,6 +1,6 @@
 # @1mbrain/sdk
 
-The official TypeScript/Node.js client for [1MBrain](https://github.com/stolenhourdev/1mbrain) — a portable, semantic graph memory layer for AI agents.
+The official TypeScript/Node.js client for [1MBrain](https://github.com/mrizkiiy04/1mbrain) — a portable, semantic graph memory layer for AI agents.
 
 ## Installation
 

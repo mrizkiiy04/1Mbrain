@@ -1,6 +1,6 @@
 {
   "name": "@1mbrain/sdk",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "TypeScript client SDK for the 1MBrain REST API.",
   "license": "MIT",
   "type": "module",
