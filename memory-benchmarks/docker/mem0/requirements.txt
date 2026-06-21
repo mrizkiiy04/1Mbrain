@@ -1,9 +1,0 @@
-fastapi>=0.115.0
-uvicorn>=0.34.0
-mem0ai
-spacy>=3.7.0
-pydantic>=2.10.0
-pyyaml>=6.0
-boto3>=1.34.0
-azure-identity>=1.15.0
-fastembed>=0.4.2
