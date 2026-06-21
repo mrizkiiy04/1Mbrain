@@ -41,7 +41,8 @@ jobs:
         run: |
           npm install
           npm run typecheck
-          # Start the 1MBrain API background server on port 3000
+          npm run db:migrate
+          # Start the 1MBrain API background server on port 3100
           npm run start --workspace=@1mbrain/api &
           echo "Waiting for 1MBrain Server to start..."
           sleep 10
@@ -64,7 +65,7 @@ jobs:
       - name: Run LOCOMO Benchmark
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          ONEMBRAIN_HOST: "http://localhost:3000"
+          ONEMBRAIN_HOST: "http://localhost:3100"
           ONEMBRAIN_API_KEY: "locomo-benchmark-key"
         run: |
           cd memory-benchmarks
