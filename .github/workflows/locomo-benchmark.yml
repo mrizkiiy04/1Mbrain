@@ -41,6 +41,8 @@ jobs:
         run: |
           npm install
           npm run typecheck
+          # Create data directory for SQLite
+          mkdir -p data
           # Start the 1MBrain API background server on port 3100
           npm run start --workspace=@1mbrain/api &
           echo "Waiting for 1MBrain Server to start..."
