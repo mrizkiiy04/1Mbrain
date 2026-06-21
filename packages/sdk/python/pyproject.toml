@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "onemillionbrain"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python client SDK for the 1MBrain REST API — portable memory layer for AI agents."
 readme = "README.md"
 license = { text = "MIT" }
@@ -38,6 +38,13 @@ Documentation = "https://github.com/mrizkiiy04/1mbrain/tree/main/packages/sdk/py
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/onemillionbrain"]
+
+[tool.hatch.build]
+include = [
+  "src/onemillionbrain",
+  "AGENT_INSTRUCTIONS.md",
+  "AGENT_INTEGRATION_GUIDE.md"
+]
 
 [project.scripts]
 1mbrain-server = "onemillionbrain.server:main"
