@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "onemillionbrain"
+version = "0.1.1"
+description = "Python client SDK for the 1MBrain REST API — portable memory layer for AI agents."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = ["ai", "agent", "memory", "1mbrain", "llm"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.optional-dependencies]
+async = ["httpx>=0.27.0"]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.23.0",
+  "httpx>=0.27.0",
+  "respx>=0.21.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/mrizkiiy04/1mbrain"
+Repository = "https://github.com/mrizkiiy04/1mbrain"
+Documentation = "https://github.com/mrizkiiy04/1mbrain/tree/main/packages/sdk/python"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/onemillionbrain"]
+
+[project.scripts]
+1mbrain-server = "onemillionbrain.server:main"
+1mbrain = "onemillionbrain.server:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

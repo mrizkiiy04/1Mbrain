@@ -1,0 +1,3333 @@
+{
+  "name": "memory-bench-adversarial",
+  "description": "Dataset C (Adversarial Memory): a 10-conversation, provider-neutral benchmark stress-testing stale facts, multi-step contradictions, near-duplicate-name distractors, ambiguity, and abstention, while keeping the same category distribution as Datasets A and B.",
+  "generated_at": "2026-06-19",
+  "fairness_notes": [
+    "Adversarial difficulty comes from the conversation content itself (multi-step contradiction chains, near-duplicate names like Sam/Sami, Adam/Adnan, Alpha/Beta, and corrected misconceptions vs. real-world changes) rather than from skewing the category distribution toward any one architecture's strength.",
+    "Multi-hop questions remain capped at 10% (6 of 60), the same ratio as Datasets A and B, so this harder dataset does not become a de facto graph-memory benchmark.",
+    "Contradiction-resolution questions intentionally mix two distinct patterns -- a real-world fact that changed (e.g. a moved schedule) and a person's belief that was simply corrected (e.g. a misunderstood renewal date or scoring breakdown) -- so the dataset doesn't only reward systems that track timestamps; it also rewards systems that track which statement is the final, corrected one.",
+    "Near-duplicate-name distractors (Sam/Sami, Adam/Adnan, Alpha/Beta) are designed to penalize over-eager similarity matching equally regardless of whether the underlying index is a vector store or a graph store -- both must disambiguate by content, not just by string or embedding proximity.",
+    "Abstention questions are split between true information gaps (no record addresses the topic) and a stated-but-unresolved status (e.g. 'hasn't decided yet'), so abstention isn't trivially solvable by checking for the mere absence of a keyword match."
+  ],
+  "conversations": [
+    {
+      "conversation_id": "convC-software-01",
+      "agent_id": "agent-dev-assist",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "memC-sw-001",
+          "type": "semantic",
+          "timestamp": "2025-10-01T09:00:00Z",
+          "content": "Nadia is building Ticketly, a bug-tracking tool for small software teams, with a Next.js frontend and a Postgres backend.",
+          "tags": [
+            "ticketly",
+            "tech-stack"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-002",
+          "type": "semantic",
+          "timestamp": "2025-10-05T10:00:00Z",
+          "content": "Ticketly's pricing model started out free for all teams under 5 users.",
+          "tags": [
+            "ticketly",
+            "pricing"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-003",
+          "type": "episodic",
+          "timestamp": "2026-01-05T11:00:00Z",
+          "content": "After three months, Nadia switched Ticketly to a paid-only model at $9/user/month because the free tier wasn't converting to revenue.",
+          "tags": [
+            "ticketly",
+            "pricing"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw-002",
+              "strength": 0.8,
+              "reason": "replaces the original free pricing"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw-004",
+          "type": "episodic",
+          "timestamp": "2026-02-16T12:00:00Z",
+          "content": "Six weeks later, Nadia reverted Ticketly to a freemium model: free for teams under 3 users, $9/user/month above that.",
+          "tags": [
+            "ticketly",
+            "pricing"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw-003",
+              "strength": 0.85,
+              "reason": "replaces the brief paid-only period"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw-005",
+          "type": "episodic",
+          "timestamp": "2026-02-20T13:00:00Z",
+          "content": "Nadia hired a contractor named Sam to handle customer support tickets.",
+          "tags": [
+            "ticketly",
+            "team"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-006",
+          "type": "episodic",
+          "timestamp": "2026-02-25T14:00:00Z",
+          "content": "Nadia also brought on a part-time designer named Sami to redesign Ticketly's dashboard.",
+          "tags": [
+            "ticketly",
+            "team"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-007",
+          "type": "procedural",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Nadia's release process is: merge to main, run the CI test suite, then deploy to staging for 24 hours before pushing to production.",
+          "tags": [
+            "ticketly",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-008",
+          "type": "episodic",
+          "timestamp": "2026-03-05T10:00:00Z",
+          "content": "Nadia mentioned a different past project, a Chrome extension called 'Tabsy,' which she sold two years ago and no longer maintains.",
+          "tags": [
+            "tabsy",
+            "past-project"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-009",
+          "type": "semantic",
+          "timestamp": "2026-03-20T11:00:00Z",
+          "content": "Ticketly currently supports integrations with GitHub and Slack, but not Jira yet.",
+          "tags": [
+            "ticketly",
+            "integrations"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-010",
+          "type": "episodic",
+          "timestamp": "2026-04-02T12:00:00Z",
+          "content": "A beta user reported that Ticketly's email notifications were arriving up to 20 minutes late.",
+          "tags": [
+            "ticketly",
+            "bug"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw-011",
+          "type": "episodic",
+          "timestamp": "2026-04-03T13:00:00Z",
+          "content": "Investigating the delay, Nadia found the cause was a misconfigured queue worker, not the email provider itself.",
+          "tags": [
+            "ticketly",
+            "bug"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw-010",
+              "strength": 0.85,
+              "reason": "diagnosis of the reported delay"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw-012",
+          "type": "episodic",
+          "timestamp": "2026-04-05T14:00:00Z",
+          "content": "Nadia fixed the queue worker configuration, bringing notification delays down to under 10 seconds.",
+          "tags": [
+            "ticketly",
+            "bug"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw-011",
+              "strength": 0.85,
+              "reason": "resolves the diagnosed cause"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-sw-01",
+          "category": "atomic_fact_recall",
+          "question": "What backend database does Ticketly use?",
+          "expected_answer": "Postgres",
+          "acceptable_answer_criteria": [
+            "names Postgres"
+          ],
+          "required_memory_ids": [
+            "memC-sw-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact in one record."
+        },
+        {
+          "question_id": "qC-sw-02",
+          "category": "atomic_fact_recall",
+          "question": "Which two integrations does Ticketly currently support?",
+          "expected_answer": "GitHub and Slack (not Jira yet)",
+          "acceptable_answer_criteria": [
+            "names GitHub and Slack"
+          ],
+          "required_memory_ids": [
+            "memC-sw-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated; no architecture-specific advantage either way."
+        },
+        {
+          "question_id": "qC-sw-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What does Nadia do before a release goes live?",
+          "expected_answer": "Merge to main, run the CI suite, then sit on staging for 24 hours before production.",
+          "acceptable_answer_criteria": [
+            "mentions CI",
+            "mentions the 24-hour staging step"
+          ],
+          "required_memory_ids": [
+            "memC-sw-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural memory's exact phrasing."
+        },
+        {
+          "question_id": "qC-sw-04",
+          "category": "temporal_update",
+          "question": "What is Ticketly's current pricing model?",
+          "expected_answer": "Freemium: free for teams under 3 users, $9/user/month above that.",
+          "acceptable_answer_criteria": [
+            "states the freemium structure",
+            "gives the 3-user threshold"
+          ],
+          "required_memory_ids": [
+            "memC-sw-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Pricing changed twice; the system must surface the most recent state, not either earlier one."
+        },
+        {
+          "question_id": "qC-sw-05",
+          "category": "contradiction_resolution",
+          "question": "Is Ticketly currently free for all teams under 5 users?",
+          "expected_answer": "No. That was the original pricing; it has since changed twice and is now free only for teams under 3 users, with paid tiers above that.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "gives the current 3-user freemium threshold"
+          ],
+          "required_memory_ids": [
+            "memC-sw-004"
+          ],
+          "forbidden_memory_ids": [
+            "memC-sw-002"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests resistance to a stale fact that was true at one point but has been superseded twice since."
+        },
+        {
+          "question_id": "qC-sw-06",
+          "category": "noise_resistance",
+          "question": "Did Sam, the customer-support contractor, redesign Ticketly's dashboard?",
+          "expected_answer": "No, that was Sami, the part-time designer -- a different person with a similar-sounding name.",
+          "acceptable_answer_criteria": [
+            "distinguishes Sam from Sami",
+            "correctly attributes the dashboard redesign to Sami"
+          ],
+          "required_memory_ids": [
+            "memC-sw-005",
+            "memC-sw-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Near-duplicate names (Sam/Sami) with different roles are a deliberate adversarial trap for similarity-based retrieval that doesn't disambiguate carefully."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-personal-assistant-01",
+      "agent_id": "agent-pa",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "memC-pa-001",
+          "type": "semantic",
+          "timestamp": "2025-09-01T08:00:00Z",
+          "content": "Soren is based in Berlin but travels frequently for work, often to Sao Paulo and Singapore.",
+          "tags": [
+            "soren",
+            "travel"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-002",
+          "type": "semantic",
+          "timestamp": "2025-09-02T09:00:00Z",
+          "content": "Soren prefers all meeting times communicated in his local time zone, not UTC.",
+          "tags": [
+            "soren",
+            "preference"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-003",
+          "type": "episodic",
+          "timestamp": "2025-09-10T10:00:00Z",
+          "content": "Soren set up a recurring client call every Wednesday at 4pm Berlin time.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-004",
+          "type": "episodic",
+          "timestamp": "2026-03-03T11:00:00Z",
+          "content": "While traveling to Sao Paulo in March, Soren asked to shift that Wednesday call to 11am Sao Paulo time for the duration of the trip.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa-003",
+              "strength": 0.7,
+              "reason": "temporary override while traveling"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa-005",
+          "type": "episodic",
+          "timestamp": "2026-04-01T12:00:00Z",
+          "content": "Soren returned to Berlin in April and the Wednesday call reverted to 4pm Berlin time.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa-004",
+              "strength": 0.7,
+              "reason": "reverts the temporary travel override"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa-006",
+          "type": "episodic",
+          "timestamp": "2026-04-05T13:00:00Z",
+          "content": "Soren mentioned his colleague Lena also has a recurring Wednesday call, but hers is at 2pm and unrelated to his.",
+          "tags": [
+            "lena",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-007",
+          "type": "semantic",
+          "timestamp": "2025-09-15T08:00:00Z",
+          "content": "Soren is allergic to penicillin, noted for any travel medical forms.",
+          "tags": [
+            "soren",
+            "health"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-008",
+          "type": "procedural",
+          "timestamp": "2025-09-20T09:00:00Z",
+          "content": "When booking Soren's flights, the assistant should always default to aisle seats and avoid red-eye flights longer than 6 hours.",
+          "tags": [
+            "soren",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-009",
+          "type": "episodic",
+          "timestamp": "2026-05-06T10:00:00Z",
+          "content": "In May, Soren's recurring Wednesday call was permanently moved to Thursdays at 10am Berlin time after the client requested the change.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa-005",
+              "strength": 0.8,
+              "reason": "permanent change replacing the Wednesday slot"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa-010",
+          "type": "episodic",
+          "timestamp": "2026-06-10T11:00:00Z",
+          "content": "Soren asked for a one-time exception in June to push a Thursday call to Friday because of a public holiday.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-011",
+          "type": "semantic",
+          "timestamp": "2025-09-25T08:00:00Z",
+          "content": "Soren's emergency contact is his partner, Mikael.",
+          "tags": [
+            "soren",
+            "contact"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa-012",
+          "type": "episodic",
+          "timestamp": "2026-06-15T12:00:00Z",
+          "content": "Soren confirmed that, aside from the one-time June exception, his recurring client call remains on Thursdays at 10am Berlin time.",
+          "tags": [
+            "soren",
+            "schedule"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa-009",
+              "strength": 0.85,
+              "reason": "confirms the current standing schedule"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-pa-01",
+          "category": "atomic_fact_recall",
+          "question": "What is Soren allergic to?",
+          "expected_answer": "Penicillin",
+          "acceptable_answer_criteria": [
+            "states penicillin"
+          ],
+          "required_memory_ids": [
+            "memC-pa-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-pa-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What's the assistant's rule of thumb when booking Soren's flights?",
+          "expected_answer": "Default to aisle seats and avoid red-eyes longer than 6 hours.",
+          "acceptable_answer_criteria": [
+            "mentions aisle seats",
+            "mentions the red-eye limit"
+          ],
+          "required_memory_ids": [
+            "memC-pa-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural memory's phrasing."
+        },
+        {
+          "question_id": "qC-pa-03",
+          "category": "temporal_update",
+          "question": "What day and time is Soren's recurring client call currently?",
+          "expected_answer": "Thursdays at 10am Berlin time -- moved from the original Wednesday 4pm slot in May.",
+          "acceptable_answer_criteria": [
+            "gives Thursday 10am",
+            "notes it changed from Wednesday"
+          ],
+          "required_memory_ids": [
+            "memC-pa-009",
+            "memC-pa-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Schedule changed multiple times (temporary travel shift, then permanent move); requires surfacing the latest standing state."
+        },
+        {
+          "question_id": "qC-pa-04",
+          "category": "contradiction_resolution",
+          "question": "Is Soren's recurring client call still on Wednesdays?",
+          "expected_answer": "No -- it was permanently moved to Thursdays at 10am Berlin time in May. The earlier Sao Paulo time shift was only a temporary travel override, not the current state.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "gives the current Thursday slot",
+            "doesn't get tripped up by the temporary Sao Paulo override"
+          ],
+          "required_memory_ids": [
+            "memC-pa-009"
+          ],
+          "forbidden_memory_ids": [
+            "memC-pa-003"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Three sequential changes to the same fact (temporary override, revert, permanent move) make this a harder recency test than a single before/after pair."
+        },
+        {
+          "question_id": "qC-pa-05",
+          "category": "noise_resistance",
+          "question": "Is Lena's Wednesday call the same one Soren reschedules when he travels?",
+          "expected_answer": "No -- Lena's Wednesday 2pm call is a separate, unrelated recurring meeting that belongs to a colleague, not Soren.",
+          "acceptable_answer_criteria": [
+            "identifies Lena's call as unrelated"
+          ],
+          "required_memory_ids": [
+            "memC-pa-006",
+            "memC-pa-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor shares the 'recurring Wednesday call' framing but belongs to a different person entirely."
+        },
+        {
+          "question_id": "qC-pa-06",
+          "category": "atomic_fact_recall",
+          "question": "Where is Soren based?",
+          "expected_answer": "Berlin",
+          "acceptable_answer_criteria": [
+            "states Berlin"
+          ],
+          "required_memory_ids": [
+            "memC-pa-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact; a second, separate atomic-recall check distinct from the schedule/contradiction questions above."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-research-01",
+      "agent_id": "agent-research",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "memC-res-001",
+          "type": "semantic",
+          "timestamp": "2025-11-01T09:00:00Z",
+          "content": "Farah's research examines microplastic concentration in freshwater lakes near urban centers.",
+          "tags": [
+            "farah",
+            "topic"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-002",
+          "type": "episodic",
+          "timestamp": "2025-11-05T10:00:00Z",
+          "content": "Farah's collaborator, Dr. Lindqvist, shared a sampling protocol originally developed for ocean microplastics.",
+          "tags": [
+            "protocol"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-003",
+          "type": "episodic",
+          "timestamp": "2025-11-20T11:00:00Z",
+          "content": "Farah adapted Dr. Lindqvist's ocean protocol for freshwater by reducing the filter mesh size from 333 to 100 micrometers.",
+          "tags": [
+            "protocol"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-002",
+              "strength": 0.85,
+              "reason": "adapted from this original protocol"
+            }
+          ]
+        },
+        {
+          "id": "memC-res-004",
+          "type": "semantic",
+          "timestamp": "2025-10-15T08:00:00Z",
+          "content": "Farah originally estimated Lake Halvorsen's microplastic count using older 333-micrometer mesh data from a 2021 regional survey.",
+          "tags": [
+            "estimate"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-005",
+          "type": "episodic",
+          "timestamp": "2026-01-10T12:00:00Z",
+          "content": "Using the adapted 100-micrometer protocol, Farah found microplastic counts in Lake Halvorsen were nearly triple her initial estimate.",
+          "tags": [
+            "results"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-003",
+              "strength": 0.85,
+              "reason": "result of the adapted protocol"
+            },
+            {
+              "target_id": "memC-res-004",
+              "strength": 0.6,
+              "reason": "compared against this original estimate"
+            }
+          ]
+        },
+        {
+          "id": "memC-res-006",
+          "type": "episodic",
+          "timestamp": "2026-01-25T13:00:00Z",
+          "content": "The unexpectedly high count led Farah's team to add two sampling sites downstream of a wastewater treatment plant.",
+          "tags": [
+            "expansion"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-005",
+              "strength": 0.85,
+              "reason": "new sites added because of this high count"
+            }
+          ]
+        },
+        {
+          "id": "memC-res-007",
+          "type": "episodic",
+          "timestamp": "2026-02-10T14:00:00Z",
+          "content": "Sampling at the new downstream sites confirmed the treatment plant as a major contributor, with counts dropping 70% just 2km past the outflow.",
+          "tags": [
+            "results"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-006",
+              "strength": 0.85,
+              "reason": "result of the site expansion"
+            }
+          ]
+        },
+        {
+          "id": "memC-res-008",
+          "type": "episodic",
+          "timestamp": "2026-02-15T09:00:00Z",
+          "content": "Farah mentioned a separate, smaller dataset her undergrad assistant collected on plastic in soil samples, which is not part of the lake study.",
+          "tags": [
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-009",
+          "type": "episodic",
+          "timestamp": "2025-12-01T10:00:00Z",
+          "content": "Farah's funding agency initially approved a one-year grant.",
+          "tags": [
+            "funding"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-010",
+          "type": "episodic",
+          "timestamp": "2026-02-20T11:00:00Z",
+          "content": "The grant was extended to 18 months after the downstream sampling expansion required more time.",
+          "tags": [
+            "funding"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-009",
+              "strength": 0.8,
+              "reason": "extends the original one-year grant"
+            }
+          ]
+        },
+        {
+          "id": "memC-res-011",
+          "type": "procedural",
+          "timestamp": "2025-11-10T09:00:00Z",
+          "content": "Farah's lab protocol requires triple-rinsing all sampling jars with deionized water before each collection trip.",
+          "tags": [
+            "workflow"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-res-012",
+          "type": "episodic",
+          "timestamp": "2026-04-05T12:00:00Z",
+          "content": "A lab tech accidentally mixed up sample labels from Lake Halvorsen and a nearby control lake, Lake Persson, in April, requiring Farah to redo that batch; the corrected results matched the earlier finding of nearly triple the original estimate.",
+          "tags": [
+            "correction"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-res-005",
+              "strength": 0.7,
+              "reason": "redo confirms this earlier finding"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-res-01",
+          "category": "atomic_fact_recall",
+          "question": "What mesh size does Farah currently use for freshwater sampling?",
+          "expected_answer": "100 micrometers",
+          "acceptable_answer_criteria": [
+            "states 100 micrometers"
+          ],
+          "required_memory_ids": [
+            "memC-res-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact, the adapted/current protocol value."
+        },
+        {
+          "question_id": "qC-res-02",
+          "category": "atomic_fact_recall",
+          "question": "Who originally developed the ocean sampling protocol Farah adapted?",
+          "expected_answer": "Dr. Lindqvist",
+          "acceptable_answer_criteria": [
+            "names Dr. Lindqvist"
+          ],
+          "required_memory_ids": [
+            "memC-res-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated single fact."
+        },
+        {
+          "question_id": "qC-res-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What's the standard cleaning step before Farah's team heads out on a collection trip?",
+          "expected_answer": "Triple-rinse all sampling jars with deionized water beforehand.",
+          "acceptable_answer_criteria": [
+            "mentions triple-rinsing",
+            "mentions deionized water"
+          ],
+          "required_memory_ids": [
+            "memC-res-011"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural record's exact phrasing."
+        },
+        {
+          "question_id": "qC-res-04",
+          "category": "temporal_update",
+          "question": "How long is Farah's research grant currently funded for?",
+          "expected_answer": "18 months -- extended from the original one-year approval.",
+          "acceptable_answer_criteria": [
+            "states 18 months",
+            "notes the extension"
+          ],
+          "required_memory_ids": [
+            "memC-res-010",
+            "memC-res-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the extended duration over the original approval."
+        },
+        {
+          "question_id": "qC-res-05",
+          "category": "multi_hop_association",
+          "question": "Why did Farah's team add two new sampling sites downstream of the wastewater treatment plant?",
+          "expected_answer": "The adapted 100-micrometer protocol showed Lake Halvorsen's microplastic count was nearly triple the original estimate, prompting the team to investigate further by sampling downstream of the treatment plant.",
+          "acceptable_answer_criteria": [
+            "mentions the protocol/result that revealed the high count",
+            "connects it to the downstream expansion decision"
+          ],
+          "required_memory_ids": [
+            "memC-res-003",
+            "memC-res-005",
+            "memC-res-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Three-record causal chain (protocol change -> surprising result -> site expansion); rewards systems that can connect a sequence of related facts rather than just the nearest single match."
+        },
+        {
+          "question_id": "qC-res-06",
+          "category": "noise_resistance",
+          "question": "Is the soil microplastic dataset collected by Farah's undergrad assistant part of the lake study?",
+          "expected_answer": "No, it's a separate, smaller dataset unrelated to the freshwater lake research.",
+          "acceptable_answer_criteria": [
+            "identifies it as separate/unrelated"
+          ],
+          "required_memory_ids": [
+            "memC-res-008",
+            "memC-res-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor shares the 'microplastics' topic but is an explicitly separate dataset, testing precision over topical similarity."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-travel-01",
+      "agent_id": "agent-travel",
+      "domain": "travel",
+      "memory_records": [
+        {
+          "id": "memC-tr-001",
+          "type": "episodic",
+          "timestamp": "2025-12-01T09:00:00Z",
+          "content": "Bram is planning a 6-week backpacking trip through Vietnam, Thailand, and Cambodia starting in November.",
+          "tags": [
+            "bram",
+            "planning"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-002",
+          "type": "episodic",
+          "timestamp": "2025-12-02T10:00:00Z",
+          "content": "Bram originally planned to spend 3 weeks in Vietnam, 2 in Thailand, and 1 in Cambodia.",
+          "tags": [
+            "bram",
+            "itinerary"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-003",
+          "type": "episodic",
+          "timestamp": "2026-01-15T11:00:00Z",
+          "content": "After a friend's recommendation, Bram revised the split to 2 weeks Vietnam, 2 weeks Thailand, 2 weeks Cambodia.",
+          "tags": [
+            "bram",
+            "itinerary"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-tr-002",
+              "strength": 0.8,
+              "reason": "replaces the original time split"
+            }
+          ]
+        },
+        {
+          "id": "memC-tr-004",
+          "type": "semantic",
+          "timestamp": "2025-12-05T08:00:00Z",
+          "content": "Bram is vegan and needs restaurant recommendations that accommodate that across all three countries.",
+          "tags": [
+            "bram",
+            "diet"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-005",
+          "type": "episodic",
+          "timestamp": "2026-01-14T12:00:00Z",
+          "content": "Bram's friend Ingrid, who recommended more time in Cambodia, had visited Siem Reap the year before and said the temple sites needed at least 4 full days, not the 2 Bram initially budgeted.",
+          "tags": [
+            "bram",
+            "ingrid"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-006",
+          "type": "episodic",
+          "timestamp": "2026-01-16T13:00:00Z",
+          "content": "Because of Ingrid's recommendation about Siem Reap specifically, Bram now plans to dedicate 4 of his Cambodia days to the Angkor temple complex.",
+          "tags": [
+            "bram",
+            "itinerary"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-tr-005",
+              "strength": 0.85,
+              "reason": "Angkor day allocation driven by this tip"
+            }
+          ]
+        },
+        {
+          "id": "memC-tr-007",
+          "type": "episodic",
+          "timestamp": "2026-02-01T09:00:00Z",
+          "content": "Bram mentioned a separate weekend trip to Portugal in August, before the Southeast Asia trip even starts.",
+          "tags": [
+            "bram",
+            "portugal",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-008",
+          "type": "procedural",
+          "timestamp": "2025-12-10T10:00:00Z",
+          "content": "Bram's packing rule is to fit everything into one 40-liter backpack, no checked luggage, ever.",
+          "tags": [
+            "bram",
+            "workflow"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-009",
+          "type": "episodic",
+          "timestamp": "2026-03-01T11:00:00Z",
+          "content": "Bram bought travel insurance covering medical evacuation up to $100,000, valid for the full 6-week trip.",
+          "tags": [
+            "bram",
+            "insurance"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-tr-010",
+          "type": "episodic",
+          "timestamp": "2026-04-10T12:00:00Z",
+          "content": "Bram's departure date shifted from November 1st to November 8th after visa processing took longer than expected.",
+          "tags": [
+            "bram",
+            "dates"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-tr-001",
+              "strength": 0.7,
+              "reason": "updates the originally planned start date"
+            }
+          ]
+        },
+        {
+          "id": "memC-tr-011",
+          "type": "episodic",
+          "timestamp": "2026-04-11T13:00:00Z",
+          "content": "With the new November 8th departure, Bram's return date also shifted, now landing in mid-to-late December instead of his original target of returning before December 15th.",
+          "tags": [
+            "bram",
+            "dates"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-tr-010",
+              "strength": 0.75,
+              "reason": "consequence of the departure date shift"
+            }
+          ]
+        },
+        {
+          "id": "memC-tr-012",
+          "type": "episodic",
+          "timestamp": "2026-04-15T14:00:00Z",
+          "content": "Bram confirmed his final itinerary: depart November 8th, return December 20th, with the revised 2-2-2 week country split.",
+          "tags": [
+            "bram",
+            "itinerary",
+            "dates"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-tr-011",
+              "strength": 0.8,
+              "reason": "finalizes the shifted dates"
+            },
+            {
+              "target_id": "memC-tr-003",
+              "strength": 0.8,
+              "reason": "finalizes the revised country split"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-tr-01",
+          "category": "atomic_fact_recall",
+          "question": "What dietary requirement does Bram have for restaurant planning?",
+          "expected_answer": "Vegan",
+          "acceptable_answer_criteria": [
+            "states vegan"
+          ],
+          "required_memory_ids": [
+            "memC-tr-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-tr-02",
+          "category": "atomic_fact_recall",
+          "question": "What's Bram's rule about luggage for the trip?",
+          "expected_answer": "Everything must fit in one 40-liter backpack, no checked luggage.",
+          "acceptable_answer_criteria": [
+            "mentions 40-liter backpack",
+            "mentions no checked luggage"
+          ],
+          "required_memory_ids": [
+            "memC-tr-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated procedural fact."
+        },
+        {
+          "question_id": "qC-tr-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What level of medical coverage does Bram's travel insurance include?",
+          "expected_answer": "Medical evacuation coverage up to $100,000 for the whole trip.",
+          "acceptable_answer_criteria": [
+            "mentions $100,000",
+            "mentions medical evacuation"
+          ],
+          "required_memory_ids": [
+            "memC-tr-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the source record."
+        },
+        {
+          "question_id": "qC-tr-04",
+          "category": "temporal_update",
+          "question": "When does Bram's trip currently start and end?",
+          "expected_answer": "Departs November 8th, returns December 20th -- shifted from the original November 1st departure and pre-December-15th return target.",
+          "acceptable_answer_criteria": [
+            "gives Nov 8 / Dec 20",
+            "notes these are shifted from earlier dates"
+          ],
+          "required_memory_ids": [
+            "memC-tr-010",
+            "memC-tr-011",
+            "memC-tr-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Dates shifted twice in sequence (departure, then consequent return); requires surfacing the final confirmed dates."
+        },
+        {
+          "question_id": "qC-tr-05",
+          "category": "multi_hop_association",
+          "question": "Why is Bram now planning to spend 4 days specifically around the Angkor temple complex?",
+          "expected_answer": "His friend Ingrid, who'd visited Siem Reap before, told him the temple sites needed at least 4 full days, which led Bram to dedicate that much time to Angkor specifically.",
+          "acceptable_answer_criteria": [
+            "mentions Ingrid's prior visit/recommendation",
+            "connects it to the 4-day Angkor allocation"
+          ],
+          "required_memory_ids": [
+            "memC-tr-005",
+            "memC-tr-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires linking a friend's secondhand travel tip to a specific itinerary decision made later."
+        },
+        {
+          "question_id": "qC-tr-06",
+          "category": "noise_resistance",
+          "question": "Is Bram's August Portugal weekend trip part of his Southeast Asia backpacking itinerary?",
+          "expected_answer": "No, it's a separate, unrelated trip happening before the Southeast Asia trip even begins.",
+          "acceptable_answer_criteria": [
+            "identifies Portugal trip as unrelated"
+          ],
+          "required_memory_ids": [
+            "memC-tr-007",
+            "memC-tr-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor is a real but unrelated trip mentioned in the same conversation, testing topical precision."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-health-admin-01",
+      "agent_id": "agent-health",
+      "domain": "health_admin",
+      "memory_records": [
+        {
+          "id": "memC-ha-001",
+          "type": "episodic",
+          "timestamp": "2025-08-01T09:00:00Z",
+          "content": "Noor started seeing a neurologist, Dr. Castellano, for chronic migraines.",
+          "tags": [
+            "noor",
+            "care"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-002",
+          "type": "semantic",
+          "timestamp": "2025-08-05T10:00:00Z",
+          "content": "Dr. Castellano initially prescribed sumatriptan as an as-needed medication for migraine attacks.",
+          "tags": [
+            "noor",
+            "medication"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-003",
+          "type": "episodic",
+          "timestamp": "2025-11-10T11:00:00Z",
+          "content": "After migraines persisted at more than 8 days a month, Dr. Castellano added propranolol as a daily preventive medication.",
+          "tags": [
+            "noor",
+            "medication"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-004",
+          "type": "episodic",
+          "timestamp": "2026-01-15T12:00:00Z",
+          "content": "Propranolol caused fatigue, so Dr. Castellano switched the preventive medication to topiramate.",
+          "tags": [
+            "noor",
+            "medication"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ha-003",
+              "strength": 0.85,
+              "reason": "replaces propranolol as the preventive medication"
+            }
+          ]
+        },
+        {
+          "id": "memC-ha-005",
+          "type": "episodic",
+          "timestamp": "2026-04-10T13:00:00Z",
+          "content": "On topiramate, Noor's migraine frequency dropped from over 8 days a month to about 3 days a month.",
+          "tags": [
+            "noor",
+            "results"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ha-004",
+              "strength": 0.85,
+              "reason": "result of the medication switch"
+            }
+          ]
+        },
+        {
+          "id": "memC-ha-006",
+          "type": "episodic",
+          "timestamp": "2026-02-01T09:00:00Z",
+          "content": "Noor's primary care doctor, Dr. Femi, separately monitors her blood pressure, which has been stable and unrelated to the migraine treatment changes.",
+          "tags": [
+            "noor",
+            "distractor"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-007",
+          "type": "episodic",
+          "timestamp": "2025-12-01T10:00:00Z",
+          "content": "Dr. Castellano recommended Noor keep a migraine diary, which led to discovering her attacks frequently followed nights with less than 6 hours of sleep.",
+          "tags": [
+            "noor",
+            "diary"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-008",
+          "type": "episodic",
+          "timestamp": "2025-12-15T11:00:00Z",
+          "content": "After connecting poor sleep to her migraine triggers, Noor started a consistent 10:30pm bedtime, which her diary later showed reduced trigger-related attacks further.",
+          "tags": [
+            "noor",
+            "habit"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ha-007",
+              "strength": 0.85,
+              "reason": "sleep insight led to this bedtime change"
+            }
+          ]
+        },
+        {
+          "id": "memC-ha-009",
+          "type": "semantic",
+          "timestamp": "2025-08-10T09:00:00Z",
+          "content": "Noor is also mildly lactose intolerant, noted in her general health profile but not connected to her migraine care.",
+          "tags": [
+            "noor",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-010",
+          "type": "procedural",
+          "timestamp": "2025-12-05T10:00:00Z",
+          "content": "Noor's process for logging a migraine is to note the start time, suspected trigger, medication taken, and relief time within an hour of the attack starting.",
+          "tags": [
+            "noor",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-011",
+          "type": "episodic",
+          "timestamp": "2026-01-10T11:00:00Z",
+          "content": "Noor's insurance required prior authorization for topiramate, which took two weeks to approve before she could start taking it.",
+          "tags": [
+            "noor",
+            "insurance"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ha-012",
+          "type": "episodic",
+          "timestamp": "2026-06-10T12:00:00Z",
+          "content": "As of her June check-in, Noor remains on topiramate with sumatriptan as the as-needed rescue medication, and her migraine frequency has held steady at around 3 days a month.",
+          "tags": [
+            "noor",
+            "status"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ha-004",
+              "strength": 0.8,
+              "reason": "confirms topiramate is still the current preventive medication"
+            },
+            {
+              "target_id": "memC-ha-002",
+              "strength": 0.7,
+              "reason": "confirms sumatriptan is still the rescue medication"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-ha-01",
+          "category": "atomic_fact_recall",
+          "question": "What as-needed medication does Noor take for migraine attacks?",
+          "expected_answer": "Sumatriptan",
+          "acceptable_answer_criteria": [
+            "states sumatriptan"
+          ],
+          "required_memory_ids": [
+            "memC-ha-002",
+            "memC-ha-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Stated directly and reconfirmed later; no architecture-specific advantage."
+        },
+        {
+          "question_id": "qC-ha-02",
+          "category": "atomic_fact_recall",
+          "question": "What other health condition does Noor's primary care doctor monitor, separate from her migraines?",
+          "expected_answer": "Blood pressure",
+          "acceptable_answer_criteria": [
+            "states blood pressure"
+          ],
+          "required_memory_ids": [
+            "memC-ha-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact about an unrelated condition."
+        },
+        {
+          "question_id": "qC-ha-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What sleep-related habit did Noor adopt after noticing a pattern in her migraine diary?",
+          "expected_answer": "A consistent 10:30pm bedtime.",
+          "acceptable_answer_criteria": [
+            "mentions 10:30pm bedtime"
+          ],
+          "required_memory_ids": [
+            "memC-ha-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the source record's phrasing."
+        },
+        {
+          "question_id": "qC-ha-04",
+          "category": "temporal_update",
+          "question": "What is Noor's current daily preventive medication for migraines?",
+          "expected_answer": "Topiramate -- switched from propranolol after propranolol caused fatigue.",
+          "acceptable_answer_criteria": [
+            "states topiramate",
+            "notes the switch from propranolol"
+          ],
+          "required_memory_ids": [
+            "memC-ha-004"
+          ],
+          "forbidden_memory_ids": [
+            "memC-ha-003"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Two preventive medications were tried in sequence; the system must surface the current one, not the first one tried."
+        },
+        {
+          "question_id": "qC-ha-05",
+          "category": "multi_hop_association",
+          "question": "How did Noor's migraine diary lead to a change in her sleep habits?",
+          "expected_answer": "Dr. Castellano recommended the diary, which revealed her attacks often followed nights with less than 6 hours of sleep, leading Noor to adopt a consistent 10:30pm bedtime.",
+          "acceptable_answer_criteria": [
+            "mentions the diary recommendation",
+            "mentions the sleep-attack pattern",
+            "connects it to the bedtime change"
+          ],
+          "required_memory_ids": [
+            "memC-ha-007",
+            "memC-ha-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires connecting a recommendation, a discovered pattern, and a resulting behavior change across two records."
+        },
+        {
+          "question_id": "qC-ha-06",
+          "category": "procedural_recall",
+          "question": "What does Noor record when logging a migraine attack?",
+          "expected_answer": "Start time, suspected trigger, medication taken, and relief time, logged within an hour of the attack starting.",
+          "acceptable_answer_criteria": [
+            "mentions all four elements",
+            "mentions the one-hour logging window"
+          ],
+          "required_memory_ids": [
+            "memC-ha-010"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single procedural record states this directly."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-finance-admin-01",
+      "agent_id": "agent-finance",
+      "domain": "finance_admin",
+      "memory_records": [
+        {
+          "id": "memC-fa-001",
+          "type": "semantic",
+          "timestamp": "2025-09-01T08:00:00Z",
+          "content": "Theo is a freelance graphic designer who invoices clients monthly and has irregular income.",
+          "tags": [
+            "theo",
+            "profile"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-002",
+          "type": "semantic",
+          "timestamp": "2025-09-02T09:00:00Z",
+          "content": "Theo sets aside a percentage of every invoice payment into a separate tax savings account, originally 30%.",
+          "tags": [
+            "theo",
+            "tax"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-003",
+          "type": "episodic",
+          "timestamp": "2026-02-01T10:00:00Z",
+          "content": "Theo switched accounting software from a spreadsheet system to an app called LedgerLeaf.",
+          "tags": [
+            "theo",
+            "tools"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-004",
+          "type": "semantic",
+          "timestamp": "2025-09-05T08:00:00Z",
+          "content": "Theo's biggest recurring client, a marketing agency called Brightwell, pays on a 45-day cycle instead of the standard 30 days most of his other clients use.",
+          "tags": [
+            "theo",
+            "brightwell"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-005",
+          "type": "episodic",
+          "timestamp": "2025-09-10T09:00:00Z",
+          "content": "Because of Brightwell's longer payment cycle, Theo built up a one-month cash buffer to cover the gap between invoicing and getting paid.",
+          "tags": [
+            "theo",
+            "buffer"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-fa-004",
+              "strength": 0.8,
+              "reason": "buffer exists specifically because of this client's payment cycle"
+            }
+          ]
+        },
+        {
+          "id": "memC-fa-006",
+          "type": "episodic",
+          "timestamp": "2025-11-01T10:00:00Z",
+          "content": "Theo also does occasional one-off logo design gigs through a marketplace site, which he doesn't track with the same monthly invoicing rhythm.",
+          "tags": [
+            "theo",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-007",
+          "type": "procedural",
+          "timestamp": "2025-09-15T08:00:00Z",
+          "content": "Theo's quarterly estimated tax process is to total income in LedgerLeaf, subtract business expenses, then pay 25% of the net via the IRS online portal.",
+          "tags": [
+            "theo",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-008",
+          "type": "episodic",
+          "timestamp": "2026-05-01T11:00:00Z",
+          "content": "Theo raised his tax savings rate from 30% to 35% after underestimating his Q1 tax payment.",
+          "tags": [
+            "theo",
+            "tax"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-fa-002",
+              "strength": 0.8,
+              "reason": "updates the original 30% savings rate"
+            }
+          ]
+        },
+        {
+          "id": "memC-fa-009",
+          "type": "semantic",
+          "timestamp": "2025-09-20T09:00:00Z",
+          "content": "Theo's standard payment terms for new clients are net-30, with a 2% late fee after 15 days overdue.",
+          "tags": [
+            "theo",
+            "terms"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-010",
+          "type": "episodic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "Theo hired a part-time bookkeeper, Priya, to help reconcile invoices in LedgerLeaf monthly.",
+          "tags": [
+            "theo",
+            "team"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-011",
+          "type": "episodic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Theo's average monthly income over the past year has ranged between $4,200 and $7,800 depending on the season.",
+          "tags": [
+            "theo",
+            "income"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-fa-012",
+          "type": "episodic",
+          "timestamp": "2026-06-15T11:00:00Z",
+          "content": "After the rate increase, Theo confirmed in his June check-in that the 35% tax savings rate has made his Q2 estimated payment much easier to cover.",
+          "tags": [
+            "theo",
+            "tax"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-fa-008",
+              "strength": 0.8,
+              "reason": "confirms the raised rate is still in effect"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-fa-01",
+          "category": "atomic_fact_recall",
+          "question": "What accounting software does Theo currently use?",
+          "expected_answer": "LedgerLeaf",
+          "acceptable_answer_criteria": [
+            "names LedgerLeaf"
+          ],
+          "required_memory_ids": [
+            "memC-fa-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-fa-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What are Theo's default payment terms for a new client?",
+          "expected_answer": "Net-30, with a 2% late fee if more than 15 days overdue.",
+          "acceptable_answer_criteria": [
+            "mentions net-30",
+            "mentions the 2% late fee"
+          ],
+          "required_memory_ids": [
+            "memC-fa-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the source record."
+        },
+        {
+          "question_id": "qC-fa-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "Who did Theo bring on to help with monthly invoice reconciliation?",
+          "expected_answer": "A part-time bookkeeper, Priya.",
+          "acceptable_answer_criteria": [
+            "names Priya",
+            "mentions the bookkeeper role"
+          ],
+          "required_memory_ids": [
+            "memC-fa-010"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from 'help reconcile invoices' phrasing."
+        },
+        {
+          "question_id": "qC-fa-04",
+          "category": "temporal_update",
+          "question": "What percentage of each invoice does Theo currently set aside for taxes?",
+          "expected_answer": "35% -- raised from the original 30% after underestimating his Q1 payment.",
+          "acceptable_answer_criteria": [
+            "states 35%",
+            "notes the change from 30%"
+          ],
+          "required_memory_ids": [
+            "memC-fa-008",
+            "memC-fa-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires returning the updated rate, not the original starting figure."
+        },
+        {
+          "question_id": "qC-fa-05",
+          "category": "multi_hop_association",
+          "question": "Why did Theo build up a one-month cash buffer?",
+          "expected_answer": "His biggest client, Brightwell, pays on a 45-day cycle instead of the standard 30 days, so the buffer covers the gap between invoicing and getting paid.",
+          "acceptable_answer_criteria": [
+            "mentions Brightwell's 45-day cycle",
+            "connects it to the buffer's purpose"
+          ],
+          "required_memory_ids": [
+            "memC-fa-004",
+            "memC-fa-005"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires connecting a client-specific payment term to a financial decision made because of it."
+        },
+        {
+          "question_id": "qC-fa-06",
+          "category": "procedural_recall",
+          "question": "What is Theo's process for paying quarterly estimated taxes?",
+          "expected_answer": "Total income in LedgerLeaf, subtract business expenses, then pay 25% of the net through the IRS online portal.",
+          "acceptable_answer_criteria": [
+            "mentions LedgerLeaf totals",
+            "mentions subtracting expenses",
+            "mentions the 25% portal payment"
+          ],
+          "required_memory_ids": [
+            "memC-fa-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single procedural record states this directly."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-education-01",
+      "agent_id": "agent-tutor",
+      "domain": "education",
+      "memory_records": [
+        {
+          "id": "memC-ed-001",
+          "type": "episodic",
+          "timestamp": "2026-01-05T09:00:00Z",
+          "content": "Mira started studying for the state bar exam, six months before the original July test date.",
+          "tags": [
+            "mira",
+            "study"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-002",
+          "type": "episodic",
+          "timestamp": "2026-01-06T10:00:00Z",
+          "content": "Mira originally planned to study primarily from a commercial outline service called BarReady.",
+          "tags": [
+            "mira",
+            "materials"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-003",
+          "type": "episodic",
+          "timestamp": "2026-03-10T11:00:00Z",
+          "content": "After a practice test on BarReady material scored lower than expected, Mira switched her primary study material to a different outline service, ExamCore.",
+          "tags": [
+            "mira",
+            "materials"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ed-002",
+              "strength": 0.8,
+              "reason": "replaces the original outline service"
+            }
+          ]
+        },
+        {
+          "id": "memC-ed-004",
+          "type": "episodic",
+          "timestamp": "2026-03-15T12:00:00Z",
+          "content": "Mira's study partner, Devon, also switched to ExamCore around the same time after hearing about Mira's experience.",
+          "tags": [
+            "mira",
+            "devon",
+            "distractor"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-005",
+          "type": "episodic",
+          "timestamp": "2026-01-10T09:00:00Z",
+          "content": "Mira initially believed the bar exam's essay portion counted for 50% of her total score.",
+          "tags": [
+            "mira",
+            "scoring"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-006",
+          "type": "episodic",
+          "timestamp": "2026-02-01T10:00:00Z",
+          "content": "After reviewing the exact scoring breakdown, Mira learned the essay portion actually counts for 30% of the total score, with multiple-choice worth 50% and the performance test worth 20%.",
+          "tags": [
+            "mira",
+            "scoring"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ed-005",
+              "strength": 0.85,
+              "reason": "corrects this earlier mistaken belief"
+            }
+          ]
+        },
+        {
+          "id": "memC-ed-007",
+          "type": "procedural",
+          "timestamp": "2026-01-20T09:00:00Z",
+          "content": "Mira's weekly study routine is three practice essays, one full practice multiple-choice set, and one performance-test simulation, every Sunday.",
+          "tags": [
+            "mira",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-008",
+          "type": "episodic",
+          "timestamp": "2026-04-01T11:00:00Z",
+          "content": "Mira's bar exam date moved from July 28th to August 4th after the state bar association rescheduled due to a venue conflict.",
+          "tags": [
+            "mira",
+            "schedule"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-009",
+          "type": "episodic",
+          "timestamp": "2026-02-10T10:00:00Z",
+          "content": "Mira mentioned she'd already passed a separate licensing exam in an unrelated field, real estate, three years earlier.",
+          "tags": [
+            "mira",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-ed-010",
+          "type": "episodic",
+          "timestamp": "2026-03-20T12:00:00Z",
+          "content": "Switching to ExamCore's essay-focused materials specifically helped Mira improve her practice essay scores, since BarReady had been comparatively light on essay technique coverage.",
+          "tags": [
+            "mira",
+            "progress"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ed-003",
+              "strength": 0.8,
+              "reason": "result of the switch to ExamCore"
+            }
+          ]
+        },
+        {
+          "id": "memC-ed-011",
+          "type": "episodic",
+          "timestamp": "2026-03-25T13:00:00Z",
+          "content": "Because her essay scores improved most after switching materials, Mira added a second weekly essay-focused study session, on Wednesdays.",
+          "tags": [
+            "mira",
+            "workflow"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ed-010",
+              "strength": 0.85,
+              "reason": "added because of this improvement"
+            }
+          ]
+        },
+        {
+          "id": "memC-ed-012",
+          "type": "episodic",
+          "timestamp": "2026-05-05T14:00:00Z",
+          "content": "Mira confirmed in her May check-in that her current routine is the original Sunday session plus the new Wednesday essay-focused session, continuing through to her August 4th exam date.",
+          "tags": [
+            "mira",
+            "status"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-ed-011",
+              "strength": 0.8,
+              "reason": "confirms the Wednesday session is still active"
+            },
+            {
+              "target_id": "memC-ed-008",
+              "strength": 0.7,
+              "reason": "confirms the current exam date"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-ed-01",
+          "category": "atomic_fact_recall",
+          "question": "Which outline service is Mira currently using as her primary study material?",
+          "expected_answer": "ExamCore",
+          "acceptable_answer_criteria": [
+            "names ExamCore"
+          ],
+          "required_memory_ids": [
+            "memC-ed-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Most recent record names the current resource directly."
+        },
+        {
+          "question_id": "qC-ed-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What did a typical Sunday study session look like for Mira before her schedule changed?",
+          "expected_answer": "Three practice essays, one full multiple-choice set, and one performance-test simulation.",
+          "acceptable_answer_criteria": [
+            "mentions the three components"
+          ],
+          "required_memory_ids": [
+            "memC-ed-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural record's phrasing."
+        },
+        {
+          "question_id": "qC-ed-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What other professional exam had Mira already completed before starting bar exam prep?",
+          "expected_answer": "A real estate licensing exam, passed three years earlier.",
+          "acceptable_answer_criteria": [
+            "mentions real estate",
+            "mentions it was already passed"
+          ],
+          "required_memory_ids": [
+            "memC-ed-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded; tests retrieving a minor but explicit fact rather than confusing it with bar exam progress."
+        },
+        {
+          "question_id": "qC-ed-04",
+          "category": "contradiction_resolution",
+          "question": "Does the essay portion of the bar exam count for 50% of Mira's total score?",
+          "expected_answer": "No -- that was Mira's initial mistaken belief. The essay portion actually counts for 30%, with multiple-choice at 50% and the performance test at 20%.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "gives the corrected 30/50/20 breakdown"
+          ],
+          "required_memory_ids": [
+            "memC-ed-006"
+          ],
+          "forbidden_memory_ids": [
+            "memC-ed-005"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "The 'stale' fact here is an initial misunderstanding rather than an outdated state of the world, testing whether corrections are tracked as well as updates."
+        },
+        {
+          "question_id": "qC-ed-05",
+          "category": "multi_hop_association",
+          "question": "Why did Mira add a second weekly study session on Wednesdays?",
+          "expected_answer": "Switching from BarReady to ExamCore's essay-focused materials improved her practice essay scores, and because of that improvement she added a Wednesday essay-focused session on top of her usual Sunday routine.",
+          "acceptable_answer_criteria": [
+            "mentions the materials switch",
+            "mentions the essay-score improvement",
+            "connects it to adding the Wednesday session"
+          ],
+          "required_memory_ids": [
+            "memC-ed-010",
+            "memC-ed-011"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires connecting a materials switch, its measured effect, and a resulting schedule change."
+        },
+        {
+          "question_id": "qC-ed-06",
+          "category": "procedural_recall",
+          "question": "What is Mira's current weekly study routine?",
+          "expected_answer": "Her original Sunday session (three essays, one multiple-choice set, one performance test) plus a new Wednesday essay-focused session.",
+          "acceptable_answer_criteria": [
+            "mentions both Sunday and Wednesday sessions"
+          ],
+          "required_memory_ids": [
+            "memC-ed-007",
+            "memC-ed-011",
+            "memC-ed-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires combining the original procedural record with a later addition to describe the current full routine."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-creative-work-01",
+      "agent_id": "agent-writing",
+      "domain": "creative_work",
+      "memory_records": [
+        {
+          "id": "memC-cw-001",
+          "type": "episodic",
+          "timestamp": "2025-09-01T09:00:00Z",
+          "content": "Iskandar started writing songs for a concept album about migration, originally planned as 10 tracks.",
+          "tags": [
+            "iskandar",
+            "album"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-002",
+          "type": "episodic",
+          "timestamp": "2026-01-10T10:00:00Z",
+          "content": "Iskandar expanded the album to 12 tracks after writing two additional songs that fit the theme better than two he'd originally planned to cut.",
+          "tags": [
+            "iskandar",
+            "album"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-cw-001",
+              "strength": 0.7,
+              "reason": "updates the original 10-track plan"
+            }
+          ]
+        },
+        {
+          "id": "memC-cw-003",
+          "type": "semantic",
+          "timestamp": "2025-09-05T08:00:00Z",
+          "content": "The album's working title is 'Crossing Lines.'",
+          "tags": [
+            "iskandar",
+            "title"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-004",
+          "type": "episodic",
+          "timestamp": "2025-10-01T09:00:00Z",
+          "content": "Iskandar originally planned the album's opening track to be a song called 'Harbor Lights.'",
+          "tags": [
+            "iskandar",
+            "tracklist"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-005",
+          "type": "episodic",
+          "timestamp": "2026-02-15T11:00:00Z",
+          "content": "After feedback from his producer, Iskandar moved 'Harbor Lights' to track 4 and made a newer song, 'First Light,' the opening track instead.",
+          "tags": [
+            "iskandar",
+            "tracklist"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-cw-004",
+              "strength": 0.8,
+              "reason": "replaces the original opening-track plan"
+            }
+          ]
+        },
+        {
+          "id": "memC-cw-006",
+          "type": "episodic",
+          "timestamp": "2026-02-14T10:00:00Z",
+          "content": "Iskandar's producer, Mette, specifically said 'Harbor Lights' felt more like a midpoint emotional beat than an opener.",
+          "tags": [
+            "iskandar",
+            "mette"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-007",
+          "type": "episodic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Iskandar mentioned he'd also written an unrelated jingle for a friend's small business, completely separate from the album project.",
+          "tags": [
+            "iskandar",
+            "distractor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-008",
+          "type": "procedural",
+          "timestamp": "2025-09-10T08:00:00Z",
+          "content": "Iskandar's recording routine is to track scratch vocals first, then build instrumentation around them, then record final vocals last.",
+          "tags": [
+            "iskandar",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-009",
+          "type": "episodic",
+          "timestamp": "2026-04-01T10:00:00Z",
+          "content": "Iskandar pushed the album's release date from October to January after deciding two tracks needed additional production time.",
+          "tags": [
+            "iskandar",
+            "release"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-010",
+          "type": "episodic",
+          "timestamp": "2026-04-10T11:00:00Z",
+          "content": "Iskandar said the closing track, still untitled as of his last update, will feature a string arrangement recorded with a local chamber ensemble.",
+          "tags": [
+            "iskandar",
+            "tracklist"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-cw-011",
+          "type": "episodic",
+          "timestamp": "2026-02-20T12:00:00Z",
+          "content": "Following the track-order change, Iskandar confirmed the album's sequence has 'First Light' as track 1 and 'Harbor Lights' as track 4.",
+          "tags": [
+            "iskandar",
+            "tracklist"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-cw-005",
+              "strength": 0.85,
+              "reason": "confirms the reordering"
+            }
+          ]
+        },
+        {
+          "id": "memC-cw-012",
+          "type": "episodic",
+          "timestamp": "2026-05-01T13:00:00Z",
+          "content": "Iskandar has not yet decided on a record label or distribution method for the album.",
+          "tags": [
+            "iskandar",
+            "release"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-cw-01",
+          "category": "atomic_fact_recall",
+          "question": "What is the working title of Iskandar's album?",
+          "expected_answer": "Crossing Lines",
+          "acceptable_answer_criteria": [
+            "names Crossing Lines"
+          ],
+          "required_memory_ids": [
+            "memC-cw-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-cw-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What's Iskandar's typical order of operations when recording a track?",
+          "expected_answer": "Scratch vocals first, then instrumentation, then final vocals last.",
+          "acceptable_answer_criteria": [
+            "mentions all three steps in order"
+          ],
+          "required_memory_ids": [
+            "memC-cw-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural record."
+        },
+        {
+          "question_id": "qC-cw-03",
+          "category": "temporal_update",
+          "question": "When is the album currently scheduled to release?",
+          "expected_answer": "January -- pushed back from the original October target.",
+          "acceptable_answer_criteria": [
+            "states January",
+            "notes the change from October"
+          ],
+          "required_memory_ids": [
+            "memC-cw-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the updated release date."
+        },
+        {
+          "question_id": "qC-cw-04",
+          "category": "contradiction_resolution",
+          "question": "Is 'Harbor Lights' currently the album's opening track?",
+          "expected_answer": "No -- it was originally planned as the opener but was moved to track 4; 'First Light' is now the opening track.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "names First Light as the current opener"
+          ],
+          "required_memory_ids": [
+            "memC-cw-011"
+          ],
+          "forbidden_memory_ids": [
+            "memC-cw-004"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests resistance to an early, stale plan that was explicitly changed later in the conversation."
+        },
+        {
+          "question_id": "qC-cw-05",
+          "category": "multi_hop_association",
+          "question": "Why did Iskandar move 'Harbor Lights' out of the opening slot?",
+          "expected_answer": "His producer, Mette, felt it played more like a midpoint emotional beat than an opener, so Iskandar swapped in 'First Light' as the opening track instead.",
+          "acceptable_answer_criteria": [
+            "mentions Mette's feedback",
+            "connects it to the track-order change"
+          ],
+          "required_memory_ids": [
+            "memC-cw-006",
+            "memC-cw-005"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires linking a producer's feedback to the resulting creative decision."
+        },
+        {
+          "question_id": "qC-cw-06",
+          "category": "abstention",
+          "question": "Which record label will release Iskandar's album?",
+          "expected_answer": "Not enough information -- Iskandar hasn't decided on a label or distribution method yet.",
+          "acceptable_answer_criteria": [
+            "states this is undecided",
+            "does not invent a label"
+          ],
+          "required_memory_ids": [
+            "memC-cw-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "The correct answer is explicitly 'not yet decided,' which is itself stated in a record, rather than a true information gap -- testing that abstention-worthy answers are still grounded in evidence when such evidence exists."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-software-02",
+      "agent_id": "agent-dev-assist",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "memC-sw2-001",
+          "type": "semantic",
+          "timestamp": "2025-10-01T09:00:00Z",
+          "content": "Petra is building Reviewlytic, an automated code-review tool that posts inline comments on pull requests, written in TypeScript with a Node.js backend.",
+          "tags": [
+            "reviewlytic",
+            "tech-stack"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-002",
+          "type": "episodic",
+          "timestamp": "2025-10-05T10:00:00Z",
+          "content": "Reviewlytic originally only supported GitHub pull requests.",
+          "tags": [
+            "reviewlytic",
+            "platforms"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-003",
+          "type": "episodic",
+          "timestamp": "2026-02-10T11:00:00Z",
+          "content": "Petra added GitLab merge request support, making Reviewlytic work across both GitHub and GitLab.",
+          "tags": [
+            "reviewlytic",
+            "platforms"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw2-002",
+              "strength": 0.7,
+              "reason": "extends platform support beyond GitHub"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw2-004",
+          "type": "episodic",
+          "timestamp": "2026-04-15T12:00:00Z",
+          "content": "Petra also added Bitbucket support, so Reviewlytic now supports all three major platforms: GitHub, GitLab, and Bitbucket.",
+          "tags": [
+            "reviewlytic",
+            "platforms"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw2-003",
+              "strength": 0.7,
+              "reason": "extends platform support to a third platform"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw2-005",
+          "type": "episodic",
+          "timestamp": "2025-11-01T09:00:00Z",
+          "content": "Petra's earliest internal build was nicknamed 'Reviewlytic Alpha,' strictly for her own testing and never released to anyone else.",
+          "tags": [
+            "reviewlytic",
+            "alpha"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-006",
+          "type": "episodic",
+          "timestamp": "2026-01-01T10:00:00Z",
+          "content": "A separate, actually-released early-access version was called 'Reviewlytic Beta,' used by a small group of 20 external testers starting in March.",
+          "tags": [
+            "reviewlytic",
+            "beta"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-007",
+          "type": "episodic",
+          "timestamp": "2025-12-01T09:00:00Z",
+          "content": "Petra initially set the per-seat price at $12/month for the planned public launch.",
+          "tags": [
+            "reviewlytic",
+            "pricing"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-008",
+          "type": "episodic",
+          "timestamp": "2026-02-20T11:00:00Z",
+          "content": "After surveying beta testers, Petra lowered the price to $8/month before the public launch to be more competitive.",
+          "tags": [
+            "reviewlytic",
+            "pricing"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw2-007",
+              "strength": 0.8,
+              "reason": "replaces the original $12 price"
+            }
+          ]
+        },
+        {
+          "id": "memC-sw2-009",
+          "type": "semantic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Reviewlytic's comment-posting feature currently has a known limitation: it cannot yet flag issues across multiple files in a single combined comment.",
+          "tags": [
+            "reviewlytic",
+            "limitation"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-010",
+          "type": "procedural",
+          "timestamp": "2025-11-15T08:00:00Z",
+          "content": "Petra's process for triaging a bug report is to reproduce it locally first, label it by severity, then assign it to the next sprint if it's not a security issue.",
+          "tags": [
+            "reviewlytic",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-011",
+          "type": "episodic",
+          "timestamp": "2026-03-10T10:00:00Z",
+          "content": "A tester reported a false-positive bug pattern, which Petra traced to an outdated linting ruleset bundled with Reviewlytic, not an actual flaw in the core analysis engine.",
+          "tags": [
+            "reviewlytic",
+            "bug"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-sw2-012",
+          "type": "episodic",
+          "timestamp": "2026-05-01T11:00:00Z",
+          "content": "Petra confirmed the current public per-seat price for Reviewlytic is $8/month, unchanged since the pre-launch adjustment.",
+          "tags": [
+            "reviewlytic",
+            "pricing"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-sw2-008",
+              "strength": 0.85,
+              "reason": "confirms this is still the current price"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-sw2-01",
+          "category": "atomic_fact_recall",
+          "question": "What language is Reviewlytic written in?",
+          "expected_answer": "TypeScript, with a Node.js backend",
+          "acceptable_answer_criteria": [
+            "names TypeScript",
+            "names Node.js"
+          ],
+          "required_memory_ids": [
+            "memC-sw2-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-sw2-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What's Petra's process when she gets a new bug report?",
+          "expected_answer": "Reproduce it locally, label its severity, then schedule it for the next sprint unless it's a security issue.",
+          "acceptable_answer_criteria": [
+            "mentions reproducing locally",
+            "mentions severity labeling",
+            "mentions the sprint/security distinction"
+          ],
+          "required_memory_ids": [
+            "memC-sw2-010"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural record."
+        },
+        {
+          "question_id": "qC-sw2-03",
+          "category": "temporal_update",
+          "question": "Which platforms does Reviewlytic currently support?",
+          "expected_answer": "GitHub, GitLab, and Bitbucket.",
+          "acceptable_answer_criteria": [
+            "names all three platforms"
+          ],
+          "required_memory_ids": [
+            "memC-sw2-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Platform support was added incrementally across three records; requires surfacing the cumulative current state, not just the first or second addition."
+        },
+        {
+          "question_id": "qC-sw2-04",
+          "category": "contradiction_resolution",
+          "question": "Is Reviewlytic's per-seat price currently $12/month?",
+          "expected_answer": "No -- that was the originally planned price. It was lowered to $8/month before public launch and has stayed there.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "gives the current $8 price"
+          ],
+          "required_memory_ids": [
+            "memC-sw2-012"
+          ],
+          "forbidden_memory_ids": [
+            "memC-sw2-007"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests resistance to an early planned price that was explicitly changed before launch."
+        },
+        {
+          "question_id": "qC-sw2-05",
+          "category": "noise_resistance",
+          "question": "Did the 'Reviewlytic Alpha' build get used by external testers?",
+          "expected_answer": "No -- Alpha was Petra's private internal testing build only; the externally-tested version was called 'Reviewlytic Beta.'",
+          "acceptable_answer_criteria": [
+            "distinguishes Alpha from Beta",
+            "correctly attributes external testing to Beta"
+          ],
+          "required_memory_ids": [
+            "memC-sw2-005",
+            "memC-sw2-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Near-duplicate naming (Alpha/Beta) for the same product line, where only one was ever externally released, is a deliberate retrieval-precision trap."
+        },
+        {
+          "question_id": "qC-sw2-06",
+          "category": "abstention",
+          "question": "How many paying customers does Reviewlytic currently have?",
+          "expected_answer": "Not enough information -- no record states a customer count, only a tester count and pricing.",
+          "acceptable_answer_criteria": [
+            "states this isn't recorded",
+            "doesn't conflate the 20 testers with paying customers"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "memC-sw2-006"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests whether a stated tester count gets misread as a customer count when no such figure actually exists."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convC-personal-assistant-02",
+      "agent_id": "agent-pa",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "memC-pa2-001",
+          "type": "semantic",
+          "timestamp": "2025-09-01T09:00:00Z",
+          "content": "Yusuf manages the shared family calendar and subscriptions for his household of four.",
+          "tags": [
+            "yusuf",
+            "profile"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-002",
+          "type": "episodic",
+          "timestamp": "2025-09-05T10:00:00Z",
+          "content": "Yusuf set up the family's streaming subscription on an annual plan in March rather than monthly, to save money.",
+          "tags": [
+            "yusuf",
+            "subscriptions"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-003",
+          "type": "episodic",
+          "timestamp": "2025-09-10T11:00:00Z",
+          "content": "Yusuf's son, Adam, has Tuesday evening soccer practice at 6pm.",
+          "tags": [
+            "yusuf",
+            "adam",
+            "schedule"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-004",
+          "type": "episodic",
+          "timestamp": "2025-09-12T12:00:00Z",
+          "content": "Yusuf's nephew, Adnan, who visits on alternating weekends, has his own separate Saturday morning soccer practice that Yusuf isn't responsible for driving to.",
+          "tags": [
+            "yusuf",
+            "adnan",
+            "distractor"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-005",
+          "type": "episodic",
+          "timestamp": "2026-05-01T09:00:00Z",
+          "content": "Adam's soccer practice moved from Tuesday evenings to Wednesday evenings because the league changed field availability.",
+          "tags": [
+            "yusuf",
+            "adam",
+            "schedule"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa2-003",
+              "strength": 0.8,
+              "reason": "replaces the original Tuesday slot"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa2-006",
+          "type": "semantic",
+          "timestamp": "2025-09-15T08:00:00Z",
+          "content": "Yusuf's daughter, Lina, is allergic to peanuts, which matters for any snacks he packs for family outings.",
+          "tags": [
+            "yusuf",
+            "lina",
+            "health"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-007",
+          "type": "episodic",
+          "timestamp": "2025-10-01T09:00:00Z",
+          "content": "Yusuf originally believed the family's internet plan renewal date was the 1st of each month.",
+          "tags": [
+            "yusuf",
+            "internet"
+          ],
+          "importance": 0.4,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-008",
+          "type": "episodic",
+          "timestamp": "2025-11-15T10:00:00Z",
+          "content": "After checking the actual bill, Yusuf found the internet plan actually renews on the 15th of each month, not the 1st as he'd assumed.",
+          "tags": [
+            "yusuf",
+            "internet"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa2-007",
+              "strength": 0.85,
+              "reason": "corrects this earlier mistaken assumption"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa2-009",
+          "type": "procedural",
+          "timestamp": "2025-09-20T08:00:00Z",
+          "content": "Yusuf's process for canceling a subscription he no longer wants is to check the renewal date first, then cancel at least 3 days before that date to avoid being charged for another cycle.",
+          "tags": [
+            "yusuf",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-010",
+          "type": "episodic",
+          "timestamp": "2026-04-01T11:00:00Z",
+          "content": "Yusuf canceled a meal-kit subscription in April using that process, successfully avoiding the next billing cycle.",
+          "tags": [
+            "yusuf",
+            "subscriptions"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-010",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa2-009",
+              "strength": 0.8,
+              "reason": "followed the established cancellation process"
+            }
+          ]
+        },
+        {
+          "id": "memC-pa2-011",
+          "type": "episodic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Yusuf mentioned he's considering switching internet providers but hasn't made a decision yet.",
+          "tags": [
+            "yusuf",
+            "internet"
+          ],
+          "importance": 0.35,
+          "metadata": {
+            "source_turn": "turn-011",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memC-pa2-012",
+          "type": "episodic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "Yusuf confirmed that, as of June, Adam's soccer practice remains on Wednesday evenings at 6pm.",
+          "tags": [
+            "yusuf",
+            "adam",
+            "schedule"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-012",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memC-pa2-005",
+              "strength": 0.85,
+              "reason": "confirms the moved Wednesday slot is still current"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qC-pa2-01",
+          "category": "atomic_fact_recall",
+          "question": "What is Lina allergic to?",
+          "expected_answer": "Peanuts",
+          "acceptable_answer_criteria": [
+            "states peanuts"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact."
+        },
+        {
+          "question_id": "qC-pa2-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What does Yusuf do before canceling a subscription he doesn't want anymore?",
+          "expected_answer": "He checks the renewal date and cancels at least 3 days before it to avoid another billing cycle.",
+          "acceptable_answer_criteria": [
+            "mentions checking the renewal date",
+            "mentions the 3-day buffer"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-009"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural record."
+        },
+        {
+          "question_id": "qC-pa2-03",
+          "category": "temporal_update",
+          "question": "What day is Adam's soccer practice currently on?",
+          "expected_answer": "Wednesday evenings at 6pm -- moved from the original Tuesday slot.",
+          "acceptable_answer_criteria": [
+            "states Wednesday 6pm",
+            "notes the change from Tuesday"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-005",
+            "memC-pa2-012"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the updated day over the originally stated one."
+        },
+        {
+          "question_id": "qC-pa2-04",
+          "category": "contradiction_resolution",
+          "question": "Does the family's internet plan renew on the 1st of the month?",
+          "expected_answer": "No -- Yusuf initially assumed that, but checking the bill showed it actually renews on the 15th.",
+          "acceptable_answer_criteria": [
+            "says no",
+            "gives the corrected 15th date"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-008"
+          ],
+          "forbidden_memory_ids": [
+            "memC-pa2-007"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "The 'stale' fact here is a mistaken assumption rather than a changed real-world state, testing whether corrections are handled as well as updates."
+        },
+        {
+          "question_id": "qC-pa2-05",
+          "category": "noise_resistance",
+          "question": "Is Yusuf responsible for driving Adnan to his Saturday soccer practice?",
+          "expected_answer": "No -- Adnan is Yusuf's nephew with his own separate practice; Yusuf isn't responsible for that drive. Adam, Yusuf's son, is the one whose soccer schedule Yusuf manages.",
+          "acceptable_answer_criteria": [
+            "distinguishes Adam from Adnan",
+            "correctly states Yusuf isn't responsible for Adnan's practice"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-003",
+            "memC-pa2-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Near-duplicate names (Adam/Adnan) referring to a son versus a nephew, with different responsibilities, is a deliberate adversarial trap."
+        },
+        {
+          "question_id": "qC-pa2-06",
+          "category": "abstention",
+          "question": "Which internet provider did Yusuf switch to?",
+          "expected_answer": "Not enough information -- he's only considering switching and hasn't decided or made a switch yet.",
+          "acceptable_answer_criteria": [
+            "states this isn't decided yet",
+            "does not name a provider"
+          ],
+          "required_memory_ids": [
+            "memC-pa2-011"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests whether 'considering switching' gets incorrectly treated as evidence that a switch already happened."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1995 @@
+{
+  "name": "balanced-mini",
+  "description": "Fast balanced memory benchmark smoke test containing 8 conversations with 72 memory records and 40 questions.",
+  "generated_at": "2026-06-19",
+  "fairness_notes": [
+    "No memory passport, decay, or explicit graph schema dependencies are assumed.",
+    "Questions are distributed across exact retrieval, paraphrased semantic queries, and temporal updates.",
+    "Graph-heavy questions are kept below 15% to prevent bias towards graph memory models."
+  ],
+  "conversations": [
+    {
+      "conversation_id": "da_c01_fastapi",
+      "agent_id": "da_agent_fastapi",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "da_c01_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-10T10:00:00Z",
+          "content": "The developer prefers using Uvicorn with 4 workers for local development of the FastAPI server.",
+          "tags": [
+            "fastapi",
+            "uvicorn",
+            "local-dev"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c01_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-10T10:05:00Z",
+          "content": "The database connection URI template is postgresql://user:pass@localhost:5432/dev_db.",
+          "tags": [
+            "fastapi",
+            "database",
+            "postgres"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c01_m03",
+          "type": "procedural",
+          "timestamp": "2026-06-10T10:10:00Z",
+          "content": "To update the database schema, run the command 'alembic upgrade head' in the root directory.",
+          "tags": [
+            "fastapi",
+            "alembic",
+            "migration"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c01_m04",
+          "type": "episodic",
+          "timestamp": "2026-06-10T10:15:00Z",
+          "content": "At 09:00, the database connection failed because the local Postgres container was stopped.",
+          "tags": [
+            "fastapi",
+            "database",
+            "error"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c01_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-11T09:00:00Z",
+          "content": "On June 11, the developer decided that SQLite should be used for testing, replacing Postgres.",
+          "tags": [
+            "fastapi",
+            "database",
+            "testing"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c01_m06",
+          "type": "episodic",
+          "timestamp": "2026-06-11T09:10:00Z",
+          "content": "At 10:15, the developer reported that tests passed using the SQLite memory driver.",
+          "tags": [
+            "fastapi",
+            "testing",
+            "success"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c01_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-12T11:00:00Z",
+          "content": "Noise: The project logo uses a green and blue color palette representing growth and stability.",
+          "tags": [
+            "noise",
+            "logo"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c01_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-12T11:05:00Z",
+          "content": "Noise: The server logs are stored in the folder /var/log/fastapi/app.log.",
+          "tags": [
+            "noise",
+            "logs"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c01_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-13T14:00:00Z",
+          "content": "The latest preference is to deploy on GCP Cloud Run using dockerized builds, replacing the older AWS ECS plan.",
+          "tags": [
+            "fastapi",
+            "deployment",
+            "gcp"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c01_q01",
+          "category": "atomic_fact_recall",
+          "question": "What connection URI template is configured for the dev database?",
+          "expected_answer": "postgresql://user:pass@localhost:5432/dev_db",
+          "acceptable_answer_criteria": [
+            "postgresql://user:pass@localhost:5432/dev_db",
+            "Postgres dev_db URI"
+          ],
+          "required_memory_ids": [
+            "da_c01_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval, basic vector search works perfectly."
+        },
+        {
+          "question_id": "da_c01_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the preferred setup for running the local API server?",
+          "expected_answer": "Uvicorn with 4 workers",
+          "acceptable_answer_criteria": [
+            "Uvicorn",
+            "4 workers"
+          ],
+          "required_memory_ids": [
+            "da_c01_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Paraphrasing evaluates semantic similarity retrieval rather than simple keyword overlap."
+        },
+        {
+          "question_id": "da_c01_q03",
+          "category": "temporal_update",
+          "question": "Where should the application be deployed according to the latest decision?",
+          "expected_answer": "GCP Cloud Run using dockerized builds",
+          "acceptable_answer_criteria": [
+            "GCP Cloud Run",
+            "GCP",
+            "Cloud Run"
+          ],
+          "required_memory_ids": [
+            "da_c01_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires checking timestamps or explicit updates to ignore outdated AWS plan."
+        },
+        {
+          "question_id": "da_c01_q04",
+          "category": "procedural_recall",
+          "question": "What command must be executed to migrate the database schema?",
+          "expected_answer": "alembic upgrade head",
+          "acceptable_answer_criteria": [
+            "alembic upgrade head",
+            "alembic"
+          ],
+          "required_memory_ids": [
+            "da_c01_m03"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Retrieves a simple step-by-step procedural instruction."
+        },
+        {
+          "question_id": "da_c01_q05",
+          "category": "noise_resistance",
+          "question": "What is the file path where FastAPI server log files are written?",
+          "expected_answer": "/var/log/fastapi/app.log",
+          "acceptable_answer_criteria": [
+            "/var/log/fastapi/app.log",
+            "/var/log/fastapi"
+          ],
+          "required_memory_ids": [
+            "da_c01_m08"
+          ],
+          "forbidden_memory_ids": [
+            "da_c01_m07"
+          ],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies the system can ignore unrelated design/color noise."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c02_smart_home",
+      "agent_id": "da_agent_smart_home",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "da_c02_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-12T08:00:00Z",
+          "content": "The family prefers keeping the living room thermostat at 71 degrees Fahrenheit during daytime.",
+          "tags": [
+            "home",
+            "thermostat",
+            "temperature"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-12T08:05:00Z",
+          "content": "The smart lock code for the back door is set to 4920 for house cleaner access.",
+          "tags": [
+            "home",
+            "security",
+            "smart-lock"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m03",
+          "type": "episodic",
+          "timestamp": "2026-06-12T08:10:00Z",
+          "content": "The house cleaner, Maria, visits every Thursday at 10:00 AM.",
+          "tags": [
+            "schedule",
+            "cleaner",
+            "house"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c02_m02",
+              "strength": 0.85,
+              "reason": "cleaner uses smart lock code"
+            }
+          ]
+        },
+        {
+          "id": "da_c02_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-13T09:00:00Z",
+          "content": "Noise: The living room couch is covered with a beige slipcover to prevent dog hair stains.",
+          "tags": [
+            "noise",
+            "furniture"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-14T09:00:00Z",
+          "content": "On June 14, the daytime living room thermostat preference was updated to 73 degrees Fahrenheit for energy saving.",
+          "tags": [
+            "home",
+            "thermostat",
+            "temperature"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m06",
+          "type": "episodic",
+          "timestamp": "2026-06-14T10:00:00Z",
+          "content": "The back door smart lock battery level dropped to 10% and needs replacement soon.",
+          "tags": [
+            "home",
+            "security",
+            "battery"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c02_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-15T11:00:00Z",
+          "content": "The dog's name is Barnaby, and he eats dry kibble twice a day at 8:00 AM and 6:00 PM.",
+          "tags": [
+            "pet",
+            "schedule",
+            "dog"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-15T11:15:00Z",
+          "content": "Noise: The backyard sprinkler system runs on Mondays and Thursdays at 6:00 AM.",
+          "tags": [
+            "noise",
+            "sprinklers"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c02_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-16T12:00:00Z",
+          "content": "The house cleaner's contact number is 555-0192.",
+          "tags": [
+            "cleaner",
+            "contact"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c02_q01",
+          "category": "atomic_fact_recall",
+          "question": "What is the contact number of the house cleaner?",
+          "expected_answer": "555-0192",
+          "acceptable_answer_criteria": [
+            "555-0192",
+            "cleaner's phone number is 555-0192"
+          ],
+          "required_memory_ids": [
+            "da_c02_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Basic keyword overlap fact retrieval."
+        },
+        {
+          "question_id": "da_c02_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the feeding schedule for Barnaby?",
+          "expected_answer": "Twice a day at 8:00 AM and 6:00 PM.",
+          "acceptable_answer_criteria": [
+            "8:00 AM and 6:00 PM",
+            "twice a day"
+          ],
+          "required_memory_ids": [
+            "da_c02_m07"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests semantic mapping of 'feeding schedule' to 'eats dry kibble'."
+        },
+        {
+          "question_id": "da_c02_q03",
+          "category": "temporal_update",
+          "question": "What temperature should the living room be set to during the day?",
+          "expected_answer": "73 degrees Fahrenheit",
+          "acceptable_answer_criteria": [
+            "73 degrees",
+            "73 F",
+            "73"
+          ],
+          "required_memory_ids": [
+            "da_c02_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c02_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires checking timestamps to ensure the newer 73F setting overrides the older 71F setting."
+        },
+        {
+          "question_id": "da_c02_q04",
+          "category": "contradiction_resolution",
+          "question": "Is the living room thermostat still set to 71 degrees?",
+          "expected_answer": "No, it was updated to 73 degrees Fahrenheit on June 14.",
+          "acceptable_answer_criteria": [
+            "No",
+            "Updated to 73"
+          ],
+          "required_memory_ids": [
+            "da_c02_m05",
+            "da_c02_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Resolves contradiction by looking at the update history."
+        },
+        {
+          "question_id": "da_c02_q05",
+          "category": "multi_hop_association",
+          "question": "What door entry code does Maria need when she visits on Thursdays?",
+          "expected_answer": "4920",
+          "acceptable_answer_criteria": [
+            "4920",
+            "smart lock code 4920"
+          ],
+          "required_memory_ids": [
+            "da_c02_m02",
+            "da_c02_m03"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires linking Maria -> house cleaner -> smart lock code (4920). Solvable with either graph search or multi-evidence semantic retrieval."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c03_quantum_sim",
+      "agent_id": "da_agent_quantum_sim",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "da_c03_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-15T09:00:00Z",
+          "content": "The quantum simulator code uses a grid spacing parameter dx = 0.05 microns.",
+          "tags": [
+            "physics",
+            "quantum",
+            "simulation"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-15T09:05:00Z",
+          "content": "The Hamiltonian solver converges only when the relaxation factor omega is set to 1.25.",
+          "tags": [
+            "physics",
+            "solver",
+            "convergence"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m03",
+          "type": "episodic",
+          "timestamp": "2026-06-15T09:10:00Z",
+          "content": "Simulation run #402 stalled after 1500 iterations due to a floating point exception in the grid boundary code.",
+          "tags": [
+            "physics",
+            "simulation",
+            "bug"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c03_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-15T09:15:00Z",
+          "content": "Noise: Dr. Henderson recommends using Python's NumPy library instead of SciPy for matrix division.",
+          "tags": [
+            "noise",
+            "numpy"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-16T10:00:00Z",
+          "content": "The grid spacing parameter dx was decreased to 0.02 microns to resolve numerical stability issues.",
+          "tags": [
+            "physics",
+            "quantum",
+            "simulation"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m06",
+          "type": "semantic",
+          "timestamp": "2026-06-16T10:10:00Z",
+          "content": "Noise: The simulator outputs are saved in high-density HDF5 format by default.",
+          "tags": [
+            "noise",
+            "hdf5"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c03_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-17T11:00:00Z",
+          "content": "The quantum simulator utilizes the Crank-Nicolson method for time-stepping calculations.",
+          "tags": [
+            "physics",
+            "simulation",
+            "math"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-17T11:20:00Z",
+          "content": "We use the GPU-accelerated CuPy backend for sparse matrix operations.",
+          "tags": [
+            "physics",
+            "simulation",
+            "gpu"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c03_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-18T13:00:00Z",
+          "content": "The research project is titled 'Project Quasar' and is funded until December 2027.",
+          "tags": [
+            "research",
+            "admin"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c03_q01",
+          "category": "atomic_fact_recall",
+          "question": "What relaxation factor is required for the Hamiltonian solver to converge?",
+          "expected_answer": "1.25",
+          "acceptable_answer_criteria": [
+            "1.25",
+            "omega is set to 1.25"
+          ],
+          "required_memory_ids": [
+            "da_c03_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c03_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What mathematical approach is utilized for updating calculations across time?",
+          "expected_answer": "Crank-Nicolson method",
+          "acceptable_answer_criteria": [
+            "Crank-Nicolson method",
+            "Crank-Nicolson"
+          ],
+          "required_memory_ids": [
+            "da_c03_m07"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests paraphrased query match mapping 'updating calculations across time' to 'time-stepping'."
+        },
+        {
+          "question_id": "da_c03_q03",
+          "category": "temporal_update",
+          "question": "What is the current grid spacing parameter dx used in the simulation?",
+          "expected_answer": "0.02 microns",
+          "acceptable_answer_criteria": [
+            "0.02 microns",
+            "0.02"
+          ],
+          "required_memory_ids": [
+            "da_c03_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c03_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires checking timestamps to ensure the newer 0.02 setting overrides the older 0.05 setting."
+        },
+        {
+          "question_id": "da_c03_q04",
+          "category": "contradiction_resolution",
+          "question": "Did we increase the grid spacing parameter dx in our latest update?",
+          "expected_answer": "No, it was decreased to 0.02 microns to resolve numerical stability issues.",
+          "acceptable_answer_criteria": [
+            "No, it was decreased",
+            "No"
+          ],
+          "required_memory_ids": [
+            "da_c03_m05",
+            "da_c03_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests the ability to resolve the direction of change in contradiction resolution."
+        },
+        {
+          "question_id": "da_c03_q05",
+          "category": "abstention",
+          "question": "Which specific GPU model is used to run the CuPy simulator?",
+          "expected_answer": "not enough information",
+          "acceptable_answer_criteria": [
+            "not enough information",
+            "insufficient evidence",
+            "unknown"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "da_c03_m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies the system correctly abstains when the record mentions a GPU backend (CuPy) but not the specific GPU model."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c04_tokyo_itinerary",
+      "agent_id": "da_agent_tokyo_itinerary",
+      "domain": "travel",
+      "memory_records": [
+        {
+          "id": "da_c04_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The traveler has a booking at Hotel Claska in Meguro, Tokyo, from October 12 to October 18.",
+          "tags": [
+            "travel",
+            "hotel",
+            "tokyo"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The traveler prefers flying window seats on long-haul flights to sleep easily.",
+          "tags": [
+            "travel",
+            "flight",
+            "preference"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m03",
+          "type": "episodic",
+          "timestamp": "2026-06-02T11:00:00Z",
+          "content": "The traveler booked flight JL005 from JFK to Haneda, departing at 1:15 PM on October 11.",
+          "tags": [
+            "travel",
+            "flight",
+            "tokyo"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c04_m02",
+              "strength": 0.75,
+              "reason": "flight seat preferences"
+            }
+          ]
+        },
+        {
+          "id": "da_c04_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T11:05:00Z",
+          "content": "Noise: The traveler's luggage is a medium-sized hard-shell suitcase in navy blue color.",
+          "tags": [
+            "noise",
+            "traveler-suitfall"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T09:00:00Z",
+          "content": "On June 3, the traveler changed the Tokyo accommodation plan to stay at Trunk Hotel in Shibuya instead of Hotel Claska.",
+          "tags": [
+            "travel",
+            "hotel",
+            "tokyo"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m06",
+          "type": "episodic",
+          "timestamp": "2026-06-04T12:00:00Z",
+          "content": "The traveler bought a museum ticket for the teamLab Planets exhibit on October 14 at 2:00 PM.",
+          "tags": [
+            "travel",
+            "activity",
+            "museum"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T12:05:00Z",
+          "content": "Noise: Tokyo temperatures in mid-October average 15 to 22 degrees Celsius.",
+          "tags": [
+            "noise",
+            "weather"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c04_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The traveler enjoys visiting traditional tempura restaurants and prefers reservations for dinner.",
+          "tags": [
+            "travel",
+            "food",
+            "dining"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c04_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:30:00Z",
+          "content": "The passenger name in the airline booking is listed as Sarah Miller.",
+          "tags": [
+            "travel",
+            "identity"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c04_q01",
+          "category": "atomic_fact_recall",
+          "question": "What is the departure time and flight number for the JFK to Haneda flight?",
+          "expected_answer": "Flight JL005 departing at 1:15 PM.",
+          "acceptable_answer_criteria": [
+            "Flight JL005",
+            "1:15 PM",
+            "JL005"
+          ],
+          "required_memory_ids": [
+            "da_c04_m03"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c04_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What type of seating does Sarah Miller prefer on long airplane journeys?",
+          "expected_answer": "Window seats",
+          "acceptable_answer_criteria": [
+            "window",
+            "window seat"
+          ],
+          "required_memory_ids": [
+            "da_c04_m02",
+            "da_c04_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests semantic mapping of 'long airplane journeys' to 'long-haul flights' and uses passenger name 'Sarah Miller' from another record."
+        },
+        {
+          "question_id": "da_c04_q03",
+          "category": "temporal_update",
+          "question": "Where is the traveler staying in Tokyo during their visit?",
+          "expected_answer": "Trunk Hotel in Shibuya",
+          "acceptable_answer_criteria": [
+            "Trunk Hotel",
+            "Trunk Hotel in Shibuya",
+            "Trunk"
+          ],
+          "required_memory_ids": [
+            "da_c04_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires retrieving the updated Trunk Hotel choice rather than the old Hotel Claska plan."
+        },
+        {
+          "question_id": "da_c04_q04",
+          "category": "noise_resistance",
+          "question": "What is the date and time of the teamLab Planets ticket?",
+          "expected_answer": "October 14 at 2:00 PM",
+          "acceptable_answer_criteria": [
+            "October 14",
+            "2:00 PM"
+          ],
+          "required_memory_ids": [
+            "da_c04_m06"
+          ],
+          "forbidden_memory_ids": [
+            "da_c04_m07",
+            "da_c04_m04"
+          ],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests retrieval quality when ignores irrelevant weather and luggage color metadata."
+        },
+        {
+          "question_id": "da_c04_q05",
+          "category": "multi_hop_association",
+          "question": "What seat selection is preferred for the traveler's flight JL005 on October 11?",
+          "expected_answer": "Window seat",
+          "acceptable_answer_criteria": [
+            "window seat",
+            "window"
+          ],
+          "required_memory_ids": [
+            "da_c04_m02",
+            "da_c04_m03"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests link between flight JL005 -> long-haul flight -> window seat preference."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c05_diabetes_admin",
+      "agent_id": "da_agent_diabetes_admin",
+      "domain": "health_admin",
+      "memory_records": [
+        {
+          "id": "da_c05_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-05T08:00:00Z",
+          "content": "The patient is insured under Blue Shield PPO, Policy ID #BS-9021-X.",
+          "tags": [
+            "health",
+            "insurance",
+            "policy"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c05_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-05T08:05:00Z",
+          "content": "The patient's endocrinologist is Dr. Robert Vance, located at the Vance Clinic on Oak Street.",
+          "tags": [
+            "health",
+            "doctor",
+            "endocrinologist"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c05_m03",
+          "type": "episodic",
+          "timestamp": "2026-06-05T08:10:00Z",
+          "content": "The patient has a scheduled routine blood draw appointment on June 20 at 7:30 AM at Oak Laboratories.",
+          "tags": [
+            "health",
+            "appointment",
+            "labs"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c05_m02",
+              "strength": 0.8,
+              "reason": "doctor ordered blood draw"
+            }
+          ]
+        },
+        {
+          "id": "da_c05_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-05T08:15:00Z",
+          "content": "Noise: The Vance Clinic building has a red brick facade with a parking lot in the rear.",
+          "tags": [
+            "noise",
+            "clinic"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c05_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-06T09:00:00Z",
+          "content": "On June 6, the patient's insurance plan was updated to Cigna Gold Open Access, Policy ID #CI-8401-Y, due to employer benefits change.",
+          "tags": [
+            "health",
+            "insurance",
+            "policy"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c05_m06",
+          "type": "episodic",
+          "timestamp": "2026-06-06T10:00:00Z",
+          "content": "The patient completed their annual physical examination on June 2 and was advised to exercise 30 minutes daily.",
+          "tags": [
+            "health",
+            "physical",
+            "exercise"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c05_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-07T11:00:00Z",
+          "content": "The patient takes Metformin 500mg twice daily with meals to manage blood sugar levels.",
+          "tags": [
+            "health",
+            "prescription",
+            "diabetes"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c05_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-07T11:15:00Z",
+          "content": "Noise: Blue Shield PPO customer service phone line is open 24 hours for emergency inquiries.",
+          "tags": [
+            "noise",
+            "insurance"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c05_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-08T12:00:00Z",
+          "content": "The primary pharmacy is Walgreens on 4th Avenue, which has a drive-through window.",
+          "tags": [
+            "health",
+            "pharmacy"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c05_q01",
+          "category": "atomic_fact_recall",
+          "question": "What dosage of Metformin is the patient prescribed to take?",
+          "expected_answer": "500mg twice daily",
+          "acceptable_answer_criteria": [
+            "500mg twice daily",
+            "500mg",
+            "twice a day"
+          ],
+          "required_memory_ids": [
+            "da_c05_m07"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c05_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "Where does the patient get their prescriptions filled?",
+          "expected_answer": "Walgreens on 4th Avenue",
+          "acceptable_answer_criteria": [
+            "Walgreens",
+            "Walgreens on 4th Avenue"
+          ],
+          "required_memory_ids": [
+            "da_c05_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests semantic mapping of 'where does the patient get their prescriptions filled' to 'primary pharmacy'."
+        },
+        {
+          "question_id": "da_c05_q03",
+          "category": "temporal_update",
+          "question": "What is the patient's current insurance provider and Policy ID?",
+          "expected_answer": "Cigna Gold Open Access, Policy ID #CI-8401-Y",
+          "acceptable_answer_criteria": [
+            "Cigna",
+            "CI-8401-Y"
+          ],
+          "required_memory_ids": [
+            "da_c05_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c05_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires checking timestamps to ensure the Cigna policy overrides the old Blue Shield policy."
+        },
+        {
+          "question_id": "da_c05_q04",
+          "category": "contradiction_resolution",
+          "question": "Is the patient's active health policy still Blue Shield PPO?",
+          "expected_answer": "No, it was updated to Cigna Gold Open Access on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Cigna",
+            "No"
+          ],
+          "required_memory_ids": [
+            "da_c05_m05",
+            "da_c05_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests contradiction handling between old Blue Shield and current Cigna policies."
+        },
+        {
+          "question_id": "da_c05_q05",
+          "category": "multi_hop_association",
+          "question": "At which laboratory is the blood draw requested by Dr. Robert Vance scheduled?",
+          "expected_answer": "Oak Laboratories",
+          "acceptable_answer_criteria": [
+            "Oak Laboratories",
+            "Oak Labs"
+          ],
+          "required_memory_ids": [
+            "da_c05_m03",
+            "da_c05_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires connecting Dr. Vance -> ordered blood draw -> Oak Laboratories appointment."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c06_tax_prep",
+      "agent_id": "da_agent_tax_prep",
+      "domain": "finance_admin",
+      "memory_records": [
+        {
+          "id": "da_c06_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The user has a primary checking account at Chase Bank with routing number #***0912.",
+          "tags": [
+            "finance",
+            "bank",
+            "chase"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c06_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The tax consultant is Evelyn Mercer, who works at Mercer Tax Services.",
+          "tags": [
+            "finance",
+            "tax",
+            "consultant"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c06_m03",
+          "type": "episodic",
+          "timestamp": "2026-06-02T09:00:00Z",
+          "content": "The user submitted Form 1099-NEC for freelance earnings of $14,200 from Apex Systems.",
+          "tags": [
+            "finance",
+            "tax",
+            "income"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c06_m02",
+              "strength": 0.8,
+              "reason": "Evelyn Mercer prepares tax submission"
+            }
+          ]
+        },
+        {
+          "id": "da_c06_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T09:10:00Z",
+          "content": "Noise: Chase Bank's branch in downtown has a revolving door and 4 teller counters.",
+          "tags": [
+            "noise",
+            "chase"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c06_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the user opened a business checking account at Silicon Valley Bank (SVB) to replace Chase for all future freelance income deposits.",
+          "tags": [
+            "finance",
+            "bank",
+            "svb"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c06_m06",
+          "type": "episodic",
+          "timestamp": "2026-06-03T12:00:00Z",
+          "content": "The user paid a tax preparation deposit of $150 to Mercer Tax Services using their credit card.",
+          "tags": [
+            "finance",
+            "payment",
+            "tax"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c06_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T10:00:00Z",
+          "content": "The quarterly estimated tax payment deadline for Q2 is June 15.",
+          "tags": [
+            "finance",
+            "tax",
+            "deadline"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c06_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-04T10:15:00Z",
+          "content": "Noise: Mercer Tax Services logo has a scales of justice symbol in gold and navy colors.",
+          "tags": [
+            "noise",
+            "tax"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c06_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T13:00:00Z",
+          "content": "The user has a personal retirement traditional IRA account at Fidelity with a 2026 contribution limit of $7,000.",
+          "tags": [
+            "finance",
+            "ira",
+            "fidelity"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c06_q01",
+          "category": "atomic_fact_recall",
+          "question": "What routing number is associated with the Chase Bank checking account?",
+          "expected_answer": "#***0912",
+          "acceptable_answer_criteria": [
+            "#***0912",
+            "routing number #***0912"
+          ],
+          "required_memory_ids": [
+            "da_c06_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c06_q02",
+          "category": "paraphrased_semantic_recall",
+          "question": "Who is handling the user's tax consultancy work?",
+          "expected_answer": "Evelyn Mercer at Mercer Tax Services",
+          "acceptable_answer_criteria": [
+            "Evelyn Mercer",
+            "Mercer Tax Services"
+          ],
+          "required_memory_ids": [
+            "da_c06_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests semantic mapping of 'tax consultancy work' to 'tax consultant'."
+        },
+        {
+          "question_id": "da_c06_q03",
+          "category": "temporal_update",
+          "question": "Where should future freelance earnings be deposited according to the latest decision?",
+          "expected_answer": "Silicon Valley Bank (SVB)",
+          "acceptable_answer_criteria": [
+            "Silicon Valley Bank",
+            "SVB"
+          ],
+          "required_memory_ids": [
+            "da_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c06_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Requires identifying the new bank account (SVB) replacing the old bank account (Chase)."
+        },
+        {
+          "question_id": "da_c06_q04",
+          "category": "contradiction_resolution",
+          "question": "Is Chase Bank still the active checking account for freelance income?",
+          "expected_answer": "No, it was replaced by Silicon Valley Bank (SVB) on June 3.",
+          "acceptable_answer_criteria": [
+            "No, it was replaced by SVB",
+            "No"
+          ],
+          "required_memory_ids": [
+            "da_c06_m05",
+            "da_c06_m01"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies the system resolves contradiction and correctly updates active account."
+        },
+        {
+          "question_id": "da_c06_q05",
+          "category": "abstention",
+          "question": "What is the account number of the traditional IRA at Fidelity?",
+          "expected_answer": "not enough information",
+          "acceptable_answer_criteria": [
+            "not enough information",
+            "insufficient evidence",
+            "unknown"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "da_c06_m09"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests abstention: the user mentioned having a traditional IRA at Fidelity but never shared the account number."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c07_linear_algebra",
+      "agent_id": "da_agent_linear_algebra",
+      "domain": "education",
+      "memory_records": [
+        {
+          "id": "da_c07_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T09:00:00Z",
+          "content": "The Linear Algebra course has weekly quizzes that open on Friday and close on Sunday night.",
+          "tags": [
+            "education",
+            "math",
+            "quizzes"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c07_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T09:05:00Z",
+          "content": "The mid-term exam is scheduled for October 15 and covers vector spaces, eigenvalues, and linear transformations.",
+          "tags": [
+            "education",
+            "math",
+            "midterm"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c07_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T09:10:00Z",
+          "content": "The required textbook is 'Introduction to Linear Algebra' by Gilbert Strang, 5th Edition.",
+          "tags": [
+            "education",
+            "math",
+            "textbook"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c07_m02",
+              "strength": 0.7,
+              "reason": "study source for midterm"
+            }
+          ]
+        },
+        {
+          "id": "da_c07_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-01T09:15:00Z",
+          "content": "Noise: The lecturer, Professor Adams, likes to drink hot black coffee during morning sessions.",
+          "tags": [
+            "noise",
+            "professor"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c07_m05",
+          "type": "episodic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "The user achieved a score of 92/100 on Homework Assignment 1.",
+          "tags": [
+            "education",
+            "grade",
+            "homework"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c07_m06",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:05:00Z",
+          "content": "Noise: Homework assignments must be uploaded in PDF format only.",
+          "tags": [
+            "noise",
+            "format"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c07_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "The teaching assistant is named Marcus Vance, and his office hours are Wednesdays from 2:00 PM to 4:00 PM.",
+          "tags": [
+            "education",
+            "math",
+            "office-hours"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c07_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:15:00Z",
+          "content": "Office hours are located in Room 402 of the Mathematics Building.",
+          "tags": [
+            "education",
+            "math",
+            "location"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c07_m07",
+              "strength": 0.9,
+              "reason": "TA's office location"
+            }
+          ]
+        },
+        {
+          "id": "da_c07_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-04T12:00:00Z",
+          "content": "The class Zoom password is 'Eigen2026'.",
+          "tags": [
+            "education",
+            "math",
+            "zoom"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c07_q01",
+          "category": "atomic_fact_recall",
+          "question": "What textbook edition is required for the Linear Algebra course?",
+          "expected_answer": "'Introduction to Linear Algebra' by Gilbert Strang, 5th Edition.",
+          "acceptable_answer_criteria": [
+            "Strang 5th Edition",
+            "Gilbert Strang",
+            "5th Edition"
+          ],
+          "required_memory_ids": [
+            "da_c07_m03"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c07_q02",
+          "category": "atomic_fact_recall",
+          "question": "What is the date of the midterm exam and what topics does it cover?",
+          "expected_answer": "October 15, covering vector spaces, eigenvalues, and linear transformations.",
+          "acceptable_answer_criteria": [
+            "October 15",
+            "vector spaces",
+            "eigenvalues",
+            "linear transformations"
+          ],
+          "required_memory_ids": [
+            "da_c07_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct details fact retrieval."
+        },
+        {
+          "question_id": "da_c07_q03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the password to access virtual course video conferences?",
+          "expected_answer": "Eigen2026",
+          "acceptable_answer_criteria": [
+            "Eigen2026",
+            "class Zoom password 'Eigen2026'"
+          ],
+          "required_memory_ids": [
+            "da_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests semantic mapping of 'virtual course video conferences' to 'class Zoom'."
+        },
+        {
+          "question_id": "da_c07_q04",
+          "category": "noise_resistance",
+          "question": "What grade did the user receive on the first Homework Assignment?",
+          "expected_answer": "92/100",
+          "acceptable_answer_criteria": [
+            "92/100",
+            "92"
+          ],
+          "required_memory_ids": [
+            "da_c07_m05"
+          ],
+          "forbidden_memory_ids": [
+            "da_c07_m04",
+            "da_c07_m06"
+          ],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies ignoring coffee drinking preference and PDF upload requirements."
+        },
+        {
+          "question_id": "da_c07_q05",
+          "category": "multi_hop_association",
+          "question": "Where should the student go to meet teaching assistant Marcus Vance in person?",
+          "expected_answer": "Room 402 of the Mathematics Building",
+          "acceptable_answer_criteria": [
+            "Room 402",
+            "Math Building Room 402"
+          ],
+          "required_memory_ids": [
+            "da_c07_m07",
+            "da_c07_m08"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires linking Marcus Vance -> TA -> office location in Room 402 of the Mathematics Building."
+        }
+      ]
+    },
+    {
+      "conversation_id": "da_c08_novel_outline",
+      "agent_id": "da_agent_novel_outline",
+      "domain": "creative_work",
+      "memory_records": [
+        {
+          "id": "da_c08_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main character of the sci-fi novel is Captain Vance Rennold, commander of the starship 'Nebula'.",
+          "tags": [
+            "creative",
+            "novel",
+            "character"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t01",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c08_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "Captain Rennold's primary motivation is finding the lost colony of Elysium to rescue his sister.",
+          "tags": [
+            "creative",
+            "novel",
+            "character-motive"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t02",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c08_m01",
+              "strength": 0.85,
+              "reason": "character detail"
+            }
+          ]
+        },
+        {
+          "id": "da_c08_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "The starship 'Nebula' is powered by a rare dark-matter core that requires cooling every 24 hours.",
+          "tags": [
+            "creative",
+            "novel",
+            "lore"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t03",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c08_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:15:00Z",
+          "content": "Noise: The starship control deck features chrome surfaces and blue neon status panels.",
+          "tags": [
+            "noise",
+            "starship-deck"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "t04",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "da_c08_m05",
+          "type": "procedural",
+          "timestamp": "2026-06-02T09:00:00Z",
+          "content": "To build narrative tension in Chapter 3, outline the following steps: first, introduce the cooling system failure; second, force a hard landing on an asteroid; third, trigger a conflict between Rennold and the engineer.",
+          "tags": [
+            "creative",
+            "novel",
+            "outline"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t05",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c08_m06",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "Noise: The author uses Scrivener for drafting and Google Docs for sharing review copies.",
+          "tags": [
+            "noise",
+            "software"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t06",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c08_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "The primary antagonist is Commander Sarah Drake, head of the Orion Syndicate.",
+          "tags": [
+            "creative",
+            "novel",
+            "character"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t07",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "da_c08_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:15:00Z",
+          "content": "The Orion Syndicate operates from a hidden space station orbiting the gas giant Jupiter.",
+          "tags": [
+            "creative",
+            "novel",
+            "lore"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t08",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "da_c08_m07",
+              "strength": 0.9,
+              "reason": "antagonist's organization location"
+            }
+          ]
+        },
+        {
+          "id": "da_c08_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-04T12:00:00Z",
+          "content": "The novel's working title is 'Shattered Nebula' and the word count goal is 80,000 words.",
+          "tags": [
+            "creative",
+            "novel",
+            "metadata"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t09",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "da_c08_q01",
+          "category": "atomic_fact_recall",
+          "question": "Who is the primary antagonist of the sci-fi novel?",
+          "expected_answer": "Commander Sarah Drake",
+          "acceptable_answer_criteria": [
+            "Sarah Drake",
+            "Commander Sarah Drake"
+          ],
+          "required_memory_ids": [
+            "da_c08_m07"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct exact match fact retrieval."
+        },
+        {
+          "question_id": "da_c08_q02",
+          "category": "atomic_fact_recall",
+          "question": "What is the working title of the book and its target word count?",
+          "expected_answer": "'Shattered Nebula' with an 80,000 words target.",
+          "acceptable_answer_criteria": [
+            "Shattered Nebula",
+            "80,000 words",
+            "80k000 words"
+          ],
+          "required_memory_ids": [
+            "da_c08_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct metadata fact lookup."
+        },
+        {
+          "question_id": "da_c08_q03",
+          "category": "paraphrased_semantic_recall",
+          "question": "What drives Captain Rennold to search the galaxy?",
+          "expected_answer": "Finding the lost colony of Elysium to rescue his sister.",
+          "acceptable_answer_criteria": [
+            "rescuing his sister",
+            "finding Elysium",
+            "his sister"
+          ],
+          "required_memory_ids": [
+            "da_c08_m02"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests paraphrased mapping from 'drives Captain Rennold to search the galaxy' to 'primary motivation'."
+        },
+        {
+          "question_id": "da_c08_q04",
+          "category": "noise_resistance",
+          "question": "How is the starship 'Nebula' powered?",
+          "expected_answer": "A rare dark-matter core.",
+          "acceptable_answer_criteria": [
+            "dark-matter core",
+            "dark-matter"
+          ],
+          "required_memory_ids": [
+            "da_c08_m03"
+          ],
+          "forbidden_memory_ids": [
+            "da_c08_m04",
+            "da_c08_m06"
+          ],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Ensures model ignores visual control deck chrome description and software like Scrivener."
+        },
+        {
+          "question_id": "da_c08_q05",
+          "category": "procedural_recall",
+          "question": "What steps are planned to build narrative tension in the third chapter?",
+          "expected_answer": "First, introduce cooling system failure; second, force a hard landing on an asteroid; third, trigger a conflict between Rennold and the engineer.",
+          "acceptable_answer_criteria": [
+            "cooling system failure",
+            "hard landing on an asteroid",
+            "conflict with engineer"
+          ],
+          "required_memory_ids": [
+            "da_c08_m05"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Retrieves a multi-step writing procedure."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4374 @@
+{
+  "name": "graph-stress-hard",
+  "description": "Diagnostic benchmark for multi-hop association, conflict resolution, graph traversal with weak lexical overlap, near-entity distractors, and abstention under tempting distractors.",
+  "generated_at": "2026-06-19",
+  "generated_by": "deterministic-template",
+  "version": "1.0.0",
+  "fairness_notes": [
+    "This is intentionally not a provider-neutral public leaderboard fixture; it is a graph-stress diagnostic for tuning association traversal and conflict semantics.",
+    "Many questions require two or three required memories, and no single memory contains both the query anchor and final answer.",
+    "Conflict questions include stale, interim, and final states linked by replaces/replaced_by associations.",
+    "Weak-overlap graph traversal questions use different surface wording for the query anchor and the target memory.",
+    "Abstention questions contain tempting distractor facts for similar entities but no answer for the target entity."
+  ],
+  "stats": {
+    "conversations": 12,
+    "memory_records": 144,
+    "questions": 60,
+    "question_categories": {
+      "multi_hop_association": 24,
+      "contradiction_resolution": 12,
+      "graph_traversal": 12,
+      "entity_disambiguation": 7,
+      "abstention": 5
+    }
+  },
+  "conversations": [
+    {
+      "conversation_id": "gsh-c01",
+      "agent_id": "agent-launch-ops",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "gsh-c01-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-01T09:00:00Z",
+          "content": "Rina uses codename Aurora for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "aurora",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-01T10:00:00Z",
+          "content": "Codename Aurora refers to the customer-retention project, which is governed through the renewal-risk initiative.",
+          "tags": [
+            "customer-retention",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c01-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-01T11:00:00Z",
+          "content": "The renewal-risk initiative depends on the Postgres event pipeline; this dependency is not named in the codename discussion.",
+          "tags": [
+            "renewal-risk",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-01T12:00:00Z",
+          "content": "Rina said the approval ritual is internally called Copper Gate; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-01T13:00:00Z",
+          "content": "Copper Gate is owned by the release assurance team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c01-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-01T14:00:00Z",
+          "content": "Before release assurance team signs off, they require the signed rollback matrix.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-01T15:00:00Z",
+          "content": "Initial state for customer-retention project: email-only weekly digest.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-01T16:00:00Z",
+          "content": "Interim update for customer-retention project: Slack digest with email fallback, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c01-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-01T17:00:00Z",
+          "content": "Final resolved state for customer-retention project: in-app digest with Slack fallback. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c01-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-01T18:00:00Z",
+          "content": "Distractor: Aurelia runs a similar-sounding effort with Redis queue, but it is not Rina's customer-retention project.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c01-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-01T19:00:00Z",
+          "content": "For Rina's customer-retention project, the accountable owner is Sofia Marin.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c01-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c01-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-01T20:00:00Z",
+          "content": "Tempting gap: Aurelia's similar effort mentions budget cap, but Rina's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c01-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Rina's codename Aurora?",
+          "expected_answer": "Postgres event pipeline",
+          "required_memory_ids": [
+            "gsh-c01-m01",
+            "gsh-c01-m02",
+            "gsh-c01-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c01-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c01-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Rina's work?",
+          "expected_answer": "signed rollback matrix",
+          "required_memory_ids": [
+            "gsh-c01-m04",
+            "gsh-c01-m05",
+            "gsh-c01-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c01-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c01-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for customer-retention project?",
+          "expected_answer": "in-app digest with Slack fallback",
+          "required_memory_ids": [
+            "gsh-c01-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c01-m07",
+            "gsh-c01-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c01-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Rina's project, which team owns the internal ritual?",
+          "expected_answer": "release assurance team",
+          "required_memory_ids": [
+            "gsh-c01-m04",
+            "gsh-c01-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c01-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c01-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Rina's project, not Aurelia's similar effort?",
+          "expected_answer": "Sofia Marin",
+          "required_memory_ids": [
+            "gsh-c01-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c01-m10",
+            "gsh-c01-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c02",
+      "agent_id": "agent-clinical-research",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "gsh-c02-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-02T09:00:00Z",
+          "content": "Devon uses codename Blue Lantern for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "blue-lantern",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-02T10:00:00Z",
+          "content": "Codename Blue Lantern refers to the rural asthma cohort, which is governed through the inhaler-adherence study.",
+          "tags": [
+            "rural",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c02-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-02T11:00:00Z",
+          "content": "The inhaler-adherence study depends on the FHIR observation export; this dependency is not named in the codename discussion.",
+          "tags": [
+            "inhaler-adherence",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-02T12:00:00Z",
+          "content": "Devon said the approval ritual is internally called Silver File; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-02T13:00:00Z",
+          "content": "Silver File is owned by the ethics submission team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c02-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-02T14:00:00Z",
+          "content": "Before ethics submission team signs off, they require the redacted consent ledger.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-02T15:00:00Z",
+          "content": "Initial state for rural asthma cohort: manual spreadsheet tracking.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-02T16:00:00Z",
+          "content": "Interim update for rural asthma cohort: Airtable tracking, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c02-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-02T17:00:00Z",
+          "content": "Final resolved state for rural asthma cohort: REDCap tracking with nightly export. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c02-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-02T18:00:00Z",
+          "content": "Distractor: Devan runs a similar-sounding effort with HL7 batch import, but it is not Devon's rural asthma cohort.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c02-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-02T19:00:00Z",
+          "content": "For Devon's rural asthma cohort, the accountable owner is Priya Shah.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c02-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c02-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-02T20:00:00Z",
+          "content": "Tempting gap: Devan's similar effort mentions participant compensation amount, but Devon's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c02-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Devon's codename Blue Lantern?",
+          "expected_answer": "FHIR observation export",
+          "required_memory_ids": [
+            "gsh-c02-m01",
+            "gsh-c02-m02",
+            "gsh-c02-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c02-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c02-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Devon's work?",
+          "expected_answer": "redacted consent ledger",
+          "required_memory_ids": [
+            "gsh-c02-m04",
+            "gsh-c02-m05",
+            "gsh-c02-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c02-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c02-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for rural asthma cohort?",
+          "expected_answer": "REDCap tracking with nightly export",
+          "required_memory_ids": [
+            "gsh-c02-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c02-m07",
+            "gsh-c02-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c02-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Devon's project, which team owns the internal ritual?",
+          "expected_answer": "ethics submission team",
+          "required_memory_ids": [
+            "gsh-c02-m04",
+            "gsh-c02-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c02-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c02-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Devon's project, not Devan's similar effort?",
+          "expected_answer": "Priya Shah",
+          "required_memory_ids": [
+            "gsh-c02-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c02-m10",
+            "gsh-c02-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c03",
+      "agent_id": "agent-finance-ops",
+      "domain": "finance",
+      "memory_records": [
+        {
+          "id": "gsh-c03-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-03T09:00:00Z",
+          "content": "Mika uses codename Northstar for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "northstar",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-03T10:00:00Z",
+          "content": "Codename Northstar refers to the invoice anomaly monitor, which is governed through the vendor-risk workflow.",
+          "tags": [
+            "invoice",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c03-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-03T11:00:00Z",
+          "content": "The vendor-risk workflow depends on the BigQuery audit table; this dependency is not named in the codename discussion.",
+          "tags": [
+            "vendor-risk",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-03T12:00:00Z",
+          "content": "Mika said the approval ritual is internally called Pine Review; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-03T13:00:00Z",
+          "content": "Pine Review is owned by the controls validation team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c03-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-03T14:00:00Z",
+          "content": "Before controls validation team signs off, they require the variance exception register.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-03T15:00:00Z",
+          "content": "Initial state for invoice anomaly monitor: threshold at USD 500.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-03T16:00:00Z",
+          "content": "Interim update for invoice anomaly monitor: threshold at USD 750, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c03-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-03T17:00:00Z",
+          "content": "Final resolved state for invoice anomaly monitor: threshold at USD 1,200 with CFO override. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c03-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-03T18:00:00Z",
+          "content": "Distractor: Mica runs a similar-sounding effort with Snowflake staging table, but it is not Mika's invoice anomaly monitor.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c03-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-03T19:00:00Z",
+          "content": "For Mika's invoice anomaly monitor, the accountable owner is Elena Costa.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c03-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c03-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-03T20:00:00Z",
+          "content": "Tempting gap: Mica's similar effort mentions insurance carrier, but Mika's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c03-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Mika's codename Northstar?",
+          "expected_answer": "BigQuery audit table",
+          "required_memory_ids": [
+            "gsh-c03-m01",
+            "gsh-c03-m02",
+            "gsh-c03-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c03-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c03-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Mika's work?",
+          "expected_answer": "variance exception register",
+          "required_memory_ids": [
+            "gsh-c03-m04",
+            "gsh-c03-m05",
+            "gsh-c03-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c03-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c03-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for invoice anomaly monitor?",
+          "expected_answer": "threshold at USD 1,200 with CFO override",
+          "required_memory_ids": [
+            "gsh-c03-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c03-m07",
+            "gsh-c03-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c03-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Mika's project, which team owns the internal ritual?",
+          "expected_answer": "controls validation team",
+          "required_memory_ids": [
+            "gsh-c03-m04",
+            "gsh-c03-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c03-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c03-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Mika's project, not Mica's similar effort?",
+          "expected_answer": "Elena Costa",
+          "required_memory_ids": [
+            "gsh-c03-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c03-m10",
+            "gsh-c03-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c04",
+      "agent_id": "agent-legal-casework",
+      "domain": "legal",
+      "memory_records": [
+        {
+          "id": "gsh-c04-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-04T09:00:00Z",
+          "content": "Amina uses codename Harbor for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "harbor",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-04T10:00:00Z",
+          "content": "Codename Harbor refers to the lease-renewal dispute, which is governed through the tenant-notice timeline.",
+          "tags": [
+            "lease-renewal",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c04-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-04T11:00:00Z",
+          "content": "The tenant-notice timeline depends on the Clause 14 cure-period memo; this dependency is not named in the codename discussion.",
+          "tags": [
+            "tenant-notice",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-04T12:00:00Z",
+          "content": "Amina said the approval ritual is internally called Green Tab; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-04T13:00:00Z",
+          "content": "Green Tab is owned by the paralegal review team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c04-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-04T14:00:00Z",
+          "content": "Before paralegal review team signs off, they require the service affidavit packet.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-04T15:00:00Z",
+          "content": "Initial state for lease-renewal dispute: hearing expected in March.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-04T16:00:00Z",
+          "content": "Interim update for lease-renewal dispute: hearing moved to April, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c04-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-04T17:00:00Z",
+          "content": "Final resolved state for lease-renewal dispute: hearing stayed pending mediation. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c04-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-04T18:00:00Z",
+          "content": "Distractor: Ameena runs a similar-sounding effort with Clause 9 insurance memo, but it is not Amina's lease-renewal dispute.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c04-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-04T19:00:00Z",
+          "content": "For Amina's lease-renewal dispute, the accountable owner is Marco Bell.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c04-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c04-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-04T20:00:00Z",
+          "content": "Tempting gap: Ameena's similar effort mentions settlement floor, but Amina's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c04-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Amina's codename Harbor?",
+          "expected_answer": "Clause 14 cure-period memo",
+          "required_memory_ids": [
+            "gsh-c04-m01",
+            "gsh-c04-m02",
+            "gsh-c04-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c04-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c04-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Amina's work?",
+          "expected_answer": "service affidavit packet",
+          "required_memory_ids": [
+            "gsh-c04-m04",
+            "gsh-c04-m05",
+            "gsh-c04-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c04-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c04-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for lease-renewal dispute?",
+          "expected_answer": "hearing stayed pending mediation",
+          "required_memory_ids": [
+            "gsh-c04-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c04-m07",
+            "gsh-c04-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c04-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Amina's project, which team owns the internal ritual?",
+          "expected_answer": "paralegal review team",
+          "required_memory_ids": [
+            "gsh-c04-m04",
+            "gsh-c04-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c04-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c04-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Amina's project, not Ameena's similar effort?",
+          "expected_answer": "Marco Bell",
+          "required_memory_ids": [
+            "gsh-c04-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c04-m10",
+            "gsh-c04-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c05",
+      "agent_id": "agent-education-design",
+      "domain": "education",
+      "memory_records": [
+        {
+          "id": "gsh-c05-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-05T09:00:00Z",
+          "content": "Leo uses codename Riverglass for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "riverglass",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-05T10:00:00Z",
+          "content": "Codename Riverglass refers to the ninth-grade climate unit, which is governed through the field-data practicum.",
+          "tags": [
+            "ninth-grade",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c05-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-05T11:00:00Z",
+          "content": "The field-data practicum depends on the watershed sensor dataset; this dependency is not named in the codename discussion.",
+          "tags": [
+            "field-data",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-05T12:00:00Z",
+          "content": "Leo said the approval ritual is internally called Lantern Check; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-05T13:00:00Z",
+          "content": "Lantern Check is owned by the curriculum alignment team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c05-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-05T14:00:00Z",
+          "content": "Before curriculum alignment team signs off, they require the rubric calibration sheet.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-05T15:00:00Z",
+          "content": "Initial state for ninth-grade climate unit: final project as a poster.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-05T16:00:00Z",
+          "content": "Interim update for ninth-grade climate unit: final project as a slide deck, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c05-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-05T17:00:00Z",
+          "content": "Final resolved state for ninth-grade climate unit: final project as a data story notebook. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c05-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-05T18:00:00Z",
+          "content": "Distractor: Lio runs a similar-sounding effort with weather-station photo set, but it is not Leo's ninth-grade climate unit.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c05-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-05T19:00:00Z",
+          "content": "For Leo's ninth-grade climate unit, the accountable owner is Nora Iqbal.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c05-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c05-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-05T20:00:00Z",
+          "content": "Tempting gap: Lio's similar effort mentions bus pickup location, but Leo's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c05-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Leo's codename Riverglass?",
+          "expected_answer": "watershed sensor dataset",
+          "required_memory_ids": [
+            "gsh-c05-m01",
+            "gsh-c05-m02",
+            "gsh-c05-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c05-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c05-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Leo's work?",
+          "expected_answer": "rubric calibration sheet",
+          "required_memory_ids": [
+            "gsh-c05-m04",
+            "gsh-c05-m05",
+            "gsh-c05-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c05-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c05-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for ninth-grade climate unit?",
+          "expected_answer": "final project as a data story notebook",
+          "required_memory_ids": [
+            "gsh-c05-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c05-m07",
+            "gsh-c05-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c05-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Leo's project, which team owns the internal ritual?",
+          "expected_answer": "curriculum alignment team",
+          "required_memory_ids": [
+            "gsh-c05-m04",
+            "gsh-c05-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c05-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c05-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Leo's project, not Lio's similar effort?",
+          "expected_answer": "Nora Iqbal",
+          "required_memory_ids": [
+            "gsh-c05-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c05-m10",
+            "gsh-c05-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c06",
+      "agent_id": "agent-health-coach",
+      "domain": "healthcare",
+      "memory_records": [
+        {
+          "id": "gsh-c06-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-06T09:00:00Z",
+          "content": "Samir uses codename Quiet Mile for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "quiet-mile",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-06T10:00:00Z",
+          "content": "Codename Quiet Mile refers to the post-surgery walking plan, which is governed through the mobility milestone tracker.",
+          "tags": [
+            "post-surgery",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c06-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-06T11:00:00Z",
+          "content": "The mobility milestone tracker depends on the 10-minute evening walk; this dependency is not named in the codename discussion.",
+          "tags": [
+            "mobility",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-06T12:00:00Z",
+          "content": "Samir said the approval ritual is internally called White Card; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-06T13:00:00Z",
+          "content": "White Card is owned by the care-transition team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c06-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-06T14:00:00Z",
+          "content": "Before care-transition team signs off, they require the pain-escalation checklist.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-06T15:00:00Z",
+          "content": "Initial state for post-surgery walking plan: stairs avoided completely.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-06T16:00:00Z",
+          "content": "Interim update for post-surgery walking plan: stairs allowed with supervision, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c06-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-06T17:00:00Z",
+          "content": "Final resolved state for post-surgery walking plan: stairs allowed twice daily with handrail. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c06-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-06T18:00:00Z",
+          "content": "Distractor: Samira runs a similar-sounding effort with 15-minute morning bike, but it is not Samir's post-surgery walking plan.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c06-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-06T19:00:00Z",
+          "content": "For Samir's post-surgery walking plan, the accountable owner is Dr. Lin Patel.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c06-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c06-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-06T20:00:00Z",
+          "content": "Tempting gap: Samira's similar effort mentions pharmacy copay, but Samir's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c06-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Samir's codename Quiet Mile?",
+          "expected_answer": "10-minute evening walk",
+          "required_memory_ids": [
+            "gsh-c06-m01",
+            "gsh-c06-m02",
+            "gsh-c06-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c06-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c06-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Samir's work?",
+          "expected_answer": "pain-escalation checklist",
+          "required_memory_ids": [
+            "gsh-c06-m04",
+            "gsh-c06-m05",
+            "gsh-c06-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c06-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c06-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for post-surgery walking plan?",
+          "expected_answer": "stairs allowed twice daily with handrail",
+          "required_memory_ids": [
+            "gsh-c06-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c06-m07",
+            "gsh-c06-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c06-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Samir's project, which team owns the internal ritual?",
+          "expected_answer": "care-transition team",
+          "required_memory_ids": [
+            "gsh-c06-m04",
+            "gsh-c06-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c06-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c06-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Samir's project, not Samira's similar effort?",
+          "expected_answer": "Dr. Lin Patel",
+          "required_memory_ids": [
+            "gsh-c06-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c06-m10",
+            "gsh-c06-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c07",
+      "agent_id": "agent-creative-studio",
+      "domain": "creative",
+      "memory_records": [
+        {
+          "id": "gsh-c07-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-07T09:00:00Z",
+          "content": "Iskandar uses codename Glass Orchard for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "glass-orchard",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-07T10:00:00Z",
+          "content": "Codename Glass Orchard refers to the ambient album launch, which is governed through the vinyl preorder campaign.",
+          "tags": [
+            "ambient",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c07-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-07T11:00:00Z",
+          "content": "The vinyl preorder campaign depends on the Bandcamp private presale page; this dependency is not named in the codename discussion.",
+          "tags": [
+            "vinyl",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-07T12:00:00Z",
+          "content": "Iskandar said the approval ritual is internally called Blue Room; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-07T13:00:00Z",
+          "content": "Blue Room is owned by the mastering coordination team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c07-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-07T14:00:00Z",
+          "content": "Before mastering coordination team signs off, they require the final lacquer approval note.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-07T15:00:00Z",
+          "content": "Initial state for ambient album launch: release set for July.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-07T16:00:00Z",
+          "content": "Interim update for ambient album launch: release moved to August, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c07-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-07T17:00:00Z",
+          "content": "Final resolved state for ambient album launch: release locked for September 6. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c07-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-07T18:00:00Z",
+          "content": "Distractor: Iskander runs a similar-sounding effort with Spotify canvas package, but it is not Iskandar's ambient album launch.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c07-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-07T19:00:00Z",
+          "content": "For Iskandar's ambient album launch, the accountable owner is Marta Velasquez.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c07-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c07-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-07T20:00:00Z",
+          "content": "Tempting gap: Iskander's similar effort mentions tour opener, but Iskandar's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c07-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Iskandar's codename Glass Orchard?",
+          "expected_answer": "Bandcamp private presale page",
+          "required_memory_ids": [
+            "gsh-c07-m01",
+            "gsh-c07-m02",
+            "gsh-c07-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c07-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c07-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Iskandar's work?",
+          "expected_answer": "final lacquer approval note",
+          "required_memory_ids": [
+            "gsh-c07-m04",
+            "gsh-c07-m05",
+            "gsh-c07-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c07-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c07-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for ambient album launch?",
+          "expected_answer": "release locked for September 6",
+          "required_memory_ids": [
+            "gsh-c07-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c07-m07",
+            "gsh-c07-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c07-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Iskandar's project, which team owns the internal ritual?",
+          "expected_answer": "mastering coordination team",
+          "required_memory_ids": [
+            "gsh-c07-m04",
+            "gsh-c07-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c07-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c07-q05",
+          "category": "entity_disambiguation",
+          "question": "Who is the accountable owner for Iskandar's project, not Iskander's similar effort?",
+          "expected_answer": "Marta Velasquez",
+          "required_memory_ids": [
+            "gsh-c07-m11"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c07-m10",
+            "gsh-c07-m12"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Near-name distractors are intentionally tempting but wrong."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c08",
+      "agent_id": "agent-travel-planner",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "gsh-c08-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-08T09:00:00Z",
+          "content": "Raf uses codename Lighthouse for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "lighthouse",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-08T10:00:00Z",
+          "content": "Codename Lighthouse refers to the Lisbon family itinerary, which is governed through the museum-access plan.",
+          "tags": [
+            "lisbon",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c08-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-08T11:00:00Z",
+          "content": "The museum-access plan depends on the Tile Museum quiet-entry slot; this dependency is not named in the codename discussion.",
+          "tags": [
+            "museum-access",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-08T12:00:00Z",
+          "content": "Raf said the approval ritual is internally called Map Fold; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-08T13:00:00Z",
+          "content": "Map Fold is owned by the reservation support team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c08-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-08T14:00:00Z",
+          "content": "Before reservation support team signs off, they require the accessibility confirmation email.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-08T15:00:00Z",
+          "content": "Initial state for Lisbon family itinerary: hostel in Baixa.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-08T16:00:00Z",
+          "content": "Interim update for Lisbon family itinerary: apartment in Alfama, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c08-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-08T17:00:00Z",
+          "content": "Final resolved state for Lisbon family itinerary: boutique hotel in Chiado. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c08-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-08T18:00:00Z",
+          "content": "Distractor: Rafi runs a similar-sounding effort with tram pass kiosk, but it is not Raf's Lisbon family itinerary.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c08-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-08T19:00:00Z",
+          "content": "For Raf's Lisbon family itinerary, the accountable owner is Tomas Freire.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c08-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c08-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-08T20:00:00Z",
+          "content": "Tempting gap: Rafi's similar effort mentions airport transfer vendor, but Raf's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c08-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Raf's codename Lighthouse?",
+          "expected_answer": "Tile Museum quiet-entry slot",
+          "required_memory_ids": [
+            "gsh-c08-m01",
+            "gsh-c08-m02",
+            "gsh-c08-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c08-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c08-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Raf's work?",
+          "expected_answer": "accessibility confirmation email",
+          "required_memory_ids": [
+            "gsh-c08-m04",
+            "gsh-c08-m05",
+            "gsh-c08-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c08-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c08-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for Lisbon family itinerary?",
+          "expected_answer": "boutique hotel in Chiado",
+          "required_memory_ids": [
+            "gsh-c08-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c08-m07",
+            "gsh-c08-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c08-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Raf's project, which team owns the internal ritual?",
+          "expected_answer": "reservation support team",
+          "required_memory_ids": [
+            "gsh-c08-m04",
+            "gsh-c08-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c08-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c08-q05",
+          "category": "abstention",
+          "question": "What is the airport transfer vendor for Raf's project?",
+          "expected_answer": "Not stated in the available memories for Raf's project.",
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "gsh-c08-m12",
+            "gsh-c08-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "The dataset contains a tempting value for a similar entity, but no answer for the target entity."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c09",
+      "agent_id": "agent-security-review",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "gsh-c09-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-09T09:00:00Z",
+          "content": "Nadia uses codename Iron Finch for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "iron-finch",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-09T10:00:00Z",
+          "content": "Codename Iron Finch refers to the API abuse detection, which is governed through the credential-stuffing response.",
+          "tags": [
+            "api",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c09-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-09T11:00:00Z",
+          "content": "The credential-stuffing response depends on the edge rate-limit rule set; this dependency is not named in the codename discussion.",
+          "tags": [
+            "credential-stuffing",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-09T12:00:00Z",
+          "content": "Nadia said the approval ritual is internally called Black Seal; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-09T13:00:00Z",
+          "content": "Black Seal is owned by the incident readiness team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c09-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-09T14:00:00Z",
+          "content": "Before incident readiness team signs off, they require the pager escalation map.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-09T15:00:00Z",
+          "content": "Initial state for API abuse detection: block after 20 failed attempts.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-09T16:00:00Z",
+          "content": "Interim update for API abuse detection: challenge after 15 failed attempts, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c09-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-09T17:00:00Z",
+          "content": "Final resolved state for API abuse detection: challenge after 8 failed attempts plus IP reputation. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c09-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-09T18:00:00Z",
+          "content": "Distractor: Nadya runs a similar-sounding effort with WAF geo-block list, but it is not Nadia's API abuse detection.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c09-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-09T19:00:00Z",
+          "content": "For Nadia's API abuse detection, the accountable owner is Owen Hart.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c09-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c09-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-09T20:00:00Z",
+          "content": "Tempting gap: Nadya's similar effort mentions annual security budget, but Nadia's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c09-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Nadia's codename Iron Finch?",
+          "expected_answer": "edge rate-limit rule set",
+          "required_memory_ids": [
+            "gsh-c09-m01",
+            "gsh-c09-m02",
+            "gsh-c09-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c09-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c09-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Nadia's work?",
+          "expected_answer": "pager escalation map",
+          "required_memory_ids": [
+            "gsh-c09-m04",
+            "gsh-c09-m05",
+            "gsh-c09-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c09-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c09-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for API abuse detection?",
+          "expected_answer": "challenge after 8 failed attempts plus IP reputation",
+          "required_memory_ids": [
+            "gsh-c09-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c09-m07",
+            "gsh-c09-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c09-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Nadia's project, which team owns the internal ritual?",
+          "expected_answer": "incident readiness team",
+          "required_memory_ids": [
+            "gsh-c09-m04",
+            "gsh-c09-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c09-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c09-q05",
+          "category": "abstention",
+          "question": "What is the annual security budget for Nadia's project?",
+          "expected_answer": "Not stated in the available memories for Nadia's project.",
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "gsh-c09-m12",
+            "gsh-c09-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "The dataset contains a tempting value for a similar entity, but no answer for the target entity."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c10",
+      "agent_id": "agent-supply-chain",
+      "domain": "operations",
+      "memory_records": [
+        {
+          "id": "gsh-c10-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-10T09:00:00Z",
+          "content": "Jonas uses codename Cedar Path for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "cedar-path",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-10T10:00:00Z",
+          "content": "Codename Cedar Path refers to the warehouse slotting refresh, which is governed through the cold-chain pick route.",
+          "tags": [
+            "warehouse",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c10-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-10T11:00:00Z",
+          "content": "The cold-chain pick route depends on the zone C thermal scanner; this dependency is not named in the codename discussion.",
+          "tags": [
+            "cold-chain",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-10T12:00:00Z",
+          "content": "Jonas said the approval ritual is internally called Orange Tag; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-10T13:00:00Z",
+          "content": "Orange Tag is owned by the inventory audit team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c10-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-10T14:00:00Z",
+          "content": "Before inventory audit team signs off, they require the lot-expiry reconciliation sheet.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-10T15:00:00Z",
+          "content": "Initial state for warehouse slotting refresh: refresh every quarter.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-10T16:00:00Z",
+          "content": "Interim update for warehouse slotting refresh: refresh every two months, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c10-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-10T17:00:00Z",
+          "content": "Final resolved state for warehouse slotting refresh: refresh every six weeks during peak season. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c10-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-10T18:00:00Z",
+          "content": "Distractor: Jona runs a similar-sounding effort with zone A RFID gate, but it is not Jonas's warehouse slotting refresh.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c10-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-10T19:00:00Z",
+          "content": "For Jonas's warehouse slotting refresh, the accountable owner is Mina Park.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c10-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c10-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-10T20:00:00Z",
+          "content": "Tempting gap: Jona's similar effort mentions forklift maintenance vendor, but Jonas's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c10-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Jonas's codename Cedar Path?",
+          "expected_answer": "zone C thermal scanner",
+          "required_memory_ids": [
+            "gsh-c10-m01",
+            "gsh-c10-m02",
+            "gsh-c10-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c10-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c10-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Jonas's work?",
+          "expected_answer": "lot-expiry reconciliation sheet",
+          "required_memory_ids": [
+            "gsh-c10-m04",
+            "gsh-c10-m05",
+            "gsh-c10-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c10-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c10-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for warehouse slotting refresh?",
+          "expected_answer": "refresh every six weeks during peak season",
+          "required_memory_ids": [
+            "gsh-c10-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c10-m07",
+            "gsh-c10-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c10-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Jonas's project, which team owns the internal ritual?",
+          "expected_answer": "inventory audit team",
+          "required_memory_ids": [
+            "gsh-c10-m04",
+            "gsh-c10-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c10-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c10-q05",
+          "category": "abstention",
+          "question": "What is the forklift maintenance vendor for Jonas's project?",
+          "expected_answer": "Not stated in the available memories for Jonas's project.",
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "gsh-c10-m12",
+            "gsh-c10-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "The dataset contains a tempting value for a similar entity, but no answer for the target entity."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c11",
+      "agent_id": "agent-civic-data",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "gsh-c11-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-11T09:00:00Z",
+          "content": "Yara uses codename Civic Loom for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "civic-loom",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-11T10:00:00Z",
+          "content": "Codename Civic Loom refers to the public-comment clustering, which is governed through the transportation hearing archive.",
+          "tags": [
+            "public-comment",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c11-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-11T11:00:00Z",
+          "content": "The transportation hearing archive depends on the speaker-topic matrix; this dependency is not named in the codename discussion.",
+          "tags": [
+            "transportation",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-11T12:00:00Z",
+          "content": "Yara said the approval ritual is internally called Grey Index; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-11T13:00:00Z",
+          "content": "Grey Index is owned by the open-records team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c11-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-11T14:00:00Z",
+          "content": "Before open-records team signs off, they require the redaction exception log.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-11T15:00:00Z",
+          "content": "Initial state for public-comment clustering: archive limited to 2024 hearings.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-11T16:00:00Z",
+          "content": "Interim update for public-comment clustering: archive expanded to 2025 hearings, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c11-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-11T17:00:00Z",
+          "content": "Final resolved state for public-comment clustering: archive covers 2023 through 2026 hearings. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c11-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-11T18:00:00Z",
+          "content": "Distractor: Yarra runs a similar-sounding effort with council-vote matrix, but it is not Yara's public-comment clustering.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c11-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-11T19:00:00Z",
+          "content": "For Yara's public-comment clustering, the accountable owner is Hugo Stern.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c11-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c11-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-11T20:00:00Z",
+          "content": "Tempting gap: Yarra's similar effort mentions grant renewal date, but Yara's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c11-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Yara's codename Civic Loom?",
+          "expected_answer": "speaker-topic matrix",
+          "required_memory_ids": [
+            "gsh-c11-m01",
+            "gsh-c11-m02",
+            "gsh-c11-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c11-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c11-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Yara's work?",
+          "expected_answer": "redaction exception log",
+          "required_memory_ids": [
+            "gsh-c11-m04",
+            "gsh-c11-m05",
+            "gsh-c11-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c11-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c11-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for public-comment clustering?",
+          "expected_answer": "archive covers 2023 through 2026 hearings",
+          "required_memory_ids": [
+            "gsh-c11-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c11-m07",
+            "gsh-c11-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c11-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Yara's project, which team owns the internal ritual?",
+          "expected_answer": "open-records team",
+          "required_memory_ids": [
+            "gsh-c11-m04",
+            "gsh-c11-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c11-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c11-q05",
+          "category": "abstention",
+          "question": "What is the grant renewal date for Yara's project?",
+          "expected_answer": "Not stated in the available memories for Yara's project.",
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "gsh-c11-m12",
+            "gsh-c11-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "The dataset contains a tempting value for a similar entity, but no answer for the target entity."
+        }
+      ]
+    },
+    {
+      "conversation_id": "gsh-c12",
+      "agent_id": "agent-product-analytics",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "gsh-c12-m01",
+          "type": "semantic",
+          "timestamp": "2026-05-12T09:00:00Z",
+          "content": "Talia uses codename Prism Desk for the active workstream, but the codename itself does not state the operational dependency.",
+          "tags": [
+            "prism-desk",
+            "codename"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "role": "anchor",
+            "source_turn": "t01"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m02",
+              "strength": 0.9,
+              "relation": "alias_of"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m02",
+          "type": "semantic",
+          "timestamp": "2026-05-12T10:00:00Z",
+          "content": "Codename Prism Desk refers to the support-ticket insight panel, which is governed through the agent-escalation taxonomy.",
+          "tags": [
+            "support-ticket",
+            "project-link"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "role": "bridge",
+            "source_turn": "t02"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m01",
+              "strength": 0.9,
+              "relation": "alias_of"
+            },
+            {
+              "target_id": "gsh-c12-m03",
+              "strength": 0.9,
+              "relation": "depends_on"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m03",
+          "type": "semantic",
+          "timestamp": "2026-05-12T11:00:00Z",
+          "content": "The agent-escalation taxonomy depends on the DuckDB local analytics store; this dependency is not named in the codename discussion.",
+          "tags": [
+            "agent-escalation",
+            "dependency"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "role": "answer",
+            "source_turn": "t03"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m02",
+              "strength": 0.9,
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m04",
+          "type": "episodic",
+          "timestamp": "2026-05-12T12:00:00Z",
+          "content": "Talia said the approval ritual is internally called Crimson Pass; outside notes describe it as the release approval meeting.",
+          "tags": [
+            "approval",
+            "ritual"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "role": "weak-overlap-anchor",
+            "source_turn": "t04"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m05",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m05",
+          "type": "semantic",
+          "timestamp": "2026-05-12T13:00:00Z",
+          "content": "Crimson Pass is owned by the quality review team, not by the team whose name resembles the project codename.",
+          "tags": [
+            "approval",
+            "team"
+          ],
+          "importance": 0.82,
+          "metadata": {
+            "role": "weak-overlap-bridge",
+            "source_turn": "t05"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m04",
+              "strength": 0.9,
+              "relation": "owns"
+            },
+            {
+              "target_id": "gsh-c12-m06",
+              "strength": 0.9,
+              "relation": "requires"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m06",
+          "type": "procedural",
+          "timestamp": "2026-05-12T14:00:00Z",
+          "content": "Before quality review team signs off, they require the escalation-label audit file.",
+          "tags": [
+            "approval",
+            "artifact"
+          ],
+          "importance": 0.88,
+          "metadata": {
+            "role": "weak-overlap-answer",
+            "source_turn": "t06"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m05",
+              "strength": 0.9,
+              "relation": "required_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m07",
+          "type": "semantic",
+          "timestamp": "2026-05-12T15:00:00Z",
+          "content": "Initial state for support-ticket insight panel: charts refreshed daily.",
+          "tags": [
+            "current-state",
+            "stale"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "role": "stale",
+            "source_turn": "t07"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m08",
+              "strength": 0.95,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m08",
+          "type": "episodic",
+          "timestamp": "2026-05-12T16:00:00Z",
+          "content": "Interim update for support-ticket insight panel: charts refreshed hourly, replacing the initial state.",
+          "tags": [
+            "current-state",
+            "interim"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "role": "interim",
+            "source_turn": "t08"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m07",
+              "strength": 0.95,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c12-m09",
+              "strength": 0.98,
+              "relation": "replaced_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m09",
+          "type": "semantic",
+          "timestamp": "2026-05-12T17:00:00Z",
+          "content": "Final resolved state for support-ticket insight panel: charts refreshed every fifteen minutes. This supersedes all earlier versions.",
+          "tags": [
+            "current-state",
+            "final"
+          ],
+          "importance": 0.95,
+          "metadata": {
+            "role": "final",
+            "source_turn": "t09"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m08",
+              "strength": 0.98,
+              "relation": "replaces"
+            },
+            {
+              "target_id": "gsh-c12-m07",
+              "strength": 0.98,
+              "relation": "replaces"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m10",
+          "type": "semantic",
+          "timestamp": "2026-05-12T18:00:00Z",
+          "content": "Distractor: Thalia runs a similar-sounding effort with ClickHouse metrics cluster, but it is not Talia's support-ticket insight panel.",
+          "tags": [
+            "near-entity",
+            "distractor"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "role": "distractor",
+            "source_turn": "t10"
+          },
+          "associations": []
+        },
+        {
+          "id": "gsh-c12-m11",
+          "type": "semantic",
+          "timestamp": "2026-05-12T19:00:00Z",
+          "content": "For Talia's support-ticket insight panel, the accountable owner is Irene Moss.",
+          "tags": [
+            "near-entity",
+            "owner"
+          ],
+          "importance": 0.86,
+          "metadata": {
+            "role": "entity-answer",
+            "source_turn": "t11"
+          },
+          "associations": [
+            {
+              "target_id": "gsh-c12-m02",
+              "strength": 0.9,
+              "relation": "owned_by"
+            }
+          ]
+        },
+        {
+          "id": "gsh-c12-m12",
+          "type": "semantic",
+          "timestamp": "2026-05-12T20:00:00Z",
+          "content": "Tempting gap: Thalia's similar effort mentions customer advisory board schedule, but Talia's records do not state that value.",
+          "tags": [
+            "abstention",
+            "tempting-distractor"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "role": "abstention-distractor",
+            "source_turn": "t12"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "gsh-c12-q01",
+          "category": "multi_hop_association",
+          "question": "What operational dependency is ultimately used by Talia's codename Prism Desk?",
+          "expected_answer": "DuckDB local analytics store",
+          "required_memory_ids": [
+            "gsh-c12-m01",
+            "gsh-c12-m02",
+            "gsh-c12-m03"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c12-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Requires codename to project to bridge to dependency; no single memory contains both codename and answer."
+        },
+        {
+          "question_id": "gsh-c12-q02",
+          "category": "multi_hop_association",
+          "question": "Which artifact is needed before the release approval meeting can be signed off for Talia's work?",
+          "expected_answer": "escalation-label audit file",
+          "required_memory_ids": [
+            "gsh-c12-m04",
+            "gsh-c12-m05",
+            "gsh-c12-m06"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c12-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Uses weak lexical overlap between release approval meeting and the internal ritual name."
+        },
+        {
+          "question_id": "gsh-c12-q03",
+          "category": "contradiction_resolution",
+          "question": "What is the current resolved state for support-ticket insight panel?",
+          "expected_answer": "charts refreshed every fifteen minutes",
+          "required_memory_ids": [
+            "gsh-c12-m09"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c12-m07",
+            "gsh-c12-m08"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Final memory must beat stale and interim states connected by replaces/replaced_by edges."
+        },
+        {
+          "question_id": "gsh-c12-q04",
+          "category": "graph_traversal",
+          "question": "For the approval chain in Talia's project, which team owns the internal ritual?",
+          "expected_answer": "quality review team",
+          "required_memory_ids": [
+            "gsh-c12-m04",
+            "gsh-c12-m05"
+          ],
+          "forbidden_memory_ids": [
+            "gsh-c12-m10"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "Retrieval should cross from the approval phrasing to the internal ritual and owner team."
+        },
+        {
+          "question_id": "gsh-c12-q05",
+          "category": "abstention",
+          "question": "What is the customer advisory board schedule for Talia's project?",
+          "expected_answer": "Not stated in the available memories for Talia's project.",
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "gsh-c12-m12",
+            "gsh-c12-m10"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "intentional_graph_stress",
+          "fairness_note": "The dataset contains a tempting value for a similar entity, but no answer for the target entity."
+        }
+      ]
+    }
+  ]
+}

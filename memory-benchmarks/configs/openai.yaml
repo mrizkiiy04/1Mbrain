@@ -1,0 +1,25 @@
+# Default OpenAI configuration
+# This is what you get out of the box — no config file needed.
+# Only useful if you want to change the models.
+
+version: "v1.1"
+
+llm:
+  provider: openai
+  config:
+    model: gpt-4o-mini       # Fact extraction model (cost-efficient default)
+    temperature: 0.1
+
+embedder:
+  provider: openai
+  config:
+    model: text-embedding-3-small  # 1536 dimensions
+
+# Vector store is auto-configured to use the Qdrant container.
+# Uncomment to override:
+# vector_store:
+#   provider: qdrant
+#   config:
+#     host: qdrant
+#     port: 6333
+#     collection_name: memories

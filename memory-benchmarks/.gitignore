@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.next/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Database
+evals.db
+evals.db-wal
+evals.db-shm
+
+# Outputs
+results/
+!results/platform/
+!results/platform/**
+!results/oss/
+!results/oss/**
+datasets/
+logs/
+evaluation_results/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Build
+tsconfig.tsbuildinfo
+next-env.d.ts
+mem0-config.yaml
+mem0-config-*.yaml

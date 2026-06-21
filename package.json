@@ -1,0 +1,53 @@
+{
+  "name": "1mbrain",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A portable, holographic memory layer for any AI agent.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "packages/sdk/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=packages/api",
+    "dev:dashboard": "npm run dev --workspace=packages/dashboard",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "bench": "npm run bench --workspace=packages/benchmarks",
+    "lint": "eslint packages/ --ext .ts,.tsx",
+    "format": "prettier --write \"packages/**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"packages/**/*.{ts,tsx,json,md}\"",
+    "typecheck": "tsc --build",
+    "clean": "rimraf packages/*/dist packages/*/.turbo",
+    "db:migrate": "npm run db:migrate --workspace=packages/core",
+    "db:seed": "npm run db:seed --workspace=packages/core",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "eslint": "^9.15.0",
+    "husky": "^9.1.0",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.4.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.61.1",
+    "vitest": "^2.1.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

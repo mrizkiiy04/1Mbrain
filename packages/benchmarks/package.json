@@ -1,0 +1,22 @@
+{
+  "name": "@1mbrain/benchmarks",
+  "version": "0.1.1",
+  "description": "Provider-level benchmarks for 1MBrain and comparable memory providers.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "bench": "tsx src/runner.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@1mbrain/core": "*",
+    "mem0ai": "^3.0.9"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,30 @@
+# Azure OpenAI configuration
+#
+# Usage:
+#   1. Copy to repo root:  cp configs/azure-openai.yaml mem0-config.yaml
+#   2. Fill in your values below
+#   3. Uncomment the volume mount in docker-compose.yml
+#   4. docker compose up -d
+
+version: "v1.1"
+
+llm:
+  provider: azure_openai
+  config:
+    model: gpt-5
+    temperature: 0.1
+    azure_kwargs:
+      azure_deployment: gpt-5               # Azure deployment name
+      azure_endpoint: ${AZURE_OPENAI_ENDPOINT}
+      api_key: ${AZURE_OPENAI_API_KEY}
+      api_version: "2024-12-01-preview"
+
+embedder:
+  provider: azure_openai
+  config:
+    model: text-embedding-3-small
+    azure_kwargs:
+      azure_deployment: text-embedding-3-small
+      azure_endpoint: ${AZURE_OPENAI_ENDPOINT}
+      api_key: ${AZURE_OPENAI_API_KEY}
+      api_version: "2024-12-01-preview"

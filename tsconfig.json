@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/benchmarks" },
+    { "path": "./packages/ingest" },
+    { "path": "./packages/consolidation" },
+    { "path": "./packages/api" },
+    { "path": "./packages/sdk/typescript" }
+  ]
+}

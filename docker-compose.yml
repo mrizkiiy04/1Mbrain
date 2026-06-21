@@ -1,0 +1,64 @@
+services:
+  # ─── Redis (pub/sub for dashboard + caching) ──────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  # ─── PostgreSQL (optional, for multi-tenant scale) ─
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: onemillionbrain
+      POSTGRES_PASSWORD: onemillionbrain
+      POSTGRES_DB: onemillionbrain
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U onemillionbrain"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    profiles:
+      - postgres
+
+  # ─── Ollama (local embedding provider) ─────────────
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    profiles:
+      - ollama
+
+  # Qdrant (optional, for external vector provider benchmarks)
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    restart: unless-stopped
+    profiles:
+      - qdrant
+
+volumes:
+  redis-data:
+  pg-data:
+  ollama-data:
+  qdrant-data:

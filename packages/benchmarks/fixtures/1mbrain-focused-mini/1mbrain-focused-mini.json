@@ -1,0 +1,928 @@
+{
+  "name": "1mbrain-focused-mini",
+  "version": "0.1.0",
+  "generated_at": "2026-06-19T00:00:00.000Z",
+  "license": "MIT",
+  "description": "Small directed benchmark dataset for evaluating 1MBrain memory behavior with low API usage.",
+  "api_budget_profile": {
+    "recommended_mode": "retrieval_only",
+    "llm_judge_required": false,
+    "estimated_conversations": 5,
+    "estimated_turns": 40,
+    "estimated_memory_records": 41,
+    "estimated_questions": 23,
+    "notes": "Expected answers and required memory IDs are included, so retrieval quality can be scored without answer generation."
+  },
+  "schema": {
+    "conversation_turns": "Human-readable source transcript.",
+    "memory_records": "Canonical memories to ingest. Each record is intentionally atomic and timestamped.",
+    "questions": "Evaluation prompts with expected answers, required IDs, forbidden IDs, and category labels."
+  },
+  "conversations": [
+    {
+      "conversation_id": "conv_kreasa_firebase",
+      "title": "Kreasa Firebase Migration",
+      "agent_id": "focused_kreasa_agent",
+      "turns": [
+        {
+          "turn_id": "kf_t01",
+          "timestamp": "2026-06-01T09:00:00Z",
+          "speaker": "User",
+          "text": "Kreasa is my Android AI mentor app. It stores user learning plans in Firestore."
+        },
+        {
+          "turn_id": "kf_t02",
+          "timestamp": "2026-06-01T09:03:00Z",
+          "speaker": "User",
+          "text": "The current client-side Gemini calls must move behind Firebase Callable Functions before release."
+        },
+        {
+          "turn_id": "kf_t03",
+          "timestamp": "2026-06-02T10:20:00Z",
+          "speaker": "User",
+          "text": "Firestore rules were locked down and emulator tests passed locally."
+        },
+        {
+          "turn_id": "kf_t04",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "speaker": "User",
+          "text": "Deployment is blocked because Functions v2 and Secret Manager require Blaze, but the Firebase project is still on Spark."
+        },
+        {
+          "turn_id": "kf_t05",
+          "timestamp": "2026-06-04T12:10:00Z",
+          "speaker": "User",
+          "text": "When explaining cloud blockers, separate local verification from cloud deployment status."
+        },
+        {
+          "turn_id": "kf_t06",
+          "timestamp": "2026-06-05T13:25:00Z",
+          "speaker": "Assistant",
+          "text": "Local Callable Function tests passed on Node 22, but production deploy remains blocked by billing."
+        },
+        {
+          "turn_id": "kf_t07",
+          "timestamp": "2026-06-07T15:30:00Z",
+          "speaker": "User",
+          "text": "Earlier I thought Spark might be enough, but the current decision is to wait for Blaze before deploying Functions v2."
+        },
+        {
+          "turn_id": "kf_t08",
+          "timestamp": "2026-06-08T16:40:00Z",
+          "speaker": "User",
+          "text": "The next safe step is to keep backend migration code ready and document the Blaze requirement."
+        }
+      ],
+      "memory_records": [
+        {
+          "id": "kf_identity",
+          "type": "semantic",
+          "timestamp": "2026-06-01T09:00:00Z",
+          "content": "Kreasa is the user's Android AI mentor app and stores user learning plans in Firestore.",
+          "tags": ["kreasa", "android", "firestore"],
+          "importance": 0.84,
+          "metadata": { "source_turn_id": "kf_t01" }
+        },
+        {
+          "id": "kf_gemini_backend",
+          "type": "procedural",
+          "timestamp": "2026-06-01T09:03:00Z",
+          "content": "Kreasa must move client-side Gemini calls behind Firebase Callable Functions before release.",
+          "tags": ["kreasa", "gemini", "firebase-functions"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "kf_t02" },
+          "associations": [{ "target_id": "kf_blaze_blocker", "strength": 0.92 }]
+        },
+        {
+          "id": "kf_rules_verified",
+          "type": "episodic",
+          "timestamp": "2026-06-02T10:20:00Z",
+          "content": "Kreasa Firestore rules were locked down and emulator tests passed locally.",
+          "tags": ["kreasa", "firestore", "local-verification"],
+          "importance": 0.78,
+          "metadata": { "source_turn_id": "kf_t03" }
+        },
+        {
+          "id": "kf_blaze_blocker",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "Kreasa production deployment is blocked because Firebase Functions v2 and Secret Manager require Blaze, while the project is still on Spark.",
+          "tags": ["kreasa", "blaze", "spark", "deployment-blocker"],
+          "importance": 0.96,
+          "metadata": { "source_turn_id": "kf_t04" }
+        },
+        {
+          "id": "kf_reporting_preference",
+          "type": "semantic",
+          "timestamp": "2026-06-04T12:10:00Z",
+          "content": "When reporting Kreasa blockers, separate local verification status from cloud deployment status.",
+          "tags": ["kreasa", "reporting", "preference"],
+          "importance": 0.86,
+          "metadata": { "source_turn_id": "kf_t05" }
+        },
+        {
+          "id": "kf_local_functions_verified",
+          "type": "episodic",
+          "timestamp": "2026-06-05T13:25:00Z",
+          "content": "Kreasa Callable Function tests passed locally on Node 22, but production deploy remains blocked by billing.",
+          "tags": ["kreasa", "node22", "callable-functions"],
+          "importance": 0.82,
+          "metadata": { "source_turn_id": "kf_t06" },
+          "associations": [{ "target_id": "kf_blaze_blocker", "strength": 0.91 }]
+        },
+        {
+          "id": "kf_current_billing_decision",
+          "type": "semantic",
+          "timestamp": "2026-06-07T15:30:00Z",
+          "content": "Current Kreasa deployment decision: wait for Blaze before deploying Firebase Functions v2.",
+          "tags": ["kreasa", "current-decision", "blaze"],
+          "importance": 0.94,
+          "metadata": { "source_turn_id": "kf_t07" }
+        },
+        {
+          "id": "kf_next_safe_step",
+          "type": "procedural",
+          "timestamp": "2026-06-08T16:40:00Z",
+          "content": "Next safe Kreasa step: keep backend migration code ready and document the Blaze requirement.",
+          "tags": ["kreasa", "next-step", "documentation"],
+          "importance": 0.88,
+          "metadata": { "source_turn_id": "kf_t08" }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "kf_q01",
+          "category": "multi_hop_association",
+          "question": "Why is Kreasa's production deployment blocked?",
+          "expected_answer": "Firebase Functions v2 and Secret Manager require Blaze, but the project is still on Spark.",
+          "required_memory_ids": ["kf_gemini_backend", "kf_blaze_blocker"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The answer should connect the backend migration to the billing blocker."
+        },
+        {
+          "question_id": "kf_q02",
+          "category": "contradiction_resolution",
+          "question": "Should we deploy Kreasa Functions v2 while the Firebase project is still on Spark?",
+          "expected_answer": "No. The current decision is to wait for Blaze before deploying Functions v2.",
+          "required_memory_ids": ["kf_current_billing_decision", "kf_blaze_blocker"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The latest decision should override the earlier uncertainty about Spark."
+        },
+        {
+          "question_id": "kf_q03",
+          "category": "context_injection",
+          "question": "How should a status report describe Kreasa's progress?",
+          "expected_answer": "It should say local verification passed, while cloud deployment is still blocked by Blaze billing.",
+          "required_memory_ids": ["kf_rules_verified", "kf_local_functions_verified", "kf_reporting_preference", "kf_blaze_blocker"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "A good context block must include both verified local work and the cloud blocker."
+        },
+        {
+          "question_id": "kf_q04",
+          "category": "procedural_recall",
+          "question": "What is the next safe step for Kreasa?",
+          "expected_answer": "Keep backend migration code ready and document the Blaze requirement.",
+          "required_memory_ids": ["kf_next_safe_step"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The procedural memory should be retrieved directly."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_onemillionbrain_benchmark",
+      "title": "1MBrain Benchmark Diagnosis",
+      "agent_id": "focused_1mbrain_agent",
+      "turns": [
+        {
+          "turn_id": "omb_t01",
+          "timestamp": "2026-06-18T08:00:00Z",
+          "speaker": "User",
+          "text": "The 1MBrain LOCOMO benchmark used DeepSeek V4 Flash for answerer and judge."
+        },
+        {
+          "turn_id": "omb_t02",
+          "timestamp": "2026-06-18T08:05:00Z",
+          "speaker": "User",
+          "text": "The run used Postgres and Redis in Docker, with local-keyword embeddings."
+        },
+        {
+          "turn_id": "omb_t03",
+          "timestamp": "2026-06-18T21:47:00Z",
+          "speaker": "Assistant",
+          "text": "The LOCOMO result was top_10 24.61%, top_20 27.66%, and top_50 27.21% over 1540 questions."
+        },
+        {
+          "turn_id": "omb_t04",
+          "timestamp": "2026-06-19T07:00:00Z",
+          "speaker": "User",
+          "text": "We should not treat that as final product quality because the compat endpoint stored raw turns without fact extraction."
+        },
+        {
+          "turn_id": "omb_t05",
+          "timestamp": "2026-06-19T07:10:00Z",
+          "speaker": "Assistant",
+          "text": "A threshold of 0.3 was too strict for local-keyword embeddings; many evidence turns fell below it."
+        },
+        {
+          "turn_id": "omb_t06",
+          "timestamp": "2026-06-19T07:15:00Z",
+          "speaker": "User",
+          "text": "For future fair benchmarks, use semantic embeddings and add date-aware fact extraction before retrieval."
+        },
+        {
+          "turn_id": "omb_t07",
+          "timestamp": "2026-06-19T07:20:00Z",
+          "speaker": "User",
+          "text": "Current model preference for benchmark spending is DeepSeek or local models, not OpenAI API calls."
+        },
+        {
+          "turn_id": "omb_t08",
+          "timestamp": "2026-06-19T07:25:00Z",
+          "speaker": "Assistant",
+          "text": "The Mem0 comparison should be paused if it starts consuming too much API budget."
+        },
+        {
+          "turn_id": "omb_t09",
+          "timestamp": "2026-06-19T07:30:00Z",
+          "speaker": "User",
+          "text": "The useful public message is that 1MBrain needs a focused benchmark before a broad LOCOMO comparison."
+        }
+      ],
+      "memory_records": [
+        {
+          "id": "omb_deepseek_models",
+          "type": "semantic",
+          "timestamp": "2026-06-18T08:00:00Z",
+          "content": "The 1MBrain LOCOMO benchmark used DeepSeek V4 Flash for answerer and judge.",
+          "tags": ["1mbrain", "locomo", "deepseek"],
+          "importance": 0.82,
+          "metadata": { "source_turn_id": "omb_t01" }
+        },
+        {
+          "id": "omb_local_keyword_setup",
+          "type": "semantic",
+          "timestamp": "2026-06-18T08:05:00Z",
+          "content": "The 1MBrain LOCOMO run used Postgres and Redis in Docker with local-keyword embeddings.",
+          "tags": ["1mbrain", "postgres", "redis", "local-keyword"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "omb_t02" }
+        },
+        {
+          "id": "omb_locomo_score",
+          "type": "episodic",
+          "timestamp": "2026-06-18T21:47:00Z",
+          "content": "1MBrain LOCOMO result: top_10 24.61%, top_20 27.66%, top_50 27.21% over 1540 questions.",
+          "tags": ["1mbrain", "locomo", "benchmark-score"],
+          "importance": 0.93,
+          "metadata": { "source_turn_id": "omb_t03" }
+        },
+        {
+          "id": "omb_raw_turn_limitation",
+          "type": "semantic",
+          "timestamp": "2026-06-19T07:00:00Z",
+          "content": "The 1MBrain LOCOMO result should not be treated as final product quality because the compat endpoint stored raw turns without fact extraction.",
+          "tags": ["1mbrain", "benchmark-limitation", "fact-extraction"],
+          "importance": 0.95,
+          "metadata": { "source_turn_id": "omb_t04" },
+          "associations": [{ "target_id": "omb_local_keyword_threshold", "strength": 0.88 }]
+        },
+        {
+          "id": "omb_local_keyword_threshold",
+          "type": "semantic",
+          "timestamp": "2026-06-19T07:10:00Z",
+          "content": "A recall threshold of 0.3 was too strict for local-keyword embeddings; many evidence turns fell below it.",
+          "tags": ["1mbrain", "threshold", "local-keyword"],
+          "importance": 0.91,
+          "metadata": { "source_turn_id": "omb_t05" }
+        },
+        {
+          "id": "omb_benchmark_fix",
+          "type": "procedural",
+          "timestamp": "2026-06-19T07:15:00Z",
+          "content": "For a fair 1MBrain benchmark, use semantic embeddings and add date-aware fact extraction before retrieval.",
+          "tags": ["1mbrain", "benchmark-plan", "semantic-embedding"],
+          "importance": 0.95,
+          "metadata": { "source_turn_id": "omb_t06" }
+        },
+        {
+          "id": "omb_current_model_preference",
+          "type": "semantic",
+          "timestamp": "2026-06-19T07:20:00Z",
+          "content": "Current benchmark spending preference: use DeepSeek or local models, not OpenAI API calls.",
+          "tags": ["preference", "deepseek", "local-models", "api-budget"],
+          "importance": 0.94,
+          "metadata": { "source_turn_id": "omb_t07" }
+        },
+        {
+          "id": "omb_pause_mem0_budget",
+          "type": "procedural",
+          "timestamp": "2026-06-19T07:25:00Z",
+          "content": "Pause Mem0 comparison runs if they start consuming too much API budget.",
+          "tags": ["mem0", "api-budget", "procedure"],
+          "importance": 0.86,
+          "metadata": { "source_turn_id": "omb_t08" }
+        },
+        {
+          "id": "omb_public_message",
+          "type": "semantic",
+          "timestamp": "2026-06-19T07:30:00Z",
+          "content": "Useful public benchmark message: 1MBrain needs a focused benchmark before broad LOCOMO comparison.",
+          "tags": ["1mbrain", "github", "benchmark-positioning"],
+          "importance": 0.88,
+          "metadata": { "source_turn_id": "omb_t09" }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "omb_q01",
+          "category": "atomic_fact_recall",
+          "question": "What scores did 1MBrain get on the LOCOMO run?",
+          "expected_answer": "top_10 24.61%, top_20 27.66%, top_50 27.21% over 1540 questions.",
+          "required_memory_ids": ["omb_locomo_score"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The score memory is atomic and should be directly retrieved."
+        },
+        {
+          "question_id": "omb_q02",
+          "category": "root_cause_recall",
+          "question": "Why should the low LOCOMO score not be treated as final 1MBrain quality?",
+          "expected_answer": "Because the benchmark stored raw turns without fact extraction and used weak local-keyword retrieval with a strict threshold.",
+          "required_memory_ids": ["omb_raw_turn_limitation", "omb_local_keyword_threshold"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The answer requires combining two diagnostic memories."
+        },
+        {
+          "question_id": "omb_q03",
+          "category": "procedural_recall",
+          "question": "What should change before a fair public benchmark?",
+          "expected_answer": "Use semantic embeddings and date-aware fact extraction before retrieval.",
+          "required_memory_ids": ["omb_benchmark_fix"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The procedure is stored as a dedicated memory."
+        },
+        {
+          "question_id": "omb_q04",
+          "category": "current_preference",
+          "question": "Should a benchmark run assume OpenAI API calls are acceptable?",
+          "expected_answer": "No. The current preference is DeepSeek or local models, not OpenAI API calls.",
+          "required_memory_ids": ["omb_current_model_preference"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The latest explicit preference should control the answer."
+        },
+        {
+          "question_id": "omb_q05",
+          "category": "noise_resistance",
+          "question": "What is the public message about broad LOCOMO comparison?",
+          "expected_answer": "1MBrain needs a focused benchmark before broad LOCOMO comparison.",
+          "required_memory_ids": ["omb_public_message"],
+          "forbidden_memory_ids": ["omb_locomo_score"],
+          "cutoffs": [5, 10],
+          "rationale": "The benchmark should not confuse score reporting with positioning."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_hermes_sdk",
+      "title": "Hermes Adapter and SDK Workflow",
+      "agent_id": "focused_hermes_agent",
+      "turns": [
+        {
+          "turn_id": "ha_t01",
+          "timestamp": "2026-06-10T10:00:00Z",
+          "speaker": "User",
+          "text": "Hermes should remember Q&A turns as episodic memories."
+        },
+        {
+          "turn_id": "ha_t02",
+          "timestamp": "2026-06-10T10:05:00Z",
+          "speaker": "User",
+          "text": "Hermes preferences should be semantic memories with high importance."
+        },
+        {
+          "turn_id": "ha_t03",
+          "timestamp": "2026-06-10T10:10:00Z",
+          "speaker": "User",
+          "text": "Procedures like release steps should be procedural memories."
+        },
+        {
+          "turn_id": "ha_t04",
+          "timestamp": "2026-06-10T10:15:00Z",
+          "speaker": "User",
+          "text": "The TypeScript SDK exports a Hermes adapter from @1mbrain/sdk/hermes."
+        },
+        {
+          "turn_id": "ha_t05",
+          "timestamp": "2026-06-10T10:20:00Z",
+          "speaker": "User",
+          "text": "The adapter can build an LLM context block from recalled memory."
+        },
+        {
+          "turn_id": "ha_t06",
+          "timestamp": "2026-06-10T10:25:00Z",
+          "speaker": "User",
+          "text": "When using Hermes, recall history for chat continuity, facts for preferences, and procedures for repeatable workflows."
+        },
+        {
+          "turn_id": "ha_t07",
+          "timestamp": "2026-06-12T09:00:00Z",
+          "speaker": "User",
+          "text": "Earlier the SDK package was publish-pending; currently it is locally implemented and tested, but npm publish still needs credentials."
+        },
+        {
+          "turn_id": "ha_t08",
+          "timestamp": "2026-06-12T09:20:00Z",
+          "speaker": "User",
+          "text": "The quickstart should help users integrate 1MBrain into an agent in under 30 minutes."
+        }
+      ],
+      "memory_records": [
+        {
+          "id": "ha_episodic_turns",
+          "type": "semantic",
+          "timestamp": "2026-06-10T10:00:00Z",
+          "content": "Hermes should store Q&A turns as episodic memories.",
+          "tags": ["hermes", "episodic", "adapter"],
+          "importance": 0.86,
+          "metadata": { "source_turn_id": "ha_t01" }
+        },
+        {
+          "id": "ha_preference_semantic",
+          "type": "semantic",
+          "timestamp": "2026-06-10T10:05:00Z",
+          "content": "Hermes preferences should be semantic memories with high importance.",
+          "tags": ["hermes", "semantic", "preferences"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "ha_t02" }
+        },
+        {
+          "id": "ha_procedural_workflows",
+          "type": "procedural",
+          "timestamp": "2026-06-10T10:10:00Z",
+          "content": "Repeatable Hermes workflows, such as release steps, should be stored as procedural memories.",
+          "tags": ["hermes", "procedural", "workflow"],
+          "importance": 0.88,
+          "metadata": { "source_turn_id": "ha_t03" }
+        },
+        {
+          "id": "ha_sdk_entrypoint",
+          "type": "semantic",
+          "timestamp": "2026-06-10T10:15:00Z",
+          "content": "The TypeScript SDK exports the Hermes adapter from @1mbrain/sdk/hermes.",
+          "tags": ["hermes", "typescript-sdk", "entrypoint"],
+          "importance": 0.87,
+          "metadata": { "source_turn_id": "ha_t04" }
+        },
+        {
+          "id": "ha_context_builder",
+          "type": "procedural",
+          "timestamp": "2026-06-10T10:20:00Z",
+          "content": "The Hermes adapter can build an LLM context block from recalled memory.",
+          "tags": ["hermes", "context-injection"],
+          "importance": 0.89,
+          "metadata": { "source_turn_id": "ha_t05" }
+        },
+        {
+          "id": "ha_recall_routing",
+          "type": "procedural",
+          "timestamp": "2026-06-10T10:25:00Z",
+          "content": "Hermes recall routing: use history for chat continuity, facts for preferences, and procedures for repeatable workflows.",
+          "tags": ["hermes", "recall-routing"],
+          "importance": 0.92,
+          "metadata": { "source_turn_id": "ha_t06" },
+          "associations": [
+            { "target_id": "ha_episodic_turns", "strength": 0.9 },
+            { "target_id": "ha_preference_semantic", "strength": 0.9 },
+            { "target_id": "ha_procedural_workflows", "strength": 0.9 }
+          ]
+        },
+        {
+          "id": "ha_publish_status",
+          "type": "semantic",
+          "timestamp": "2026-06-12T09:00:00Z",
+          "content": "The TypeScript SDK is locally implemented and tested, but npm publish still needs credentials.",
+          "tags": ["typescript-sdk", "publish", "credentials"],
+          "importance": 0.85,
+          "metadata": { "source_turn_id": "ha_t07" }
+        },
+        {
+          "id": "ha_quickstart_goal",
+          "type": "semantic",
+          "timestamp": "2026-06-12T09:20:00Z",
+          "content": "The SDK quickstart goal is to help users integrate 1MBrain into an agent in under 30 minutes.",
+          "tags": ["sdk", "quickstart", "integration"],
+          "importance": 0.82,
+          "metadata": { "source_turn_id": "ha_t08" }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "ha_q01",
+          "category": "procedural_recall",
+          "question": "How should Hermes route different recall needs?",
+          "expected_answer": "Use history for chat continuity, facts for preferences, and procedures for repeatable workflows.",
+          "required_memory_ids": ["ha_recall_routing"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This tests exact procedural recall."
+        },
+        {
+          "question_id": "ha_q02",
+          "category": "multi_hop_association",
+          "question": "Which memory types should Hermes use for turns, preferences, and workflows?",
+          "expected_answer": "Q&A turns are episodic, preferences are semantic, and repeatable workflows are procedural.",
+          "required_memory_ids": ["ha_recall_routing", "ha_episodic_turns", "ha_preference_semantic", "ha_procedural_workflows"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The routing memory should activate its associated type memories."
+        },
+        {
+          "question_id": "ha_q03",
+          "category": "atomic_fact_recall",
+          "question": "What package entry point exports the Hermes adapter?",
+          "expected_answer": "@1mbrain/sdk/hermes",
+          "required_memory_ids": ["ha_sdk_entrypoint"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This is a direct fact lookup."
+        },
+        {
+          "question_id": "ha_q04",
+          "category": "temporal_update",
+          "question": "Is the TypeScript SDK already published to npm?",
+          "expected_answer": "No. It is locally implemented and tested, but npm publish still needs credentials.",
+          "required_memory_ids": ["ha_publish_status"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The answer should reflect current publish status."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_preferences_and_noise",
+      "title": "User Preferences With Distractors",
+      "agent_id": "focused_preferences_agent",
+      "turns": [
+        {
+          "turn_id": "pn_t01",
+          "timestamp": "2026-06-01T08:00:00Z",
+          "speaker": "User",
+          "text": "For coding tasks, move slowly and robustly: verify one milestone before the next."
+        },
+        {
+          "turn_id": "pn_t02",
+          "timestamp": "2026-06-01T08:05:00Z",
+          "speaker": "User",
+          "text": "Do not blur local verification with cloud deployment blockers."
+        },
+        {
+          "turn_id": "pn_t03",
+          "timestamp": "2026-06-01T08:10:00Z",
+          "speaker": "User",
+          "text": "When asked for a review, lead with concrete findings and file references."
+        },
+        {
+          "turn_id": "pn_t04",
+          "timestamp": "2026-06-02T09:00:00Z",
+          "speaker": "Assistant",
+          "text": "Noise note: The dashboard theme used dark visual styling and D3 graph rendering."
+        },
+        {
+          "turn_id": "pn_t05",
+          "timestamp": "2026-06-02T09:05:00Z",
+          "speaker": "Assistant",
+          "text": "Noise note: A test fixture mentioned purple buttons, but that was unrelated to benchmark reporting."
+        },
+        {
+          "turn_id": "pn_t06",
+          "timestamp": "2026-06-03T10:00:00Z",
+          "speaker": "User",
+          "text": "The project checkpoint that future sessions should read first is task.md."
+        },
+        {
+          "turn_id": "pn_t07",
+          "timestamp": "2026-06-04T11:00:00Z",
+          "speaker": "User",
+          "text": "If a root build stalls, switch to changed workspaces instead of insisting on the broad build."
+        },
+        {
+          "turn_id": "pn_t08",
+          "timestamp": "2026-06-05T12:00:00Z",
+          "speaker": "User",
+          "text": "Older preference: long exploratory reports were acceptable. Current preference: concise verified summaries."
+        },
+        {
+          "turn_id": "pn_t09",
+          "timestamp": "2026-06-06T13:00:00Z",
+          "speaker": "User",
+          "text": "Use repo task files as the durable handoff artifact when asked to preserve progress."
+        }
+      ],
+      "memory_records": [
+        {
+          "id": "pn_slow_robust",
+          "type": "semantic",
+          "timestamp": "2026-06-01T08:00:00Z",
+          "content": "For coding tasks, the user prefers moving slowly and robustly, verifying one milestone before the next.",
+          "tags": ["preference", "coding", "verification"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "pn_t01" }
+        },
+        {
+          "id": "pn_cloud_boundary",
+          "type": "semantic",
+          "timestamp": "2026-06-01T08:05:00Z",
+          "content": "Do not blur local verification with cloud deployment blockers.",
+          "tags": ["preference", "verification", "cloud"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "pn_t02" }
+        },
+        {
+          "id": "pn_review_style",
+          "type": "semantic",
+          "timestamp": "2026-06-01T08:10:00Z",
+          "content": "For code reviews, lead with concrete findings and file references.",
+          "tags": ["preference", "code-review"],
+          "importance": 0.86,
+          "metadata": { "source_turn_id": "pn_t03" }
+        },
+        {
+          "id": "pn_dashboard_noise",
+          "type": "episodic",
+          "timestamp": "2026-06-02T09:00:00Z",
+          "content": "Noise: the dashboard theme used dark visual styling and D3 graph rendering.",
+          "tags": ["noise", "dashboard"],
+          "importance": 0.3,
+          "metadata": { "source_turn_id": "pn_t04" }
+        },
+        {
+          "id": "pn_purple_noise",
+          "type": "episodic",
+          "timestamp": "2026-06-02T09:05:00Z",
+          "content": "Noise: a test fixture mentioned purple buttons, unrelated to benchmark reporting.",
+          "tags": ["noise", "ui"],
+          "importance": 0.2,
+          "metadata": { "source_turn_id": "pn_t05" }
+        },
+        {
+          "id": "pn_task_checkpoint",
+          "type": "procedural",
+          "timestamp": "2026-06-03T10:00:00Z",
+          "content": "In this repo, future sessions should read task.md first as the project checkpoint.",
+          "tags": ["procedure", "task-md", "checkpoint"],
+          "importance": 0.92,
+          "metadata": { "source_turn_id": "pn_t06" }
+        },
+        {
+          "id": "pn_workspace_builds",
+          "type": "procedural",
+          "timestamp": "2026-06-04T11:00:00Z",
+          "content": "If a root build stalls, switch to verifying changed workspaces instead of insisting on the broad build.",
+          "tags": ["procedure", "build", "workspace"],
+          "importance": 0.84,
+          "metadata": { "source_turn_id": "pn_t07" }
+        },
+        {
+          "id": "pn_old_verbose",
+          "type": "semantic",
+          "timestamp": "2026-06-01T07:00:00Z",
+          "content": "Older preference: long exploratory reports were acceptable.",
+          "tags": ["preference", "old", "reporting"],
+          "importance": 0.35,
+          "metadata": { "source_turn_id": "pn_t08", "superseded_by": "pn_current_concise" }
+        },
+        {
+          "id": "pn_current_concise",
+          "type": "semantic",
+          "timestamp": "2026-06-05T12:00:00Z",
+          "content": "Current reporting preference: concise verified summaries.",
+          "tags": ["preference", "current", "reporting"],
+          "importance": 0.94,
+          "metadata": { "source_turn_id": "pn_t08" }
+        },
+        {
+          "id": "pn_handoff_artifact",
+          "type": "procedural",
+          "timestamp": "2026-06-06T13:00:00Z",
+          "content": "Use repo task files as the durable handoff artifact when asked to preserve progress.",
+          "tags": ["procedure", "handoff", "task-file"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "pn_t09" }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "pn_q01",
+          "category": "current_preference",
+          "question": "How should reports be written now?",
+          "expected_answer": "Use concise verified summaries.",
+          "required_memory_ids": ["pn_current_concise"],
+          "forbidden_memory_ids": ["pn_old_verbose"],
+          "cutoffs": [5, 10],
+          "rationale": "The current preference should outrank the older one."
+        },
+        {
+          "question_id": "pn_q02",
+          "category": "procedural_recall",
+          "question": "What file should future sessions read first in this repo?",
+          "expected_answer": "task.md",
+          "required_memory_ids": ["pn_task_checkpoint"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This tests durable checkpoint recall."
+        },
+        {
+          "question_id": "pn_q03",
+          "category": "noise_resistance",
+          "question": "What should a blocker report avoid mixing together?",
+          "expected_answer": "It should not blur local verification with cloud deployment blockers.",
+          "required_memory_ids": ["pn_cloud_boundary"],
+          "forbidden_memory_ids": ["pn_dashboard_noise", "pn_purple_noise"],
+          "cutoffs": [5, 10],
+          "rationale": "Noise records share unrelated UI/reporting language and should not dominate."
+        },
+        {
+          "question_id": "pn_q04",
+          "category": "procedural_recall",
+          "question": "What should happen if a root build stalls?",
+          "expected_answer": "Switch to verifying changed workspaces instead of insisting on the broad build.",
+          "required_memory_ids": ["pn_workspace_builds"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This is an operational procedure."
+        },
+        {
+          "question_id": "pn_q05",
+          "category": "review_behavior",
+          "question": "How should a code review response be structured?",
+          "expected_answer": "Lead with concrete findings and file references.",
+          "required_memory_ids": ["pn_review_style"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The memory should influence agent behavior, not only retrieval."
+        }
+      ]
+    },
+    {
+      "conversation_id": "conv_passport_recovery",
+      "title": "Passport Export and Recovery",
+      "agent_id": "focused_passport_agent",
+      "turns": [
+        {
+          "turn_id": "pr_t01",
+          "timestamp": "2026-06-11T08:00:00Z",
+          "speaker": "User",
+          "text": "A Memory Passport must preserve raw memory content and association graph edges."
+        },
+        {
+          "turn_id": "pr_t02",
+          "timestamp": "2026-06-11T08:05:00Z",
+          "speaker": "User",
+          "text": "Exports should strip raw vectors because embeddings can be regenerated after import."
+        },
+        {
+          "turn_id": "pr_t03",
+          "timestamp": "2026-06-11T08:10:00Z",
+          "speaker": "User",
+          "text": "Encrypted exports use gzip plus AES-256-GCM."
+        },
+        {
+          "turn_id": "pr_t04",
+          "timestamp": "2026-06-11T08:15:00Z",
+          "speaker": "User",
+          "text": "After import into a new agent namespace, linked project context should still answer multi-hop questions."
+        },
+        {
+          "turn_id": "pr_t05",
+          "timestamp": "2026-06-11T08:20:00Z",
+          "speaker": "Assistant",
+          "text": "The graph edge Project Atlas -> backup workflow -> encryption method should survive export and import."
+        },
+        {
+          "turn_id": "pr_t06",
+          "timestamp": "2026-06-11T08:25:00Z",
+          "speaker": "User",
+          "text": "If an import sees duplicate content, the conservative default is skip duplicates."
+        }
+      ],
+      "memory_records": [
+        {
+          "id": "pr_passport_preserves_content",
+          "type": "semantic",
+          "timestamp": "2026-06-11T08:00:00Z",
+          "content": "A Memory Passport must preserve raw memory content and association graph edges.",
+          "tags": ["passport", "associations"],
+          "importance": 0.92,
+          "metadata": { "source_turn_id": "pr_t01" },
+          "associations": [{ "target_id": "pr_import_multihop", "strength": 0.86 }]
+        },
+        {
+          "id": "pr_strip_vectors",
+          "type": "procedural",
+          "timestamp": "2026-06-11T08:05:00Z",
+          "content": "Memory Passport exports should strip raw vectors because embeddings can be regenerated after import.",
+          "tags": ["passport", "vectors", "import"],
+          "importance": 0.88,
+          "metadata": { "source_turn_id": "pr_t02" }
+        },
+        {
+          "id": "pr_encryption_method",
+          "type": "semantic",
+          "timestamp": "2026-06-11T08:10:00Z",
+          "content": "Encrypted Memory Passport exports use gzip plus AES-256-GCM.",
+          "tags": ["passport", "encryption", "gzip"],
+          "importance": 0.9,
+          "metadata": { "source_turn_id": "pr_t03" }
+        },
+        {
+          "id": "pr_import_multihop",
+          "type": "semantic",
+          "timestamp": "2026-06-11T08:15:00Z",
+          "content": "After Memory Passport import into a new agent namespace, linked project context should still answer multi-hop questions.",
+          "tags": ["passport", "import", "multi-hop"],
+          "importance": 0.94,
+          "metadata": { "source_turn_id": "pr_t04" },
+          "associations": [{ "target_id": "pr_atlas_graph_edge", "strength": 0.88 }]
+        },
+        {
+          "id": "pr_atlas_graph_edge",
+          "type": "semantic",
+          "timestamp": "2026-06-11T08:20:00Z",
+          "content": "The graph edge Project Atlas -> backup workflow -> encryption method should survive export and import.",
+          "tags": ["passport", "atlas", "graph"],
+          "importance": 0.89,
+          "metadata": { "source_turn_id": "pr_t05" },
+          "associations": [{ "target_id": "pr_encryption_method", "strength": 0.9 }]
+        },
+        {
+          "id": "pr_duplicate_strategy",
+          "type": "procedural",
+          "timestamp": "2026-06-11T08:25:00Z",
+          "content": "If Memory Passport import sees duplicate content, the conservative default is to skip duplicates.",
+          "tags": ["passport", "duplicates", "import"],
+          "importance": 0.84,
+          "metadata": { "source_turn_id": "pr_t06" }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "pr_q01",
+          "category": "portability",
+          "question": "What must a Memory Passport preserve?",
+          "expected_answer": "Raw memory content and association graph edges.",
+          "required_memory_ids": ["pr_passport_preserves_content"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This tests direct portability semantics."
+        },
+        {
+          "question_id": "pr_q02",
+          "category": "portability",
+          "question": "Should Memory Passport exports keep raw vectors?",
+          "expected_answer": "No. Raw vectors should be stripped because embeddings can be regenerated after import.",
+          "required_memory_ids": ["pr_strip_vectors"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The correct answer should avoid preserving embedding vectors."
+        },
+        {
+          "question_id": "pr_q03",
+          "category": "multi_hop_association",
+          "question": "For Project Atlas, what encryption method should survive export and import through the graph?",
+          "expected_answer": "gzip plus AES-256-GCM.",
+          "required_memory_ids": ["pr_atlas_graph_edge", "pr_encryption_method"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "The answer should traverse Atlas -> graph edge -> encryption method."
+        },
+        {
+          "question_id": "pr_q04",
+          "category": "procedural_recall",
+          "question": "What should import do with duplicate content by default?",
+          "expected_answer": "Skip duplicates.",
+          "required_memory_ids": ["pr_duplicate_strategy"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This tests conflict strategy recall."
+        },
+        {
+          "question_id": "pr_q05",
+          "category": "portability",
+          "question": "After importing into a new namespace, what should still work?",
+          "expected_answer": "Linked project context should still answer multi-hop questions.",
+          "required_memory_ids": ["pr_import_multihop", "pr_passport_preserves_content"],
+          "forbidden_memory_ids": [],
+          "cutoffs": [5, 10],
+          "rationale": "This question is meant for export/import preservation scoring."
+        }
+      ]
+    }
+  ]
+}

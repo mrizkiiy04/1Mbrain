@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* ---- Base ---- */
+
+* {
+  border-color: #e5e5e5;
+}
+
+body {
+  background: #fafafa;
+  color: #171717;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.12);
+  color: #312e81;
+}
+
+/* ---- Scrollbar ---- */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
+}
+
+/* ---- Focus ---- */
+
+:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.4);
+  outline-offset: 2px;
+}
+
+/* ---- Animations ---- */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-fast {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes progress-indeterminate {
+  0%   { left: -40%; }
+  100% { left: 100%; }
+}
+
+.animate-in {
+  animation: fade-in 0.2s ease-out both;
+}
+
+.animate-in-fast {
+  animation: fade-in-fast 0.15s ease-out both;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f5f5f5 25%, #e5e5e5 50%, #f5f5f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ---- Smooth transitions ---- */
+
+a, button, select, input, textarea {
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Glass nav ---- */
+
+.glass-nav {
+  background: rgba(250, 250, 250, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ---- Log viewer dark theme ---- */
+
+.log-viewer {
+  background: #18181b;
+  color: #d4d4d8;
+}
+
+.log-viewer::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+.log-viewer::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}

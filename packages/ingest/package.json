@@ -1,0 +1,32 @@
+{
+  "name": "@1mbrain/ingest",
+  "version": "0.1.1",
+  "description": "Web page ingestion pipeline for 1MBrain — fetch, markdown, chunk, fact-extract, store.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@1mbrain/core": "*",
+    "@mozilla/readability": "^0.5.0",
+    "jsdom": "^25.0.0",
+    "turndown": "^7.2.0",
+    "undici": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/turndown": "^5.0.5",
+    "vitest": "^2.1.0"
+  }
+}

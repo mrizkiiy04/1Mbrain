@@ -1,0 +1,2077 @@
+{
+  "name": "memory-bench-balanced-mini",
+  "description": "Dataset A (Balanced Mini): an 8-conversation, provider-neutral smoke-test benchmark spanning 8 domains, covering atomic recall, paraphrase, temporal updates, contradiction resolution, multi-hop association, noise resistance, procedural recall, and abstention.",
+  "generated_at": "2026-06-19",
+  "fairness_notes": [
+    "No memory record includes graph-specific fields such as explicit edge weights required for retrieval, decay scores, or memory-passport metadata; the optional 'associations' field is descriptive context, not a required index, so vector-only and flat-store systems can ignore it without losing answerable information.",
+    "Every question is answerable purely from the natural-language content of the listed required_memory_ids; no question depends on a system having pre-built a graph structure to succeed.",
+    "Atomic and paraphrased categories (45% combined) are intentionally the largest share, since plain recall and semantic-similarity retrieval are exactly what vector-only systems are expected to handle well.",
+    "Multi-hop questions are capped at 10% of the dataset (4 of 40) so that graph-native systems do not get a structurally inflated advantage.",
+    "Contradiction and temporal-update questions (25% combined) test recency handling, which any system with timestamped storage can address regardless of architecture.",
+    "Distractor memories are semantically similar but topically distinct (a different app, a different city, a different person, a one-off event), so noise resistance tests retrieval precision rather than rewarding any one indexing strategy."
+  ],
+  "conversations": [
+    {
+      "conversation_id": "convA-software-01",
+      "agent_id": "agent-dev-assist",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "memA-sw-001",
+          "type": "semantic",
+          "timestamp": "2025-11-02T09:10:00Z",
+          "content": "Maya decided to build Stridewell, a habit-tracking Android app, using Kotlin with Jetpack Compose for the UI layer.",
+          "tags": [
+            "stridewell",
+            "tech-stack"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-002",
+          "type": "semantic",
+          "timestamp": "2025-11-05T14:20:00Z",
+          "content": "Maya picked a teal-and-cream color palette for Stridewell because she wanted the app to feel calm rather than gamified and aggressive.",
+          "tags": [
+            "stridewell",
+            "design"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-003",
+          "type": "episodic",
+          "timestamp": "2025-11-20T11:00:00Z",
+          "content": "Maya is storing habit logs in SharedPreferences as a quick prototype solution while she gets the streak-counting logic working.",
+          "tags": [
+            "stridewell",
+            "storage"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-004",
+          "type": "semantic",
+          "timestamp": "2026-01-14T16:45:00Z",
+          "content": "After hitting performance issues with large habit histories, Maya migrated Stridewell's local storage from SharedPreferences to a Room database backed by SQLite.",
+          "tags": [
+            "stridewell",
+            "storage"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-sw-003",
+              "strength": 0.9,
+              "reason": "replaces the earlier SharedPreferences storage approach"
+            }
+          ]
+        },
+        {
+          "id": "memA-sw-005",
+          "type": "episodic",
+          "timestamp": "2026-01-15T10:05:00Z",
+          "content": "Maya mentioned that an earlier prototype of hers, a recipe-sharing app called Panfry, had used Firebase Firestore for storage, though that project has been shelved for months.",
+          "tags": [
+            "panfry",
+            "storage"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-006",
+          "type": "procedural",
+          "timestamp": "2026-02-02T13:00:00Z",
+          "content": "Maya's workflow for adding a new habit type to Stridewell is: define the data model as a Room entity, write a migration script, then wire up the new icon set in the UI.",
+          "tags": [
+            "stridewell",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-007",
+          "type": "episodic",
+          "timestamp": "2026-03-10T15:30:00Z",
+          "content": "Maya's mentor, a senior Android developer named Oskar, reviewed Stridewell's codebase and recommended she adopt an MVVM architecture with a single source-of-truth ViewModel.",
+          "tags": [
+            "stridewell",
+            "architecture",
+            "oskar"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-sw-008",
+          "type": "semantic",
+          "timestamp": "2026-03-12T09:00:00Z",
+          "content": "Following Oskar's review, Maya restructured Stridewell around MVVM, which made the streak-counting logic testable in isolation for the first time.",
+          "tags": [
+            "stridewell",
+            "architecture"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-sw-007",
+              "strength": 0.85,
+              "reason": "implements the mentor's recommendation"
+            }
+          ]
+        },
+        {
+          "id": "memA-sw-009",
+          "type": "episodic",
+          "timestamp": "2026-05-20T18:10:00Z",
+          "content": "Stridewell crashed for users with more than 200 logged habits, traced to an unindexed query in the Room database.",
+          "tags": [
+            "stridewell",
+            "bug"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-sw-004",
+              "strength": 0.6,
+              "reason": "the bug occurs in the storage layer introduced by this migration"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-sw-01",
+          "category": "atomic_fact_recall",
+          "question": "What UI toolkit is Maya using to build Stridewell?",
+          "expected_answer": "Jetpack Compose",
+          "acceptable_answer_criteria": [
+            "mentions Jetpack Compose",
+            "associates it with Kotlin/Android"
+          ],
+          "required_memory_ids": [
+            "memA-sw-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single direct fact stated once; equally retrievable by vector similarity or graph lookup."
+        },
+        {
+          "question_id": "qA-sw-02",
+          "category": "atomic_fact_recall",
+          "question": "Who reviewed Stridewell's codebase and what architecture did they recommend?",
+          "expected_answer": "Oskar, her mentor, recommended an MVVM architecture with a single source-of-truth ViewModel.",
+          "acceptable_answer_criteria": [
+            "names Oskar",
+            "mentions MVVM"
+          ],
+          "required_memory_ids": [
+            "memA-sw-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated fact in one record; no relational reasoning required."
+        },
+        {
+          "question_id": "qA-sw-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "Why did Maya go with a soft, muted look for the app instead of something flashier?",
+          "expected_answer": "She wanted Stridewell to feel calm rather than gamified or aggressive.",
+          "acceptable_answer_criteria": [
+            "captures the calm-vs-gamified rationale"
+          ],
+          "required_memory_ids": [
+            "memA-sw-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Question rewords 'teal-and-cream/calm' without reusing the source phrasing; testable by any embedding-based retriever."
+        },
+        {
+          "question_id": "qA-sw-04",
+          "category": "contradiction_resolution",
+          "question": "What does Stridewell currently use to store habit logs locally?",
+          "expected_answer": "A Room database (SQLite-backed). The earlier SharedPreferences approach was just an early prototype and has been replaced.",
+          "acceptable_answer_criteria": [
+            "identifies Room/SQLite as current",
+            "recognizes SharedPreferences is outdated"
+          ],
+          "required_memory_ids": [
+            "memA-sw-004"
+          ],
+          "forbidden_memory_ids": [
+            "memA-sw-003"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires preferring the more recent record over a stale one; doable by any system that tracks timestamps, not just graph stores."
+        },
+        {
+          "question_id": "qA-sw-05",
+          "category": "noise_resistance",
+          "question": "Did Stridewell ever use Firebase Firestore for storage?",
+          "expected_answer": "No. Firebase Firestore was used in a different, unrelated project of Maya's (Panfry), not in Stridewell.",
+          "acceptable_answer_criteria": [
+            "correctly separates Panfry from Stridewell",
+            "answers no for Stridewell specifically"
+          ],
+          "required_memory_ids": [
+            "memA-sw-001",
+            "memA-sw-005"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests whether retrieval over-matches on a semantically similar but irrelevant distractor (storage tech mentioned for a different app)."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-personal-assistant-01",
+      "agent_id": "agent-pa",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "memA-pa-001",
+          "type": "semantic",
+          "timestamp": "2025-09-10T08:00:00Z",
+          "content": "Tomas works a hybrid schedule: in the office Tuesdays and Thursdays, remote the rest of the week.",
+          "tags": [
+            "schedule",
+            "work"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-002",
+          "type": "semantic",
+          "timestamp": "2025-09-12T09:00:00Z",
+          "content": "Tomas asked to be reminded to take a short walk every day at 3pm to break up long stretches of sitting.",
+          "tags": [
+            "reminder",
+            "health"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-003",
+          "type": "episodic",
+          "timestamp": "2025-10-01T12:30:00Z",
+          "content": "Tomas started a vegetarian diet for health reasons and wants recipe suggestions without meat.",
+          "tags": [
+            "diet"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-004",
+          "type": "semantic",
+          "timestamp": "2026-02-18T19:00:00Z",
+          "content": "Tomas loosened his diet to pescatarian, now eating fish a couple of times a week while still avoiding red meat and poultry.",
+          "tags": [
+            "diet"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-pa-003",
+              "strength": 0.9,
+              "reason": "updates the earlier vegetarian-only preference"
+            }
+          ]
+        },
+        {
+          "id": "memA-pa-005",
+          "type": "episodic",
+          "timestamp": "2026-02-20T17:00:00Z",
+          "content": "Tomas asked for help picking a restaurant for his sister's birthday dinner, a one-off occasion unrelated to his regular eating routine.",
+          "tags": [
+            "one-off",
+            "dining"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-006",
+          "type": "semantic",
+          "timestamp": "2026-03-05T08:15:00Z",
+          "content": "Tomas has a recurring team standup every weekday at 9:30am that should never be scheduled over.",
+          "tags": [
+            "schedule",
+            "work"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-007",
+          "type": "episodic",
+          "timestamp": "2026-03-22T11:00:00Z",
+          "content": "Tomas booked an annual physical with Dr. Whitfield for the first week of July.",
+          "tags": [
+            "health",
+            "appointment"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-008",
+          "type": "procedural",
+          "timestamp": "2026-04-02T10:00:00Z",
+          "content": "When Tomas asks to 'block focus time,' the assistant should reserve two-hour quiet blocks in the morning and avoid placing meetings during them.",
+          "tags": [
+            "workflow",
+            "calendar"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-pa-009",
+          "type": "episodic",
+          "timestamp": "2026-05-30T14:00:00Z",
+          "content": "Tomas confirmed his office days are changing starting June to Mondays and Wednesdays because his team reorganized.",
+          "tags": [
+            "schedule",
+            "work"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-pa-001",
+              "strength": 0.85,
+              "reason": "updates the earlier hybrid-schedule days"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-pa-01",
+          "category": "atomic_fact_recall",
+          "question": "What time does Tomas like to be reminded to take a walk?",
+          "expected_answer": "3pm",
+          "acceptable_answer_criteria": [
+            "states 3pm"
+          ],
+          "required_memory_ids": [
+            "memA-pa-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single explicit fact, no temporal conflict involved."
+        },
+        {
+          "question_id": "qA-pa-02",
+          "category": "atomic_fact_recall",
+          "question": "Which doctor did Tomas book his annual physical with?",
+          "expected_answer": "Dr. Whitfield",
+          "acceptable_answer_criteria": [
+            "names Dr. Whitfield"
+          ],
+          "required_memory_ids": [
+            "memA-pa-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated once; equally accessible to any retrieval method."
+        },
+        {
+          "question_id": "qA-pa-03",
+          "category": "paraphrased_semantic_recall",
+          "question": "How should the assistant handle Tomas's calendar when he wants quiet, uninterrupted work time?",
+          "expected_answer": "Reserve two-hour quiet blocks in the morning and keep meetings out of them.",
+          "acceptable_answer_criteria": [
+            "mentions two-hour blocks",
+            "mentions morning placement",
+            "no meetings during the block"
+          ],
+          "required_memory_ids": [
+            "memA-pa-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from 'focus time' procedural memory without reusing its exact phrasing."
+        },
+        {
+          "question_id": "qA-pa-04",
+          "category": "contradiction_resolution",
+          "question": "Which days is Tomas currently in the office?",
+          "expected_answer": "Mondays and Wednesdays. This replaced his earlier Tuesday/Thursday hybrid schedule after his team reorganized.",
+          "acceptable_answer_criteria": [
+            "gives Monday/Wednesday",
+            "notes the change from the old schedule"
+          ],
+          "required_memory_ids": [
+            "memA-pa-009"
+          ],
+          "forbidden_memory_ids": [
+            "memA-pa-001"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests whether the system updates a previously stable fact rather than returning the older, now-stale schedule."
+        },
+        {
+          "question_id": "qA-pa-05",
+          "category": "noise_resistance",
+          "question": "Is picking a restaurant for his sister's birthday part of Tomas's regular eating routine?",
+          "expected_answer": "No, that was a one-off event for a birthday dinner, unrelated to his standing pescatarian diet.",
+          "acceptable_answer_criteria": [
+            "identifies it as a one-off, not a standing preference"
+          ],
+          "required_memory_ids": [
+            "memA-pa-005",
+            "memA-pa-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor shares the 'food' topic with his diet preference but describes an unrelated single event."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-research-01",
+      "agent_id": "agent-research",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "memA-res-001",
+          "type": "semantic",
+          "timestamp": "2025-12-01T10:00:00Z",
+          "content": "Elena's thesis focuses on how tree canopy coverage affects surface temperatures in mid-sized cities.",
+          "tags": [
+            "thesis",
+            "topic"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-002",
+          "type": "episodic",
+          "timestamp": "2025-12-03T11:00:00Z",
+          "content": "Elena's advisor, Professor Nakamura, suggested she look at a 2019 satellite-imagery methodology paper by Choudhury et al. for measuring canopy density.",
+          "tags": [
+            "advisor",
+            "methodology"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-003",
+          "type": "semantic",
+          "timestamp": "2025-12-10T09:30:00Z",
+          "content": "Reading the Choudhury paper led Elena to adopt NDVI (Normalized Difference Vegetation Index) thresholds as her canopy-density measure.",
+          "tags": [
+            "methodology",
+            "ndvi"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-res-002",
+              "strength": 0.8,
+              "reason": "methodology adopted because of the advisor's suggested paper"
+            }
+          ]
+        },
+        {
+          "id": "memA-res-004",
+          "type": "episodic",
+          "timestamp": "2026-01-08T15:00:00Z",
+          "content": "Elena narrowed her thesis scope from three cities down to just one, Cordoba, after her committee flagged the original scope as too broad for a one-year thesis.",
+          "tags": [
+            "scope"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-005",
+          "type": "episodic",
+          "timestamp": "2026-01-09T10:00:00Z",
+          "content": "Elena briefly considered a side project on coastal erosion with a labmate but decided not to pursue it due to time constraints.",
+          "tags": [
+            "side-project"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-006",
+          "type": "semantic",
+          "timestamp": "2026-02-14T13:00:00Z",
+          "content": "Elena's preliminary results show neighborhoods with over 30% canopy coverage run roughly 2.5°C cooler on average during summer afternoons.",
+          "tags": [
+            "results"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-007",
+          "type": "episodic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Elena's early hypothesis was that building material, asphalt versus concrete, would matter more than tree cover, but her data later showed canopy coverage was the stronger predictor.",
+          "tags": [
+            "hypothesis",
+            "results"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-008",
+          "type": "procedural",
+          "timestamp": "2026-03-15T14:00:00Z",
+          "content": "Elena's data-cleaning routine for new satellite passes is: filter out cloud cover above 10%, normalize for time-of-day, then run the NDVI threshold script.",
+          "tags": [
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-res-009",
+          "type": "episodic",
+          "timestamp": "2026-05-02T16:00:00Z",
+          "content": "Elena submitted her draft methodology section, crediting the Choudhury et al. paper as the basis for her NDVI approach, itself originally suggested by Professor Nakamura.",
+          "tags": [
+            "methodology",
+            "writing"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-res-003",
+              "strength": 0.7,
+              "reason": "restates the adopted methodology"
+            },
+            {
+              "target_id": "memA-res-002",
+              "strength": 0.6,
+              "reason": "traces the methodology back to the advisor's original suggestion"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-res-01",
+          "category": "atomic_fact_recall",
+          "question": "Which city did Elena ultimately choose to focus her thesis on?",
+          "expected_answer": "Cordoba",
+          "acceptable_answer_criteria": [
+            "names Cordoba"
+          ],
+          "required_memory_ids": [
+            "memA-res-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single stated fact; no relational chain needed."
+        },
+        {
+          "question_id": "qA-res-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What approach does Elena use to quantify how much tree canopy an area has?",
+          "expected_answer": "NDVI (Normalized Difference Vegetation Index) thresholds, drawn from the Choudhury et al. methodology.",
+          "acceptable_answer_criteria": [
+            "mentions NDVI",
+            "credits the methodology source"
+          ],
+          "required_memory_ids": [
+            "memA-res-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Rewords 'canopy density measure' as 'how much tree canopy an area has'; answerable via semantic similarity alone."
+        },
+        {
+          "question_id": "qA-res-03",
+          "category": "temporal_update",
+          "question": "How many cities is Elena currently studying for her thesis?",
+          "expected_answer": "One — Cordoba. She originally planned three but narrowed the scope after committee feedback.",
+          "acceptable_answer_criteria": [
+            "states one/Cordoba",
+            "notes the reduction from three"
+          ],
+          "required_memory_ids": [
+            "memA-res-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests whether the system reports the current, narrowed scope rather than an outdated broader plan."
+        },
+        {
+          "question_id": "qA-res-04",
+          "category": "contradiction_resolution",
+          "question": "Did Elena's data end up supporting her original hypothesis about building material?",
+          "expected_answer": "No. She initially hypothesized building material mattered more, but her data showed canopy coverage was the stronger predictor of cooling.",
+          "acceptable_answer_criteria": [
+            "names the original hypothesis",
+            "states the data contradicted it"
+          ],
+          "required_memory_ids": [
+            "memA-res-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "The contradiction is between a stated hypothesis and a later stated result within one record; any system reading the full record can resolve it without graph traversal."
+        },
+        {
+          "question_id": "qA-res-05",
+          "category": "noise_resistance",
+          "question": "Did Elena's coastal erosion side-project become part of her thesis?",
+          "expected_answer": "No, she decided not to pursue it due to time constraints; it stayed a brief side consideration, not part of the urban heat island thesis.",
+          "acceptable_answer_criteria": [
+            "identifies it as not pursued/unrelated"
+          ],
+          "required_memory_ids": [
+            "memA-res-005",
+            "memA-res-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor topic (a different environmental research idea) is thematically close but explicitly dropped, testing resistance to topical noise."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-travel-01",
+      "agent_id": "agent-travel",
+      "domain": "travel",
+      "memory_records": [
+        {
+          "id": "memA-tr-001",
+          "type": "episodic",
+          "timestamp": "2026-01-05T10:00:00Z",
+          "content": "Raf started planning a one-week trip to Lisbon, originally for early September.",
+          "tags": [
+            "lisbon",
+            "planning"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-002",
+          "type": "episodic",
+          "timestamp": "2026-01-06T11:00:00Z",
+          "content": "Raf booked a budget hostel near Alfama to keep costs low.",
+          "tags": [
+            "lisbon",
+            "lodging"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-003",
+          "type": "semantic",
+          "timestamp": "2026-01-20T09:00:00Z",
+          "content": "Raf is allergic to shellfish, which matters for restaurant recommendations in a coastal city like Lisbon.",
+          "tags": [
+            "allergy",
+            "dining"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-004",
+          "type": "episodic",
+          "timestamp": "2026-02-15T15:00:00Z",
+          "content": "Raf upgraded from the hostel to a boutique hotel in Chiado, deciding to treat himself since his 30th birthday falls during the trip.",
+          "tags": [
+            "lisbon",
+            "lodging"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-tr-002",
+              "strength": 0.9,
+              "reason": "replaces the originally booked hostel"
+            }
+          ]
+        },
+        {
+          "id": "memA-tr-005",
+          "type": "episodic",
+          "timestamp": "2026-02-16T16:00:00Z",
+          "content": "Raf recalled that on a trip to Madrid two years earlier he stayed in a similar boutique hotel and loved the central location.",
+          "tags": [
+            "madrid",
+            "past-trip"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-006",
+          "type": "episodic",
+          "timestamp": "2026-04-10T12:00:00Z",
+          "content": "Raf moved his Lisbon trip dates from early September to late September because of a work conflict.",
+          "tags": [
+            "lisbon",
+            "dates"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-007",
+          "type": "procedural",
+          "timestamp": "2026-04-12T13:00:00Z",
+          "content": "Raf prefers to book day trips no more than a week in advance so he can adjust plans based on the weather.",
+          "tags": [
+            "workflow"
+          ],
+          "importance": 0.45,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-tr-008",
+          "type": "episodic",
+          "timestamp": "2026-05-01T10:00:00Z",
+          "content": "Raf added a day trip to Sintra to see Pena Palace, booked through a small local tour operator his hotel concierge recommended.",
+          "tags": [
+            "lisbon",
+            "sintra"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-tr-004",
+              "strength": 0.5,
+              "reason": "the concierge recommendation came from the Chiado hotel stay"
+            }
+          ]
+        },
+        {
+          "id": "memA-tr-009",
+          "type": "episodic",
+          "timestamp": "2026-06-02T09:00:00Z",
+          "content": "Raf confirmed his flight: arriving in Lisbon September 28th, departing October 5th.",
+          "tags": [
+            "lisbon",
+            "dates"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-tr-006",
+              "strength": 0.85,
+              "reason": "confirms the previously moved dates"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-tr-01",
+          "category": "atomic_fact_recall",
+          "question": "What food allergy does Raf have that matters for restaurant planning?",
+          "expected_answer": "Shellfish",
+          "acceptable_answer_criteria": [
+            "states shellfish"
+          ],
+          "required_memory_ids": [
+            "memA-tr-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single explicit fact."
+        },
+        {
+          "question_id": "qA-tr-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "How far ahead does Raf like to lock in his day trips?",
+          "expected_answer": "No more than a week ahead, so he can adjust based on the weather.",
+          "acceptable_answer_criteria": [
+            "mentions about a week",
+            "mentions weather flexibility"
+          ],
+          "required_memory_ids": [
+            "memA-tr-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the procedural memory's phrasing; testable by semantic similarity."
+        },
+        {
+          "question_id": "qA-tr-03",
+          "category": "temporal_update",
+          "question": "When is Raf's Lisbon trip currently scheduled?",
+          "expected_answer": "September 28th to October 5th — moved from the original early-September plan.",
+          "acceptable_answer_criteria": [
+            "gives the new dates",
+            "notes they were moved"
+          ],
+          "required_memory_ids": [
+            "memA-tr-009",
+            "memA-tr-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the latest confirmed dates over the earlier 'early September' plan."
+        },
+        {
+          "question_id": "qA-tr-04",
+          "category": "contradiction_resolution",
+          "question": "Where is Raf staying in Lisbon?",
+          "expected_answer": "A boutique hotel in Chiado — he upgraded from the hostel near Alfama he originally booked.",
+          "acceptable_answer_criteria": [
+            "names Chiado boutique hotel",
+            "notes the upgrade from the hostel"
+          ],
+          "required_memory_ids": [
+            "memA-tr-004"
+          ],
+          "forbidden_memory_ids": [
+            "memA-tr-002"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests preference for the superseding lodging record over the stale hostel booking."
+        },
+        {
+          "question_id": "qA-tr-05",
+          "category": "noise_resistance",
+          "question": "Did Raf stay in a boutique hotel in Lisbon on an earlier trip?",
+          "expected_answer": "No — the boutique hotel he recalled was in Madrid on a previous trip, not in Lisbon.",
+          "acceptable_answer_criteria": [
+            "correctly attributes the memory to Madrid, not Lisbon"
+          ],
+          "required_memory_ids": [
+            "memA-tr-005",
+            "memA-tr-004"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Distractor mentions a boutique hotel and is thematically close to the current Lisbon hotel, but refers to a different city/trip."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-health-admin-01",
+      "agent_id": "agent-health",
+      "domain": "health_admin",
+      "memory_records": [
+        {
+          "id": "memA-ha-001",
+          "type": "episodic",
+          "timestamp": "2025-10-02T09:00:00Z",
+          "content": "Priya started coordinating medical care for her father, Vikram, after his recent diagnosis of high blood pressure.",
+          "tags": [
+            "vikram",
+            "care-coordination"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ha-002",
+          "type": "semantic",
+          "timestamp": "2025-10-05T10:00:00Z",
+          "content": "Vikram's doctor, Dr. Alam, initially prescribed 5mg of amlodipine daily for his blood pressure.",
+          "tags": [
+            "vikram",
+            "medication"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ha-003",
+          "type": "episodic",
+          "timestamp": "2026-01-12T11:00:00Z",
+          "content": "At a follow-up, Dr. Alam increased Vikram's amlodipine dosage to 10mg daily after his readings stayed high.",
+          "tags": [
+            "vikram",
+            "medication"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ha-002",
+              "strength": 0.9,
+              "reason": "updates the original 5mg dosage"
+            }
+          ]
+        },
+        {
+          "id": "memA-ha-004",
+          "type": "episodic",
+          "timestamp": "2026-01-13T12:00:00Z",
+          "content": "Priya mentioned her own annual dental cleaning was due around the same time, unrelated to her father's care.",
+          "tags": [
+            "priya",
+            "personal"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ha-005",
+          "type": "episodic",
+          "timestamp": "2026-02-20T14:00:00Z",
+          "content": "Dr. Alam referred Vikram to a cardiologist, Dr. Reyes, after an EKG showed an irregular heartbeat.",
+          "tags": [
+            "vikram",
+            "referral"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ha-003",
+              "strength": 0.6,
+              "reason": "referral followed continued high readings after the dosage increase"
+            }
+          ]
+        },
+        {
+          "id": "memA-ha-006",
+          "type": "episodic",
+          "timestamp": "2026-02-28T15:00:00Z",
+          "content": "Dr. Reyes reviewed the EKG and recommended a 24-hour Holter monitor test before deciding on further treatment.",
+          "tags": [
+            "vikram",
+            "cardiology"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ha-005",
+              "strength": 0.85,
+              "reason": "follow-up test ordered after the referral"
+            }
+          ]
+        },
+        {
+          "id": "memA-ha-007",
+          "type": "semantic",
+          "timestamp": "2026-03-10T09:00:00Z",
+          "content": "Vikram's insurance switched from Plan B to Plan C in March, changing his specialist-visit copay from $40 to $25.",
+          "tags": [
+            "vikram",
+            "insurance"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ha-008",
+          "type": "procedural",
+          "timestamp": "2026-03-15T10:00:00Z",
+          "content": "To refill Vikram's amlodipine prescription, Priya calls the pharmacy two days before it runs out and confirms Dr. Alam's office has approved the refill.",
+          "tags": [
+            "vikram",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ha-009",
+          "type": "episodic",
+          "timestamp": "2026-05-18T16:00:00Z",
+          "content": "The Holter monitor results came back normal, and Dr. Reyes cleared Vikram to continue his current blood pressure regimen without further cardiac intervention.",
+          "tags": [
+            "vikram",
+            "cardiology",
+            "results"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ha-006",
+              "strength": 0.85,
+              "reason": "this is the result of the ordered Holter monitor test"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-ha-01",
+          "category": "atomic_fact_recall",
+          "question": "What is Vikram's current amlodipine dosage?",
+          "expected_answer": "10mg daily",
+          "acceptable_answer_criteria": [
+            "states 10mg"
+          ],
+          "required_memory_ids": [
+            "memA-ha-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Most recent dosage record states this directly."
+        },
+        {
+          "question_id": "qA-ha-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What changed about Vikram's specialist-visit costs in March?",
+          "expected_answer": "His copay dropped from $40 to $25 after switching insurance plans.",
+          "acceptable_answer_criteria": [
+            "mentions the copay drop",
+            "mentions the insurance switch"
+          ],
+          "required_memory_ids": [
+            "memA-ha-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from 'copay' language without copying it verbatim."
+        },
+        {
+          "question_id": "qA-ha-03",
+          "category": "temporal_update",
+          "question": "What is Vikram's blood pressure medication dosage now, and how did it get there?",
+          "expected_answer": "10mg daily now, increased by Dr. Alam from the original 5mg dose at a January follow-up.",
+          "acceptable_answer_criteria": [
+            "gives current 10mg",
+            "traces it back to the 5mg starting dose"
+          ],
+          "required_memory_ids": [
+            "memA-ha-003",
+            "memA-ha-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Tests resolving the current value while still being able to reference the prior one for context."
+        },
+        {
+          "question_id": "qA-ha-04",
+          "category": "multi_hop_association",
+          "question": "Why did Vikram end up getting a Holter monitor test?",
+          "expected_answer": "An EKG showed an irregular heartbeat, which led Dr. Alam to refer him to cardiologist Dr. Reyes, who then ordered the Holter monitor.",
+          "acceptable_answer_criteria": [
+            "mentions the EKG finding",
+            "mentions the referral to Dr. Reyes",
+            "connects it to the Holter monitor order"
+          ],
+          "required_memory_ids": [
+            "memA-ha-005",
+            "memA-ha-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires chaining two linked records (referral -> follow-up test); a pure single-vector lookup on the question text alone would likely retrieve only one of the two records."
+        },
+        {
+          "question_id": "qA-ha-05",
+          "category": "procedural_recall",
+          "question": "What does Priya do to refill her father's blood pressure medication?",
+          "expected_answer": "She calls the pharmacy two days before it runs out and confirms Dr. Alam's office approved the refill.",
+          "acceptable_answer_criteria": [
+            "mentions calling two days ahead",
+            "mentions confirming approval with the doctor's office"
+          ],
+          "required_memory_ids": [
+            "memA-ha-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Procedure is stated in a single record; no relational reasoning needed."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-finance-admin-01",
+      "agent_id": "agent-finance",
+      "domain": "finance_admin",
+      "memory_records": [
+        {
+          "id": "memA-fa-001",
+          "type": "semantic",
+          "timestamp": "2025-11-01T08:00:00Z",
+          "content": "Jonas set a monthly savings goal of $400 when he started budgeting with the assistant.",
+          "tags": [
+            "budget",
+            "goal"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-002",
+          "type": "episodic",
+          "timestamp": "2025-11-10T09:00:00Z",
+          "content": "Jonas switched his primary checking account from Northfield Bank to Harbor Credit Union for better fees.",
+          "tags": [
+            "banking"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-003",
+          "type": "episodic",
+          "timestamp": "2026-01-05T10:00:00Z",
+          "content": "Jonas canceled a $15/month streaming subscription he rarely used.",
+          "tags": [
+            "expenses"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-004",
+          "type": "episodic",
+          "timestamp": "2026-01-06T11:00:00Z",
+          "content": "Jonas also canceled a $30/month gym membership after switching to home workouts, noting it freed up budget room.",
+          "tags": [
+            "expenses"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-005",
+          "type": "episodic",
+          "timestamp": "2026-01-20T12:00:00Z",
+          "content": "With the combined $45/month in cancellations, Jonas raised his monthly savings goal from $400 to $450.",
+          "tags": [
+            "budget",
+            "goal"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-fa-003",
+              "strength": 0.7,
+              "reason": "freed-up subscription money funded the higher goal"
+            },
+            {
+              "target_id": "memA-fa-004",
+              "strength": 0.7,
+              "reason": "freed-up gym money funded the higher goal"
+            },
+            {
+              "target_id": "memA-fa-001",
+              "strength": 0.85,
+              "reason": "updates the original $400 goal"
+            }
+          ]
+        },
+        {
+          "id": "memA-fa-006",
+          "type": "episodic",
+          "timestamp": "2026-02-02T13:00:00Z",
+          "content": "Jonas's sister asked him for advice on her own student loan refinancing, which he helped research separately.",
+          "tags": [
+            "other-person"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-007",
+          "type": "procedural",
+          "timestamp": "2026-02-10T14:00:00Z",
+          "content": "Jonas's process for disputing a charge is to first call Harbor Credit Union's support line, then follow up in writing within 10 days if it isn't resolved.",
+          "tags": [
+            "workflow",
+            "banking"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-008",
+          "type": "semantic",
+          "timestamp": "2026-04-01T09:00:00Z",
+          "content": "Jonas started allocating an extra $100/month toward an emergency fund, separate from his regular savings goal.",
+          "tags": [
+            "budget",
+            "emergency-fund"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-fa-009",
+          "type": "episodic",
+          "timestamp": "2026-05-15T15:00:00Z",
+          "content": "Jonas disputed an incorrect $60 charge from a hardware store and got it reversed within a week using his usual process.",
+          "tags": [
+            "banking",
+            "dispute"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-fa-007",
+              "strength": 0.8,
+              "reason": "followed his established dispute procedure"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-fa-01",
+          "category": "atomic_fact_recall",
+          "question": "Which bank does Jonas currently use for checking?",
+          "expected_answer": "Harbor Credit Union",
+          "acceptable_answer_criteria": [
+            "names Harbor Credit Union"
+          ],
+          "required_memory_ids": [
+            "memA-fa-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Directly stated single fact."
+        },
+        {
+          "question_id": "qA-fa-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is Jonas currently doing to build up a financial cushion for emergencies?",
+          "expected_answer": "He puts an extra $100/month into an emergency fund, separate from his regular savings goal.",
+          "acceptable_answer_criteria": [
+            "mentions $100/month",
+            "mentions it's separate from regular savings"
+          ],
+          "required_memory_ids": [
+            "memA-fa-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Rewords 'emergency fund' question without echoing the source sentence."
+        },
+        {
+          "question_id": "qA-fa-03",
+          "category": "temporal_update",
+          "question": "What is Jonas's monthly savings goal right now?",
+          "expected_answer": "$450 — raised from the original $400 goal.",
+          "acceptable_answer_criteria": [
+            "states $450",
+            "notes it was raised from $400"
+          ],
+          "required_memory_ids": [
+            "memA-fa-005",
+            "memA-fa-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires returning the updated goal rather than the original starting figure."
+        },
+        {
+          "question_id": "qA-fa-04",
+          "category": "multi_hop_association",
+          "question": "Why did Jonas raise his savings goal to $450?",
+          "expected_answer": "Canceling his streaming subscription and gym membership freed up $45/month combined, which he redirected into a higher savings goal.",
+          "acceptable_answer_criteria": [
+            "mentions both cancellations",
+            "connects the freed-up amount to the goal increase"
+          ],
+          "required_memory_ids": [
+            "memA-fa-003",
+            "memA-fa-004",
+            "memA-fa-005"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires combining two separate cancellation records with the goal-change record; a single nearest-neighbor lookup on the question alone may miss one of the three."
+        },
+        {
+          "question_id": "qA-fa-05",
+          "category": "procedural_recall",
+          "question": "What does Jonas do when he needs to dispute a charge?",
+          "expected_answer": "He calls Harbor Credit Union's support line first, then follows up in writing within 10 days if it's still unresolved.",
+          "acceptable_answer_criteria": [
+            "mentions calling support first",
+            "mentions the 10-day written follow-up"
+          ],
+          "required_memory_ids": [
+            "memA-fa-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single procedural record states this directly."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-education-01",
+      "agent_id": "agent-tutor",
+      "domain": "education",
+      "memory_records": [
+        {
+          "id": "memA-ed-001",
+          "type": "episodic",
+          "timestamp": "2025-12-01T09:00:00Z",
+          "content": "Aisha started studying for the PMP (Project Management Professional) certification exam.",
+          "tags": [
+            "pmp",
+            "study"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ed-002",
+          "type": "episodic",
+          "timestamp": "2025-12-05T10:00:00Z",
+          "content": "Aisha originally scheduled her PMP exam for March 15.",
+          "tags": [
+            "pmp",
+            "schedule"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ed-003",
+          "type": "episodic",
+          "timestamp": "2026-02-01T11:00:00Z",
+          "content": "Aisha joined a weekly study group organized through a local professional association.",
+          "tags": [
+            "pmp",
+            "study-group"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ed-004",
+          "type": "episodic",
+          "timestamp": "2026-02-08T12:00:00Z",
+          "content": "A study group member recommended a practice-exam question bank from a provider called PrepMaster.",
+          "tags": [
+            "pmp",
+            "resource"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ed-003",
+              "strength": 0.8,
+              "reason": "recommendation came from the study group"
+            }
+          ]
+        },
+        {
+          "id": "memA-ed-005",
+          "type": "episodic",
+          "timestamp": "2026-02-15T13:00:00Z",
+          "content": "Using the PrepMaster question bank, Aisha discovered she was consistently weak on risk-management questions.",
+          "tags": [
+            "pmp",
+            "weak-area"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ed-004",
+              "strength": 0.8,
+              "reason": "weakness surfaced through this recommended resource"
+            }
+          ]
+        },
+        {
+          "id": "memA-ed-006",
+          "type": "episodic",
+          "timestamp": "2026-02-20T14:00:00Z",
+          "content": "Aisha pushed her PMP exam date back to April 20 to allow more time to shore up her risk-management knowledge.",
+          "tags": [
+            "pmp",
+            "schedule"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-ed-005",
+              "strength": 0.85,
+              "reason": "weak area discovery led to rescheduling"
+            },
+            {
+              "target_id": "memA-ed-002",
+              "strength": 0.7,
+              "reason": "updates the original March 15 date"
+            }
+          ]
+        },
+        {
+          "id": "memA-ed-007",
+          "type": "episodic",
+          "timestamp": "2026-03-01T09:00:00Z",
+          "content": "Aisha mentioned she'd earned a different certification, Six Sigma Green Belt, two years earlier for a previous job.",
+          "tags": [
+            "other-certification"
+          ],
+          "importance": 0.25,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ed-008",
+          "type": "procedural",
+          "timestamp": "2026-03-10T10:00:00Z",
+          "content": "Aisha's study routine is 20 practice questions every morning with immediate review of wrong answers, then one PMBOK chapter in the evening.",
+          "tags": [
+            "pmp",
+            "workflow"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-ed-009",
+          "type": "episodic",
+          "timestamp": "2026-04-05T11:00:00Z",
+          "content": "Aisha said she felt much more confident on risk-management topics after several weeks of focused practice.",
+          "tags": [
+            "pmp",
+            "progress"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": []
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-ed-01",
+          "category": "atomic_fact_recall",
+          "question": "What certification is Aisha studying for?",
+          "expected_answer": "PMP (Project Management Professional)",
+          "acceptable_answer_criteria": [
+            "names PMP"
+          ],
+          "required_memory_ids": [
+            "memA-ed-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Direct single-fact recall."
+        },
+        {
+          "question_id": "qA-ed-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What does Aisha's daily exam-prep routine look like?",
+          "expected_answer": "20 practice questions each morning with immediate review of mistakes, plus a PMBOK chapter in the evening.",
+          "acceptable_answer_criteria": [
+            "mentions the morning practice questions",
+            "mentions the evening reading"
+          ],
+          "required_memory_ids": [
+            "memA-ed-008"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Reworded from the source procedural record's wording."
+        },
+        {
+          "question_id": "qA-ed-03",
+          "category": "temporal_update",
+          "question": "When is Aisha's PMP exam currently scheduled?",
+          "expected_answer": "April 20 — moved from the original March 15 date.",
+          "acceptable_answer_criteria": [
+            "states April 20",
+            "notes the change from March 15"
+          ],
+          "required_memory_ids": [
+            "memA-ed-006",
+            "memA-ed-002"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the rescheduled date over the originally stated one."
+        },
+        {
+          "question_id": "qA-ed-04",
+          "category": "multi_hop_association",
+          "question": "How did Aisha discover she needed to push back her exam date?",
+          "expected_answer": "Her study group recommended the PrepMaster question bank; using it revealed she was weak on risk-management, which is why she rescheduled.",
+          "acceptable_answer_criteria": [
+            "mentions the study group",
+            "mentions PrepMaster",
+            "mentions the risk-management weakness",
+            "connects it to the rescheduling"
+          ],
+          "required_memory_ids": [
+            "memA-ed-003",
+            "memA-ed-004",
+            "memA-ed-005",
+            "memA-ed-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Four-record causal chain; answering well requires connecting study-group -> resource -> discovered weakness -> reschedule, which stresses any system's ability to chain related facts."
+        },
+        {
+          "question_id": "qA-ed-05",
+          "category": "abstention",
+          "question": "Did Aisha pass her PMP exam?",
+          "expected_answer": "Not enough information — there's no record of her having taken the exam or received a result yet.",
+          "acceptable_answer_criteria": [
+            "states that the outcome is unknown/not recorded",
+            "does not fabricate a pass or fail result"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "memA-ed-009"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Tests whether the system resists treating 'felt more confident' as proof of passing; correct behavior is to abstain rather than guess."
+        }
+      ]
+    },
+    {
+      "conversation_id": "convA-creative-work-01",
+      "agent_id": "agent-writing",
+      "domain": "creative_work",
+      "memory_records": [
+        {
+          "id": "memA-cw-001",
+          "type": "episodic",
+          "timestamp": "2025-10-01T09:00:00Z",
+          "content": "Leo started drafting a fantasy novel originally titled 'The Glass Throne.'",
+          "tags": [
+            "novel",
+            "title"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-001",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-cw-002",
+          "type": "semantic",
+          "timestamp": "2025-10-10T10:00:00Z",
+          "content": "Leo's protagonist was originally named Kestrel, a runaway blacksmith's apprentice.",
+          "tags": [
+            "novel",
+            "character"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-002",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-cw-003",
+          "type": "episodic",
+          "timestamp": "2025-12-01T11:00:00Z",
+          "content": "Leo planted an early detail that the protagonist's missing mother left behind a strange iron key, intending it to matter later.",
+          "tags": [
+            "novel",
+            "plot-seed"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-003",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-cw-004",
+          "type": "episodic",
+          "timestamp": "2026-01-15T12:00:00Z",
+          "content": "Leo renamed the protagonist from Kestrel to Wren partway through drafting because Kestrel sounded too similar to another character's name.",
+          "tags": [
+            "novel",
+            "character"
+          ],
+          "importance": 0.6,
+          "metadata": {
+            "source_turn": "turn-004",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-cw-002",
+              "strength": 0.85,
+              "reason": "renames the original protagonist"
+            }
+          ]
+        },
+        {
+          "id": "memA-cw-005",
+          "type": "episodic",
+          "timestamp": "2026-02-10T13:00:00Z",
+          "content": "Leo sketched out an unrelated short story idea about a lighthouse keeper, just for fun between novel-writing sessions.",
+          "tags": [
+            "side-project"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "turn-005",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-cw-006",
+          "type": "episodic",
+          "timestamp": "2026-03-20T14:00:00Z",
+          "content": "In the midpoint twist, the iron key from the protagonist's mother unlocks a hidden chamber beneath the blacksmith's forge where the novel's villain was once imprisoned.",
+          "tags": [
+            "novel",
+            "plot-payoff"
+          ],
+          "importance": 0.75,
+          "metadata": {
+            "source_turn": "turn-006",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-cw-003",
+              "strength": 0.85,
+              "reason": "pays off the earlier planted detail"
+            }
+          ]
+        },
+        {
+          "id": "memA-cw-007",
+          "type": "procedural",
+          "timestamp": "2026-04-01T09:00:00Z",
+          "content": "Leo's revision process is to finish a full draft first, then do a structural pass focused only on plot, then a final pass focused on prose style.",
+          "tags": [
+            "novel",
+            "workflow"
+          ],
+          "importance": 0.5,
+          "metadata": {
+            "source_turn": "turn-007",
+            "speaker": "user"
+          },
+          "associations": []
+        },
+        {
+          "id": "memA-cw-008",
+          "type": "episodic",
+          "timestamp": "2026-05-01T10:00:00Z",
+          "content": "Leo changed the novel's title from 'The Glass Throne' to 'The Forge Beneath' because the original no longer fit the story.",
+          "tags": [
+            "novel",
+            "title"
+          ],
+          "importance": 0.65,
+          "metadata": {
+            "source_turn": "turn-008",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-cw-001",
+              "strength": 0.85,
+              "reason": "renames the originally chosen title"
+            }
+          ]
+        },
+        {
+          "id": "memA-cw-009",
+          "type": "episodic",
+          "timestamp": "2026-06-05T11:00:00Z",
+          "content": "Leo finished his structural revision pass and started the prose-style pass, following his usual process.",
+          "tags": [
+            "novel",
+            "progress"
+          ],
+          "importance": 0.55,
+          "metadata": {
+            "source_turn": "turn-009",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "memA-cw-007",
+              "strength": 0.8,
+              "reason": "following the established revision process"
+            }
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "qA-cw-01",
+          "category": "atomic_fact_recall",
+          "question": "Who left behind the iron key in Leo's novel?",
+          "expected_answer": "The protagonist's missing mother",
+          "acceptable_answer_criteria": [
+            "identifies the mother"
+          ],
+          "required_memory_ids": [
+            "memA-cw-003"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "easy",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Single explicit fact."
+        },
+        {
+          "question_id": "qA-cw-02",
+          "category": "paraphrased_semantic_recall",
+          "question": "What's Leo's general approach to revising a finished draft?",
+          "expected_answer": "Finish the full draft first, then a structural/plot-focused pass, then a final pass focused on prose style.",
+          "acceptable_answer_criteria": [
+            "mentions the three-stage order: draft, plot pass, prose pass"
+          ],
+          "required_memory_ids": [
+            "memA-cw-007"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Rewords the procedural memory without echoing its exact phrasing."
+        },
+        {
+          "question_id": "qA-cw-03",
+          "category": "temporal_update",
+          "question": "What is the novel currently titled?",
+          "expected_answer": "'The Forge Beneath' — changed from the original title 'The Glass Throne.'",
+          "acceptable_answer_criteria": [
+            "gives the current title",
+            "notes the change from the old title"
+          ],
+          "required_memory_ids": [
+            "memA-cw-008",
+            "memA-cw-001"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Requires surfacing the renamed title over the originally stated one."
+        },
+        {
+          "question_id": "qA-cw-04",
+          "category": "multi_hop_association",
+          "question": "What turns out to be the significance of the iron key the protagonist's mother left behind?",
+          "expected_answer": "It unlocks a hidden chamber beneath the blacksmith's forge where the novel's villain was once imprisoned — the payoff of an early planted detail.",
+          "acceptable_answer_criteria": [
+            "connects the key to the hidden chamber",
+            "mentions the villain's imprisonment"
+          ],
+          "required_memory_ids": [
+            "memA-cw-003",
+            "memA-cw-006"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "high",
+          "fairness_note": "Requires linking a plot seed planted months earlier to its payoff in a separate record; a flat similarity search on 'iron key' alone might surface only the planting record."
+        },
+        {
+          "question_id": "qA-cw-05",
+          "category": "abstention",
+          "question": "Has Leo found a publisher for the novel?",
+          "expected_answer": "Not enough information — no record discusses publishing, submission, or a publisher.",
+          "acceptable_answer_criteria": [
+            "states the information is not available",
+            "does not invent a publisher or deal"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "No memory addresses publishing status at all, so the correct behavior is abstention rather than fabrication."
+        }
+      ]
+    }
+  ]
+}

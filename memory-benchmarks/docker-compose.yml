@@ -1,0 +1,56 @@
+services:
+  mem0:
+    build:
+      context: ./docker/mem0
+    ports:
+      - "${MEM0_PORT:-8888}:8000"
+    depends_on:
+      qdrant:
+        condition: service_healthy
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - DEEPSEEK_API_BASE=${DEEPSEEK_API_BASE:-https://api.deepseek.com}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-us-west-2}
+      - SAGEMAKER_ENDPOINT_NAME=${SAGEMAKER_ENDPOINT_NAME:-}
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - COLLECTION_NAME=${COLLECTION_NAME:-memories}
+      - LLM_MODEL=${LLM_MODEL:-gpt-4o-mini}
+      - EMBEDDER_MODEL=${EMBEDDER_MODEL:-text-embedding-3-small}
+    volumes:
+      - mem0_history:/app/history
+      - ${MEM0_CONFIG_FILE:-./configs/openai.yaml}:/app/config.yaml:ro
+      # Custom config for advanced setups (Azure, Ollama, SageMaker, etc.)
+      # Uncomment and point to your config file:
+      # - ./mem0-config.yaml:/app/config.yaml:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "${QDRANT_PORT:-6333}:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/localhost/6333 && echo ok'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  qdrant_data:
+  mem0_history:

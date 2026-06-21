@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Test
+coverage/
+
+# Docker volumes
+data/
+redis-data/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+venv/
+.venv/
+*.egg-info/
+
+# Local Debug & Artifacts
+debug-*.js
+debug-*.ts
+task.md
+metrics_summary.json
+*.sqlite
+*.tsbuildinfo
+packages/benchmarks/results/

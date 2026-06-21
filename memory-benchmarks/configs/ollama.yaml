@@ -1,0 +1,30 @@
+# Fully local configuration — no API keys needed
+#
+# Prerequisites:
+#   1. Install Ollama: https://ollama.com
+#   2. Pull models:
+#        ollama pull llama3.1
+#        ollama pull nomic-embed-text
+#   3. Copy to repo root:  cp configs/ollama.yaml mem0-config.yaml
+#   4. Uncomment the volume mount in docker-compose.yml
+#   5. docker compose up -d
+#
+# Note: The Mem0 container needs to reach your host's Ollama.
+# On Docker Desktop (Mac/Windows), use host.docker.internal.
+# On Linux, use --network=host or your machine's LAN IP.
+
+version: "v1.1"
+
+llm:
+  provider: ollama
+  config:
+    model: llama3.1
+    ollama_base_url: http://host.docker.internal:11434  # Mac/Windows
+    # ollama_base_url: http://172.17.0.1:11434          # Linux (docker bridge IP)
+    temperature: 0.1
+
+embedder:
+  provider: ollama
+  config:
+    model: nomic-embed-text
+    ollama_base_url: http://host.docker.internal:11434

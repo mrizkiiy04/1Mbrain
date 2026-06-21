@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1MBrain — Codebase Workflow Visualization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b14;
+      --bg2: #0d1120;
+      --bg3: #111827;
+      --border: rgba(99,120,200,0.18);
+      --border-bright: rgba(99,120,200,0.4);
+      --text: #e2e8f7;
+      --text-dim: #8892b0;
+      --text-bright: #ffffff;
+      --accent-blue: #4f8ef7;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-orange: #f97316;
+      --accent-pink: #ec4899;
+      --accent-cyan: #06b6d4;
+      --accent-yellow: #eab308;
+      --glow-blue: rgba(79,142,247,0.25);
+      --glow-purple: rgba(168,85,247,0.25);
+      --glow-green: rgba(34,197,94,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 10%, rgba(79,142,247,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(168,85,247,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 60% 40%, rgba(34,197,94,0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 56px 24px 40px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(79,142,247,0.1);
+      border: 1px solid rgba(79,142,247,0.3);
+      border-radius: 999px;
+      padding: 6px 18px 6px 10px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--accent-blue);
+      font-weight: 500;
+    }
+
+    .logo-badge .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      box-shadow: 0 0 8px var(--accent-blue);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 0%, #a8c4ff 50%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      color: var(--text-dim);
+      font-size: 16px;
+      max-width: 560px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+
+    /* ── Nav tabs ── */
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 24px;
+      background: rgba(8,11,20,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-tab {
+      padding: 7px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-dim);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-tab:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-tab.active {
+      background: rgba(79,142,247,0.12);
+      border-color: rgba(79,142,247,0.3);
+      color: var(--accent-blue);
+    }
+
+    /* ── Content sections ── */
+    .section {
+      display: none;
+      position: relative;
+      z-index: 1;
+      padding: 40px 24px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section.active { display: block; }
+
+    /* ── Section heading ── */
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: var(--border-bright);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-title { font-size: 15px; font-weight: 600; color: var(--text-bright); }
+    .card-path { font-size: 11px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+    /* ── Grid layouts ── */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+    /* ── Tag chips ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-weight: 500;
+    }
+
+    /* ── Method list ── */
+    .method-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .method-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .method-badge {
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+    .badge-get    { background: rgba(34,197,94,0.15);  color: var(--accent-green);  border: 1px solid rgba(34,197,94,0.2); }
+    .badge-post   { background: rgba(79,142,247,0.15); color: var(--accent-blue);   border: 1px solid rgba(79,142,247,0.2); }
+    .badge-delete { background: rgba(239,68,68,0.15);  color: #f87171;             border: 1px solid rgba(239,68,68,0.2); }
+    .badge-ws     { background: rgba(168,85,247,0.15); color: var(--accent-purple); border: 1px solid rgba(168,85,247,0.2); }
+    .badge-fn     { background: rgba(6,182,212,0.15);  color: var(--accent-cyan);   border: 1px solid rgba(6,182,212,0.2); }
+    .badge-class  { background: rgba(249,115,22,0.15); color: var(--accent-orange); border: 1px solid rgba(249,115,22,0.2); }
+    .badge-type   { background: rgba(234,179,8,0.15);  color: var(--accent-yellow); border: 1px solid rgba(234,179,8,0.2); }
+
+    /* ── Flow arrows ── */
+    .flow-container {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 24px 0;
+    }
+
+    .flow-node {
+      flex-shrink: 0;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      min-width: 150px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .flow-node:hover {
+      border-color: var(--border-bright);
+      transform: scale(1.03);
+    }
+
+    .flow-node .fn { font-size: 13px; font-weight: 600; color: var(--text-bright); font-family: 'JetBrains Mono', monospace; }
+    .flow-node .desc { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+    .flow-arrow {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 4px;
+      color: var(--text-dim);
+      font-size: 20px;
+    }
+
+    /* ── Architecture diagram ── */
+    .arch-layer {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .arch-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 8px 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .arch-boxes {
+      flex: 1;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .arch-box {
+      flex: 1;
+      min-width: 160px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .arch-box:hover { border-color: var(--border-bright); transform: translateY(-2px); }
+    .arch-box .name { font-size: 13px; font-weight: 600; color: var(--text-bright); margin-bottom: 6px; }
+    .arch-box .detail { font-size: 11px; color: var(--text-dim); line-height: 1.5; font-family: 'JetBrains Mono', monospace; }
+    .arch-box .pkg { font-size: 10px; margin-top: 8px; color: var(--text-dim); }
+
+    /* ── Vertical connector ── */
+    .connector {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 22px;
+      margin: 4px 0;
+      position: relative;
+    }
+
+    .connector::before, .connector::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 20px);
+      height: 1px;
+      background: var(--border);
+    }
+    .connector::before { left: 0; }
+    .connector::after { right: 0; }
+
+    /* ── Phase timeline ── */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple), var(--accent-green));
+      border-radius: 2px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -27px;
+      top: 6px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+
+    .timeline-content {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      transition: border-color 0.3s;
+    }
+
+    .timeline-content:hover { border-color: var(--border-bright); }
+
+    .timeline-phase {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .timeline-title { font-size: 15px; font-weight: 600; color: var(--text-bright); margin-bottom: 8px; }
+    .timeline-tasks { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .timeline-task { font-size: 12px; color: var(--text-dim); display: flex; align-items: flex-start; gap: 8px; }
+    .timeline-task::before { content: '✓'; color: var(--accent-green); flex-shrink: 0; font-weight: 600; }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* ── Code snippet ── */
+    .code-block {
+      background: #0a0e1a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    .code-block .kw   { color: #c792ea; }
+    .code-block .fn   { color: #82aaff; }
+    .code-block .str  { color: #c3e88d; }
+    .code-block .cmt  { color: #546e7a; font-style: italic; }
+    .code-block .num  { color: #f78c6c; }
+    .code-block .type { color: #ffcb6b; }
+
+    /* ── Data flow diagram (SVG-based) ── */
+    .flow-svg-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 24px;
+      overflow-x: auto;
+      margin-bottom: 32px;
+    }
+
+    /* ── Color helpers ── */
+    .c-blue   { color: var(--accent-blue);   }
+    .c-purple { color: var(--accent-purple); }
+    .c-green  { color: var(--accent-green);  }
+    .c-orange { color: var(--accent-orange); }
+    .c-pink   { color: var(--accent-pink);   }
+    .c-cyan   { color: var(--accent-cyan);   }
+    .c-yellow { color: var(--accent-yellow); }
+
+    .bg-blue   { background: rgba(79,142,247,0.1);  border-color: rgba(79,142,247,0.25);  }
+    .bg-purple { background: rgba(168,85,247,0.1);  border-color: rgba(168,85,247,0.25);  }
+    .bg-green  { background: rgba(34,197,94,0.1);   border-color: rgba(34,197,94,0.25);   }
+    .bg-orange { background: rgba(249,115,22,0.1);  border-color: rgba(249,115,22,0.25);  }
+    .bg-pink   { background: rgba(236,72,153,0.1);  border-color: rgba(236,72,153,0.25);  }
+    .bg-cyan   { background: rgba(6,182,212,0.1);   border-color: rgba(6,182,212,0.25);   }
+    .bg-yellow { background: rgba(234,179,8,0.1);   border-color: rgba(234,179,8,0.25);   }
+
+    .icon-blue   { background: rgba(79,142,247,0.15); }
+    .icon-purple { background: rgba(168,85,247,0.15); }
+    .icon-green  { background: rgba(34,197,94,0.15);  }
+    .icon-orange { background: rgba(249,115,22,0.15); }
+    .icon-pink   { background: rgba(236,72,153,0.15); }
+    .icon-cyan   { background: rgba(6,182,212,0.15);  }
+    .icon-yellow { background: rgba(234,179,8,0.15);  }
+
+    /* ── Test results ── */
+    .test-suite {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .test-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .test-name { font-size: 14px; font-weight: 600; color: var(--text-bright); }
+    .test-count {
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(34,197,94,0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(34,197,94,0.25);
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .test-items { display: flex; flex-direction: column; gap: 4px; }
+    .test-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .test-item::before {
+      content: '✓';
+      color: var(--accent-green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; }
+      .flow-container { flex-direction: column; align-items: stretch; }
+      .flow-arrow { transform: rotate(90deg); justify-content: center; }
+      .arch-label { writing-mode: horizontal-tb; transform: none; }
+    }
+
+    /* ── Glow cards ── */
+    .card.glow-blue:hover  { box-shadow: 0 8px 32px var(--glow-blue); }
+    .card.glow-purple:hover{ box-shadow: 0 8px 32px var(--glow-purple); }
+    .card.glow-green:hover { box-shadow: 0 8px 32px var(--glow-green); }
+
+    /* ── Separator ── */
+    .sep {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── Info box ── */
+    .info-box {
+      border: 1px solid;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .info-box.blue   { background: rgba(79,142,247,0.07); border-color: rgba(79,142,247,0.2); color: #93c5fd; }
+    .info-box.green  { background: rgba(34,197,94,0.07);  border-color: rgba(34,197,94,0.2);  color: #86efac; }
+    .info-box.purple { background: rgba(168,85,247,0.07); border-color: rgba(168,85,247,0.2); color: #d8b4fe; }
+
+    /* ── Animated pulse rings ── */
+    @keyframes ring-pulse {
+      0%   { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<header>
+  <div class="logo-badge">
+    <span class="dot"></span>
+    All 5 phases complete · 50 tests passing
+  </div>
+  <h1>1MBrain Codebase<br>Workflow &amp; Architecture</h1>
+  <p>A portable, holographic memory layer for AI agents — complete system diagram of every package, file, and data flow.</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4f8ef7"></div> Core Engine</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div> API Layer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Dashboard</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div> SDK / Adapters</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#06b6d4"></div> Storage</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> Backup / Passport</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════ NAV TABS -->
+<nav class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('overview')">🗺 Overview</button>
+  <button class="nav-tab" onclick="showSection('packages')">📦 Packages</button>
+  <button class="nav-tab" onclick="showSection('api')">🔌 API Routes</button>
+  <button class="nav-tab" onclick="showSection('dataflow')">🔄 Data Flow</button>
+  <button class="nav-tab" onclick="showSection('sdk')">🛠 SDK &amp; Adapters</button>
+  <button class="nav-tab" onclick="showSection('tests')">✅ Tests</button>
+  <button class="nav-tab" onclick="showSection('phases')">🚀 Phases</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: OVERVIEW -->
+<div id="overview" class="section active">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-value">5</div><div class="stat-label">Phases Done</div></div>
+    <div class="stat"><div class="stat-value">34</div><div class="stat-label">Tasks Total</div></div>
+    <div class="stat"><div class="stat-value">50</div><div class="stat-label">Tests Passing</div></div>
+    <div class="stat"><div class="stat-value">4</div><div class="stat-label">Packages</div></div>
+    <div class="stat"><div class="stat-value">2</div><div class="stat-label">DB Backends</div></div>
+    <div class="stat"><div class="stat-value">3</div><div class="stat-label">Embedding Adapters</div></div>
+    <div class="stat"><div class="stat-value">2</div><div class="stat-label">SDK Languages</div></div>
+  </div>
+
+  <div class="section-title">System Architecture</div>
+  <div class="section-subtitle">How all layers connect — from client SDKs down to the database.</div>
+
+  <!-- Layer diagram -->
+  <div style="max-width:900px;margin:0 auto;">
+
+    <!-- Client Layer -->
+    <div class="arch-layer">
+      <div class="arch-label c-orange">Clients</div>
+      <div class="arch-boxes">
+        <div class="arch-box bg-orange">
+          <div class="name c-orange">🛠 TypeScript SDK</div>
+          <div class="detail">@1mbrain/sdk<br>OneMBrainClient</div>
+          <div class="pkg">packages/sdk/typescript</div>
+        </div>
+        <div class="arch-box bg-orange">
+          <div class="name c-orange">🐍 Python SDK</div>
+          <div class="detail">onemillionbrain<br>OneMBrainClient (sync + async)</div>
+          <div class="pkg">packages/sdk/python</div>
+        </div>
+        <div class="arch-box bg-orange">
+          <div class="name c-orange">🤖 Hermes Adapter</div>
+          <div class="detail">HermesMemoryAdapter<br>@1mbrain/sdk/hermes</div>
+          <div class="pkg">sdk/typescript/src/hermes.ts</div>
+        </div>
+        <div class="arch-box bg-orange">
+          <div class="name c-orange">🌐 curl / HTTP</div>
+          <div class="detail">Direct REST API<br>X-API-Key header</div>
+          <div class="pkg">any HTTP client</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">↕</div>
+
+    <!-- API Gateway Layer -->
+    <div class="arch-layer">
+      <div class="arch-label c-purple">API Gateway</div>
+      <div class="arch-boxes">
+        <div class="arch-box bg-purple">
+          <div class="name c-purple">🔐 Auth Middleware</div>
+          <div class="detail">X-API-Key · X-Agent-Id<br>namespace isolation</div>
+          <div class="pkg">middleware/auth.ts</div>
+        </div>
+        <div class="arch-box bg-purple">
+          <div class="name c-purple">📡 REST Routes</div>
+          <div class="detail">memories · passport<br>backup · dashboard</div>
+          <div class="pkg">routes/*.ts</div>
+        </div>
+        <div class="arch-box bg-purple">
+          <div class="name c-purple">🌊 WebSocket</div>
+          <div class="detail">GET /v1/dashboard/stream<br>real-time event push</div>
+          <div class="pkg">routes/dashboard.ts</div>
+        </div>
+        <div class="arch-box bg-purple">
+          <div class="name c-purple">🔴 Redis Pub/Sub</div>
+          <div class="detail">in-memory fallback<br>event bus</div>
+          <div class="pkg">events.ts (core)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">↕</div>
+
+    <!-- Memory Engine Layer -->
+    <div class="arch-layer">
+      <div class="arch-label c-blue">Core Engine</div>
+      <div class="arch-boxes">
+        <div class="arch-box bg-blue">
+          <div class="name c-blue">🧠 Memory Engine</div>
+          <div class="detail">remember · recall · forget<br>association · decay</div>
+          <div class="pkg">packages/core/engine.ts</div>
+        </div>
+        <div class="arch-box bg-blue">
+          <div class="name c-blue">🕸 Association Graph</div>
+          <div class="detail">co-occurrence · similarity<br>explicit links</div>
+          <div class="pkg">engine.ts (graph ops)</div>
+        </div>
+        <div class="arch-box bg-blue">
+          <div class="name c-blue">⚡ Spreading Activation</div>
+          <div class="detail">N-hop BFS · blend weight<br>vector + graph score</div>
+          <div class="pkg">engine.ts (two-pass)</div>
+        </div>
+        <div class="arch-box bg-blue">
+          <div class="name c-blue">🔻 Decay System</div>
+          <div class="detail">background interval<br>configurable rate</div>
+          <div class="pkg">engine.ts (decay loop)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">↕</div>
+
+    <!-- Embedding + Storage Layer -->
+    <div class="arch-layer">
+      <div class="arch-label c-cyan">Storage</div>
+      <div class="arch-boxes">
+        <div class="arch-box bg-cyan">
+          <div class="name c-cyan">🔷 OpenAI Embed</div>
+          <div class="detail">text-embedding-3-small</div>
+          <div class="pkg">embedding/openai-provider.ts</div>
+        </div>
+        <div class="arch-box bg-cyan">
+          <div class="name c-cyan">🦙 Ollama Embed</div>
+          <div class="detail">local · no API key</div>
+          <div class="pkg">embedding/ollama-provider.ts</div>
+        </div>
+        <div class="arch-box bg-cyan">
+          <div class="name c-cyan">🗄 SQLite + sqlite-vec</div>
+          <div class="detail">WAL mode · cosine sim<br>lightweight self-host</div>
+          <div class="pkg">db/sqlite-provider.ts</div>
+        </div>
+        <div class="arch-box bg-cyan">
+          <div class="name c-cyan">🐘 PostgreSQL + pgvector</div>
+          <div class="detail">multi-agent · scale<br>pgvector extension</div>
+          <div class="pkg">db/postgres-provider.ts</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">↕</div>
+
+    <!-- Passport + Dashboard Layer -->
+    <div class="arch-layer">
+      <div class="arch-label c-pink">Extras</div>
+      <div class="arch-boxes">
+        <div class="arch-box bg-pink">
+          <div class="name c-pink">🛂 Memory Passport</div>
+          <div class="detail">export · import · gzip<br>AES-256-GCM encrypt</div>
+          <div class="pkg">core/passport.ts · routes/passport.ts</div>
+        </div>
+        <div class="arch-box bg-pink">
+          <div class="name c-pink">☁️ Google Drive Backup</div>
+          <div class="detail">OAuth2 · Drive API v3<br>versioned filenames</div>
+          <div class="pkg">routes/backup.ts</div>
+        </div>
+        <div class="arch-box bg-green" style="border-color:rgba(34,197,94,0.25);">
+          <div class="name c-green">📊 Pulse Brain Dashboard</div>
+          <div class="detail">Next.js · D3 force graph<br>real-time pulse animation</div>
+          <div class="pkg">packages/dashboard</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: PACKAGES -->
+<div id="packages" class="section">
+  <div class="section-title">Package Structure</div>
+  <div class="section-subtitle">1MBrain is a monorepo with 4 main packages + docs. npm workspaces manages all dependencies.</div>
+
+  <div class="grid-3">
+    <!-- Core -->
+    <div class="card glow-blue">
+      <div class="card-header">
+        <div class="card-icon icon-blue">🧠</div>
+        <div>
+          <div class="card-title c-blue">@1mbrain/core</div>
+          <div class="card-path">packages/core/src/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span><strong>engine.ts</strong> — MemoryEngine class (remember, recall, forget, associate, decay)</span></li>
+        <li class="method-item"><span class="method-badge badge-type">type</span><span><strong>types.ts</strong> — Memory, Association, CreateMemoryInput, SearchResult, …</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span><strong>passport.ts</strong> — MemoryPassportService (export, import)</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span><strong>events.ts</strong> — MemoryEventBus (Redis + in-memory)</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span><strong>schemas.ts</strong> — Zod validation schemas</span></li>
+        <li class="method-item"><span class="method-badge badge-type">cfg</span><span><strong>config.ts</strong> — createConfig factory</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">db</span><span><strong>db/sqlite-provider.ts</strong> — SQLite + sqlite-vec adapter</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">db</span><span><strong>db/postgres-provider.ts</strong> — PostgreSQL + pgvector adapter</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">embed</span><span><strong>embedding/openai-provider.ts</strong></span></li>
+        <li class="method-item"><span class="method-badge badge-fn">embed</span><span><strong>embedding/ollama-provider.ts</strong></span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(79,142,247,0.12);color:var(--accent-blue);">TypeScript</span>
+        <span class="tag" style="background:rgba(79,142,247,0.12);color:var(--accent-blue);">22 tests</span>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div class="card glow-purple">
+      <div class="card-header">
+        <div class="card-icon icon-purple">🔌</div>
+        <div>
+          <div class="card-title c-purple">@1mbrain/api</div>
+          <div class="card-path">packages/api/src/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-fn">server</span><span><strong>index.ts</strong> — Hono app, CORS, logging, graceful shutdown</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">mw</span><span><strong>middleware/auth.ts</strong> — API key + agent namespace validation</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><strong>routes/memories.ts</strong> — remember, associate</span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><strong>routes/memories.ts</strong> — recall (search)</span></li>
+        <li class="method-item"><span class="method-badge badge-delete">DEL</span><span><strong>routes/memories.ts</strong> — forget</span></li>
+        <li class="method-item"><span class="method-badge badge-ws">WS</span><span><strong>routes/dashboard.ts</strong> — stream, heartbeat, filters</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><strong>routes/passport.ts</strong> — export (gzip+AES), import</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><strong>routes/backup.ts</strong> — gdrive backup/restore, OAuth2</span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(168,85,247,0.12);color:var(--accent-purple);">Hono</span>
+        <span class="tag" style="background:rgba(168,85,247,0.12);color:var(--accent-purple);">TypeScript</span>
+        <span class="tag" style="background:rgba(168,85,247,0.12);color:var(--accent-purple);">13 tests</span>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="card glow-green">
+      <div class="card-header">
+        <div class="card-icon icon-green">📊</div>
+        <div>
+          <div class="card-title c-green">@1mbrain/dashboard</div>
+          <div class="card-path">packages/dashboard/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-fn">page</span><span>Next.js App Router — dark theme default</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">graph</span><span>D3 force-directed graph — memory nodes + edges</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">anim</span><span>Pulse animation — glow/scale on read/write &lt;200ms</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">ws</span><span>WebSocket client — subscribe to live event stream</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">ui</span><span>Sidebar filters — agent, type, time window</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">ui</span><span>Node detail panel — click node → metadata</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">ui</span><span>Connection panel — API URL, key, namespace</span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(34,197,94,0.12);color:var(--accent-green);">Next.js</span>
+        <span class="tag" style="background:rgba(34,197,94,0.12);color:var(--accent-green);">D3.js</span>
+        <span class="tag" style="background:rgba(34,197,94,0.12);color:var(--accent-green);">lucide-react</span>
+      </div>
+    </div>
+
+    <!-- TypeScript SDK -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-orange">🛠</div>
+        <div>
+          <div class="card-title c-orange">@1mbrain/sdk</div>
+          <div class="card-path">packages/sdk/typescript/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-class">class</span><span><strong>OneMBrainClient</strong> — main entry point</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>remember(input) → Memory</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>recall(input) → SearchResult[]</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>forget(id) → boolean</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>associate(sourceId, input) → boolean</span></li>
+        <li class="method-item"><span class="method-badge badge-class">class</span><span><strong>HermesMemoryAdapter</strong> — @1mbrain/sdk/hermes</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>rememberTurn · rememberPreference · rememberProcedure</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>buildContext() → system prompt block</span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(249,115,22,0.12);color:var(--accent-orange);">ESM</span>
+        <span class="tag" style="background:rgba(249,115,22,0.12);color:var(--accent-orange);">4+11 tests</span>
+        <span class="tag" style="background:rgba(249,115,22,0.12);color:var(--accent-orange);">ready to publish</span>
+      </div>
+    </div>
+
+    <!-- Python SDK -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-yellow">🐍</div>
+        <div>
+          <div class="card-title c-yellow">onemillionbrain (PyPI)</div>
+          <div class="card-path">packages/sdk/python/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-class">class</span><span><strong>OneMBrainClient</strong> — sync, stdlib urllib only</span></li>
+        <li class="method-item"><span class="method-badge badge-class">class</span><span><strong>AsyncOneMBrainClient</strong> — async via httpx</span></li>
+        <li class="method-item"><span class="method-badge badge-fn">fn</span><span>remember() · recall() · forget() · associate()</span></li>
+        <li class="method-item"><span class="method-badge badge-type">model</span><span>Memory · RecallResult · RememberInput · RecallInput</span></li>
+        <li class="method-item"><span class="method-badge badge-type">enum</span><span>MemoryType · AssociationOrigin</span></li>
+        <li class="method-item"><span class="method-badge badge-type">err</span><span>OneMBrainError(status, details)</span></span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(234,179,8,0.12);color:var(--accent-yellow);">Python 3.10+</span>
+        <span class="tag" style="background:rgba(234,179,8,0.12);color:var(--accent-yellow);">zero deps (sync)</span>
+        <span class="tag" style="background:rgba(234,179,8,0.12);color:var(--accent-yellow);">13 tests</span>
+      </div>
+    </div>
+
+    <!-- Docs -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:rgba(99,120,200,0.1)">📄</div>
+        <div>
+          <div class="card-title">Documentation</div>
+          <div class="card-path">docs/</div>
+        </div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-type">md</span><span><strong>sdk-quickstart.md</strong> — install → first recall in &lt;30min</span></li>
+        <li class="method-item"><span class="method-badge badge-type">md</span><span><strong>memory-passport-spec.md</strong> — versioned export format spec</span></li>
+        <li class="method-item"><span class="method-badge badge-type">md</span><span><strong>workflow.html</strong> — this document</span></li>
+        <li class="method-item"><span class="method-badge badge-type">md</span><span><strong>README.md</strong> — quickstart, docker compose</span></li>
+        <li class="method-item"><span class="method-badge badge-type">env</span><span><strong>.env.example</strong> — all config variables</span></li>
+        <li class="method-item"><span class="method-badge badge-type">ci</span><span><strong>.github/workflows/</strong> — lint, typecheck, test</span></li>
+      </ul>
+      <div class="tags">
+        <span class="tag" style="background:rgba(99,120,200,0.12);color:#8892b0;">MIT License</span>
+        <span class="tag" style="background:rgba(99,120,200,0.12);color:#8892b0;">Docker Compose</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: API ROUTES -->
+<div id="api" class="section">
+  <div class="section-title">API Reference — All Endpoints</div>
+  <div class="section-subtitle">Hono server running on port 3001. All routes require <code style="font-family:JetBrains Mono;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px">X-API-Key</code> and <code style="font-family:JetBrains Mono;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px">X-Agent-Id</code> headers.</div>
+
+  <div class="grid-2">
+
+    <!-- Memories -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-blue">🧠</div>
+        <div><div class="card-title">Memory Endpoints</div><div class="card-path">routes/memories.ts</div></div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/memories</code> — Store a memory. Body: content, type, importance, tags, associations</span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/v1/memories/search?q=…</code> — Recall. Params: limit, type, tags, maxHops, blendWeight</span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/v1/memories/:id</code> — Get single memory by ID</span></li>
+        <li class="method-item"><span class="method-badge badge-delete">DEL</span><span><code>/v1/memories/:id</code> — Hard delete + cascade associations</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/memories/:id/associate</code> — Explicit link. Body: targetId, strength, origin</span></li>
+      </ul>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-purple">📊</div>
+        <div><div class="card-title">Dashboard / WebSocket</div><div class="card-path">routes/dashboard.ts</div></div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-ws">WS</span><span><code>/v1/dashboard/stream</code> — WebSocket. Query: apiKey, agentId, type filter</span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/health</code> — Health check → <code>{"status":"ok"}</code></span></li>
+      </ul>
+      <div class="info-box purple" style="margin-top:14px;">
+        Events pushed over WS: <strong>memory:created</strong>, <strong>memory:accessed</strong>, <strong>memory:deleted</strong>, <strong>association:created</strong>. Ping/pong heartbeat every 30s.
+      </div>
+    </div>
+
+    <!-- Passport -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-pink">🛂</div>
+        <div><div class="card-title">Memory Passport</div><div class="card-path">routes/passport.ts</div></div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/export</code> — Serialize agent memory. Query: <code>format=json</code> (default: gzip+AES-256-GCM)</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/import</code> — Ingest passport. Re-embeds if model differs. Conflict: skip / merge / overwrite</span></li>
+      </ul>
+      <div class="info-box blue" style="margin-top:14px;">
+        Export envelope format: <code>1mbrain.passport.envelope v1</code> — includes IV, authTag, gzip payload, source agent metadata.
+      </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-pink">☁️</div>
+        <div><div class="card-title">Google Drive Backup</div><div class="card-path">routes/backup.ts</div></div>
+      </div>
+      <ul class="method-list">
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/v1/auth/gdrive</code> — OAuth2 authorization URL</span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/v1/auth/gdrive/callback</code> — Token exchange callback</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/backup/gdrive</code> — Push encrypted snapshot. Filename: <code>1mbrain-backup-{agent}-{ts}.enc</code></span></li>
+        <li class="method-item"><span class="method-badge badge-get">GET</span><span><code>/v1/backup/gdrive</code> — List available backup snapshots</span></li>
+        <li class="method-item"><span class="method-badge badge-post">POST</span><span><code>/v1/restore/gdrive</code> — Pull selected snapshot + import</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: DATA FLOW -->
+<div id="dataflow" class="section">
+  <div class="section-title">Data Flow Diagrams</div>
+  <div class="section-subtitle">Step-by-step journey for each core operation.</div>
+
+  <!-- remember() flow -->
+  <div style="margin-bottom:40px;">
+    <div style="font-size:15px;font-weight:600;color:var(--accent-blue);margin-bottom:16px;">📝 remember() — Store a Memory</div>
+    <div class="flow-svg-wrap">
+      <div class="flow-container">
+        <div class="flow-node bg-orange">
+          <div class="fn">Agent/SDK</div>
+          <div class="desc">calls remember()</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-purple">
+          <div class="fn">POST /v1/memories</div>
+          <div class="desc">Hono · auth check</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">MemoryEngine</div>
+          <div class="desc">.remember(input)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-cyan">
+          <div class="fn">EmbeddingProvider</div>
+          <div class="desc">content → vector</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-cyan">
+          <div class="fn">DatabaseProvider</div>
+          <div class="desc">INSERT memory row</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">AutoAssociate</div>
+          <div class="desc">similarity search<br>create edges</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-purple">
+          <div class="fn">EventBus.emit</div>
+          <div class="desc">memory:created</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-green">
+          <div class="fn">Dashboard WS</div>
+          <div class="desc">pulse animation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- recall() flow -->
+  <div style="margin-bottom:40px;">
+    <div style="font-size:15px;font-weight:600;color:var(--accent-purple);margin-bottom:16px;">🔍 recall() — Retrieve Memories (Two-Pass)</div>
+    <div class="flow-svg-wrap">
+      <div class="flow-container">
+        <div class="flow-node bg-orange">
+          <div class="fn">Agent/SDK</div>
+          <div class="desc">calls recall(query)</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-purple">
+          <div class="fn">GET /search</div>
+          <div class="desc">q, limit, type, maxHops</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-cyan">
+          <div class="fn">Embed Query</div>
+          <div class="desc">query → vector</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-cyan">
+          <div class="fn">Pass 1: Vector</div>
+          <div class="desc">cosine similarity<br>top-K candidates</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">Pass 2: BFS</div>
+          <div class="desc">spreading activation<br>N hops · blend</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">Update Access</div>
+          <div class="desc">boost decay_score<br>last_accessed_at</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-purple">
+          <div class="fn">EventBus.emit</div>
+          <div class="desc">memory:accessed</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-orange">
+          <div class="fn">SearchResult[]</div>
+          <div class="desc">score · memory</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spreading Activation -->
+  <div style="margin-bottom:40px;">
+    <div style="font-size:15px;font-weight:600;color:var(--accent-cyan);margin-bottom:16px;">⚡ Spreading Activation — Graph Walk</div>
+    <div class="grid-3">
+      <div class="card bg-blue">
+        <div class="card-header">
+          <div class="card-icon icon-blue">1️⃣</div>
+          <div><div class="card-title c-blue">Vector Pass</div></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Embed the query string → cosine similarity search against all stored embeddings → top-K results (configurable <code>limit</code>).
+        </div>
+      </div>
+      <div class="card bg-purple">
+        <div class="card-header">
+          <div class="card-icon icon-purple">2️⃣</div>
+          <div><div class="card-title c-purple">Graph BFS</div></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Start from top-K seed nodes → BFS outward up to <code>maxHops</code> hops through association edges → collect candidate nodes with activation scores.
+        </div>
+      </div>
+      <div class="card bg-cyan">
+        <div class="card-header">
+          <div class="card-icon icon-cyan">3️⃣</div>
+          <div><div class="card-title c-cyan">Score Blend</div></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-dim);line-height:1.6;">
+          Final score = <code>(1 − blendWeight) × vectorScore + blendWeight × graphScore</code>. Nodes below <code>activationThreshold</code> are pruned.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export/Import flow -->
+  <div style="margin-bottom:40px;">
+    <div style="font-size:15px;font-weight:600;color:var(--accent-pink);margin-bottom:16px;">🛂 Memory Passport Export/Import</div>
+    <div class="flow-svg-wrap">
+      <div class="flow-container">
+        <div class="flow-node bg-orange">
+          <div class="fn">POST /v1/export</div>
+          <div class="desc">agent memories</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-pink" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">
+          <div class="fn">PassportService</div>
+          <div class="desc">serialize memories<br>+ associations</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-pink" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">
+          <div class="fn">gzip compress</div>
+          <div class="desc">zlib deflate</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-pink" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">
+          <div class="fn">AES-256-GCM</div>
+          <div class="desc">encrypt payload</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">Envelope JSON</div>
+          <div class="desc">iv · authTag<br>base64 payload</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;color:var(--text-dim);text-align:center;font-size:13px;">↓ POST /v1/import (reverse)</div>
+
+      <div class="flow-container" style="margin-top:8px;">
+        <div class="flow-node bg-blue">
+          <div class="fn">Envelope JSON</div>
+          <div class="desc">base64 payload</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-pink" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">
+          <div class="fn">AES-256-GCM</div>
+          <div class="desc">decrypt</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-pink" style="background:rgba(236,72,153,0.1);border-color:rgba(236,72,153,0.25);">
+          <div class="fn">gunzip</div>
+          <div class="desc">decompress</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-cyan">
+          <div class="fn">Re-embed</div>
+          <div class="desc">if model differs<br>from source</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node bg-blue">
+          <div class="fn">Reconstruct</div>
+          <div class="desc">memories +<br>association graph</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decay system -->
+  <div>
+    <div style="font-size:15px;font-weight:600;color:var(--accent-yellow);margin-bottom:16px;">⏳ Decay System — Background Loop</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header"><div class="card-icon icon-yellow">⏰</div><div><div class="card-title c-yellow">Interval Timer</div></div></div>
+        <div style="font-size:13px;color:var(--text-dim);">Configurable <code>decay.intervalMs</code> (default every minute). Runs as background loop started on server init.</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon icon-yellow">📉</div><div><div class="card-title c-yellow">Score Decay</div></div></div>
+        <div style="font-size:13px;color:var(--text-dim);"><code>decayScore *= (1 − decayRate)</code> per tick. Minimum score protected by <code>decay.minScore</code>. Association edge strength also decays.</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-icon icon-yellow">📈</div><div><div class="card-title c-yellow">Access Boost</div></div></div>
+        <div style="font-size:13px;color:var(--text-dim);">On every recall, <code>decayScore</code> is boosted back up. Frequently-accessed memories stay fresh; unused ones decay toward minimum.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: SDK -->
+<div id="sdk" class="section">
+  <div class="section-title">SDK &amp; Adapters</div>
+  <div class="section-subtitle">Everything needed to integrate 1MBrain into any agent framework.</div>
+
+  <div class="grid-2" style="margin-bottom:40px;">
+    <!-- TypeScript quick example -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-orange">🛠</div>
+        <div><div class="card-title c-orange">TypeScript SDK</div><div class="card-path">npm install @1mbrain/sdk</div></div>
+      </div>
+      <div class="code-block">
+<span class="kw">import</span> { <span class="type">OneMBrainClient</span> } <span class="kw">from</span> <span class="str">'@1mbrain/sdk'</span>;
+
+<span class="kw">const</span> brain = <span class="kw">new</span> <span class="fn">OneMBrainClient</span>({
+  apiUrl: <span class="str">'http://localhost:3001'</span>,
+  apiKey: process.env.<span class="type">ONEMILLION_API_KEY</span>,
+  agentId: <span class="str">'my-agent'</span>,
+});
+
+<span class="cmt">// Store</span>
+<span class="kw">const</span> mem = <span class="kw">await</span> brain.<span class="fn">remember</span>({
+  content: <span class="str">'User prefers dark mode'</span>,
+  type: <span class="str">'semantic'</span>,
+  importance: <span class="num">0.9</span>,
+});
+
+<span class="cmt">// Recall</span>
+<span class="kw">const</span> results = <span class="kw">await</span> brain.<span class="fn">recall</span>({ query: <span class="str">'preferences'</span> });
+      </div>
+    </div>
+
+    <!-- Python quick example -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-yellow">🐍</div>
+        <div><div class="card-title c-yellow">Python SDK</div><div class="card-path">pip install onemillionbrain</div></div>
+      </div>
+      <div class="code-block">
+<span class="kw">from</span> onemillionbrain <span class="kw">import</span> <span class="type">OneMBrainClient</span>
+
+brain = <span class="type">OneMBrainClient</span>(
+    api_url=<span class="str">"http://localhost:3001"</span>,
+    api_key=<span class="str">"your-api-key"</span>,
+    agent_id=<span class="str">"my-agent"</span>,
+)
+
+<span class="cmt"># Store</span>
+mem = brain.<span class="fn">remember</span>(
+    <span class="str">"User prefers dark mode"</span>,
+    type=<span class="str">"semantic"</span>,
+    importance=<span class="num">0.9</span>,
+)
+
+<span class="cmt"># Recall</span>
+results = brain.<span class="fn">recall</span>(<span class="str">"preferences"</span>, limit=<span class="num">5</span>)
+<span class="kw">for</span> r <span class="kw">in</span> results:
+    print(f<span class="str">"[{r.score:.3f}] {r.memory.content}"</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- Hermes Adapter -->
+  <div style="margin-bottom:32px;">
+    <div style="font-size:15px;font-weight:600;color:var(--accent-orange);margin-bottom:16px;">🤖 Hermes-Specific Adapter</div>
+    <div class="info-box blue">
+      Auto-maps Hermes context → correct 1MBrain memory type. Injects <code>source:hermes</code> tag. Provides <code>buildContext()</code> for direct LLM prompt injection.
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;color:var(--accent-orange);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">rememberTurn()</div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:1.6;">Stores conversation Q&amp;A pair as <strong>episodic</strong> memory. Tags: <code>conversation-turn</code>, topics, <code>session:{id}</code>.</div>
+        <div class="code-block" style="margin-top:10px;font-size:11px;">
+<span class="kw">await</span> adapter.<span class="fn">rememberTurn</span>({
+  userMessage: <span class="str">'What is pricing?'</span>,
+  assistantReply: <span class="str">'Rp 150k/month'</span>,
+  topics: [<span class="str">'pricing'</span>],
+});
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;color:var(--accent-orange);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">rememberPreference()</div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:1.6;">Stores user preference as <strong>semantic</strong> memory (importance: 0.85). Tags: <code>pref:{key}</code>.</div>
+        <div class="code-block" style="margin-top:10px;font-size:11px;">
+<span class="kw">await</span> adapter.<span class="fn">rememberPreference</span>(
+  <span class="str">'language'</span>, <span class="str">'Bahasa Indonesia'</span>
+);
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-size:12px;font-weight:700;color:var(--accent-orange);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">buildContext()</div>
+        <div style="font-size:12px;color:var(--text-dim);line-height:1.6;">Recalls relevant memories and formats as a markdown block for injection into the LLM system prompt.</div>
+        <div class="code-block" style="margin-top:10px;font-size:11px;">
+<span class="kw">const</span> ctx = <span class="kw">await</span> adapter
+  .<span class="fn">buildContext</span>(<span class="str">'pricing'</span>);
+<span class="cmt">// ## Relevant Memories</span>
+<span class="cmt">// - [Semantic] (0.92) …</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Framework integrations -->
+  <div>
+    <div style="font-size:15px;font-weight:600;margin-bottom:16px;">🔗 Framework Integrations</div>
+    <div class="grid-4">
+      <div class="card" style="border-color:rgba(34,197,94,0.2);">
+        <div style="font-size:14px;font-weight:600;color:var(--accent-green);margin-bottom:8px;">LangChain (Python)</div>
+        <div style="font-size:12px;color:var(--text-dim);">Wrap as <code>@tool</code> functions. <code>remember_tool</code> + <code>recall_tool</code> exposed to the agent executor.</div>
+      </div>
+      <div class="card" style="border-color:rgba(6,182,212,0.2);">
+        <div style="font-size:14px;font-weight:600;color:var(--accent-cyan);margin-bottom:8px;">LlamaIndex (Python)</div>
+        <div style="font-size:12px;color:var(--text-dim);">Wrap as <code>FunctionTool</code> for the agent. Works with any LlamaIndex agent/query engine.</div>
+      </div>
+      <div class="card" style="border-color:rgba(249,115,22,0.2);">
+        <div style="font-size:14px;font-weight:600;color:var(--accent-orange);margin-bottom:8px;">Hermes (TypeScript)</div>
+        <div style="font-size:12px;color:var(--text-dim);"><code>HermesMemoryAdapter</code> — zero-config after init. Auto-types memory on every turn.</div>
+      </div>
+      <div class="card" style="border-color:rgba(168,85,247,0.2);">
+        <div style="font-size:14px;font-weight:600;color:var(--accent-purple);margin-bottom:8px;">Custom Agent (any)</div>
+        <div style="font-size:12px;color:var(--text-dim);">Direct REST API with <code>X-API-Key</code> + <code>X-Agent-Id</code> headers. Works from any language.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: TESTS -->
+<div id="tests" class="section">
+  <div class="section-title">Test Coverage — 50 Tests Passing</div>
+  <div class="section-subtitle">Full integration and unit test coverage across all packages.</div>
+
+  <div class="stats-bar" style="margin-bottom:32px;">
+    <div class="stat"><div class="stat-value" style="font-size:20px;">22</div><div class="stat-label">@1mbrain/core</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:20px;">13</div><div class="stat-label">@1mbrain/api</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:20px;">4</div><div class="stat-label">SDK client</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:20px;">11</div><div class="stat-label">Hermes adapter</div></div>
+    <div class="stat"><div class="stat-value" style="font-size:20px;">13</div><div class="stat-label">Python SDK</div></div>
+    <div class="stat"><div class="stat-value" style="color:var(--accent-green);font-size:20px;">50</div><div class="stat-label">Total ✅</div></div>
+  </div>
+
+  <div class="grid-2">
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🧠 packages/core — engine.test.ts (14)</div>
+        <div class="test-count">14 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">should store a memory and return it</div>
+        <div class="test-item">should search memories by vector similarity</div>
+        <div class="test-item">should filter by memory type</div>
+        <div class="test-item">should delete a memory and cascade</div>
+        <div class="test-item">should create explicit associations</div>
+        <div class="test-item">should isolate namespaces (agent A ≠ agent B)</div>
+        <div class="test-item">should run spreading activation (2-hop BFS)</div>
+        <div class="test-item">should apply decay scoring</div>
+        <div class="test-item">should track co-occurrence associations</div>
+        <div class="test-item">should boost decay_score on access</div>
+        <div class="test-item">should reconstruct association graph</div>
+        <div class="test-item">should reject cross-agent associations</div>
+        <div class="test-item">should blend vector + graph scores</div>
+        <div class="test-item">should emit memory:created / memory:deleted events</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">📊 packages/core — embedding.test.ts (6)</div>
+        <div class="test-count">6 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">OpenAI adapter — embeds text to vector</div>
+        <div class="test-item">OpenAI adapter — embedBatch returns multiple vectors</div>
+        <div class="test-item">Ollama adapter — calls local endpoint</div>
+        <div class="test-item">Factory — returns correct adapter from config</div>
+        <div class="test-item">Factory — throws on unknown provider</div>
+        <div class="test-item">Adapter — dimensions match provider spec</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🛂 packages/core — passport.test.ts (2)</div>
+        <div class="test-count">2 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">should export agent memories to encrypted envelope</div>
+        <div class="test-item">should import and reconstruct association graph</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🔌 packages/api — api.test.ts (13)</div>
+        <div class="test-count">13 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">GET /health → 200 ok</div>
+        <div class="test-item">POST /v1/memories → 201 created</div>
+        <div class="test-item">GET /v1/memories/search → results array</div>
+        <div class="test-item">DELETE /v1/memories/:id → 200 ok</div>
+        <div class="test-item">POST /v1/memories/:id/associate → 200 ok</div>
+        <div class="test-item">POST /v1/export → passport envelope</div>
+        <div class="test-item">POST /v1/import → reconstructed memories</div>
+        <div class="test-item">Missing X-API-Key → 401</div>
+        <div class="test-item">Missing X-Agent-Id → 400</div>
+        <div class="test-item">Wrong agent → 404 on cross-agent access</div>
+        <div class="test-item">Search with type filter → filtered results</div>
+        <div class="test-item">Namespace isolation — agent A cannot see agent B</div>
+        <div class="test-item">Zod validation — invalid body → 400</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🛠 SDK TS — client.test.ts (4)</div>
+        <div class="test-count">4 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">should require apiUrl / apiKey</div>
+        <div class="test-item">remember() → returns Memory object</div>
+        <div class="test-item">recall() → returns SearchResult[]</div>
+        <div class="test-item">throws OneMBrainError on 4xx</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🤖 SDK TS — hermes.test.ts (11)</div>
+        <div class="test-count">11 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">rememberTurn() → stores Q&A as episodic</div>
+        <div class="test-item">rememberTurn() → includes sessionId tag</div>
+        <div class="test-item">rememberTurn() → user-only when no reply</div>
+        <div class="test-item">rememberPreference() → semantic, importance 0.85</div>
+        <div class="test-item">rememberProcedure() → procedural, importance 0.9</div>
+        <div class="test-item">recall() → defaults 8 results, 2 hops</div>
+        <div class="test-item">recallHistory() → type=episodic filter</div>
+        <div class="test-item">recallFacts() → type=semantic filter</div>
+        <div class="test-item">recallProcedures() → type=procedural filter</div>
+        <div class="test-item">buildContext() → empty string when no results</div>
+        <div class="test-item">buildContext() → formatted markdown block</div>
+      </div>
+    </div>
+
+    <div class="test-suite">
+      <div class="test-header">
+        <div class="test-name">🐍 Python SDK — test_client.py (13)</div>
+        <div class="test-count">13 passed</div>
+      </div>
+      <div class="test-items">
+        <div class="test-item">test_client_requires_api_url</div>
+        <div class="test-item">test_client_requires_api_key</div>
+        <div class="test-item">test_client_requires_agent_id_at_call_time</div>
+        <div class="test-item">test_remember_returns_memory</div>
+        <div class="test-item">test_remember_accepts_string_shorthand</div>
+        <div class="test-item">test_recall_returns_results</div>
+        <div class="test-item">test_recall_passes_limit_param</div>
+        <div class="test-item">test_recall_passes_type_filter</div>
+        <div class="test-item">test_forget_returns_true_on_success</div>
+        <div class="test-item">test_associate_returns_result</div>
+        <div class="test-item">test_raises_on_http_error</div>
+        <div class="test-item">test_memory_from_dict</div>
+        <div class="test-item">test_memory_repr</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ SECTION: PHASES -->
+<div id="phases" class="section">
+  <div class="section-title">Development Phases</div>
+  <div class="section-subtitle">All 5 phases complete — 34 tasks, zero blockers.</div>
+
+  <div style="max-width:760px;margin:0 auto;">
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-blue);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-blue">Phase 0 · Setup</div>
+          <div class="timeline-title">Project Setup &amp; Foundation</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">npm workspaces monorepo (core, api, dashboard, sdk)</li>
+            <li class="timeline-task">TypeScript, ESLint, Prettier config</li>
+            <li class="timeline-task">Docker Compose (SQLite, Redis, PostgreSQL, Ollama)</li>
+            <li class="timeline-task">GitHub Actions CI — lint, typecheck, test</li>
+            <li class="timeline-task">Husky + lint-staged pre-commit hooks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-purple);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-purple">Phase 1 · Core</div>
+          <div class="timeline-title">Memory Engine + REST API</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">SQLite + sqlite-vec and PostgreSQL + pgvector dual support</li>
+            <li class="timeline-task">Pluggable EmbeddingProvider (OpenAI + Ollama adapters)</li>
+            <li class="timeline-task">remember(), recall(), forget() core methods</li>
+            <li class="timeline-task">Decay scoring system with background interval</li>
+            <li class="timeline-task">Hono REST API with auth middleware (X-API-Key + X-Agent-Id)</li>
+            <li class="timeline-task">All REST endpoints + Zod validation</li>
+            <li class="timeline-task">22 core tests + 13 API tests</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-green);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-green">Phase 2 · Dashboard</div>
+          <div class="timeline-title">Pulse Brain Real-time Dashboard</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">Redis Pub/Sub event bus (with in-memory fallback)</li>
+            <li class="timeline-task">WebSocket endpoint with filter support + heartbeat</li>
+            <li class="timeline-task">Next.js dashboard — dark theme</li>
+            <li class="timeline-task">D3 force-directed graph — nodes color-coded by type</li>
+            <li class="timeline-task">Pulse/glow animation on memory access (&lt;200ms latency)</li>
+            <li class="timeline-task">Filters (agent, type, time window) + node detail panel</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-pink);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-pink">Phase 3 · Backup</div>
+          <div class="timeline-title">Memory Passport + Google Drive Backup</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">Versioned Memory Passport spec (docs/memory-passport-spec.md)</li>
+            <li class="timeline-task">Export: gzip + AES-256-GCM encrypted envelope</li>
+            <li class="timeline-task">Import: decrypt → decompress → re-embed → reconstruct graph</li>
+            <li class="timeline-task">Google Drive OAuth2 + token refresh flow</li>
+            <li class="timeline-task">Backup upload (versioned filenames) + list + restore</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-cyan);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-cyan">Phase 4 · Graph</div>
+          <div class="timeline-title">Association Graph + Spreading Activation</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">Auto-create edges: co-occurrence, similarity, explicit</li>
+            <li class="timeline-task">Non-explicit association edge decay in decay loop</li>
+            <li class="timeline-task">Two-pass retrieval: vector search + BFS graph walk</li>
+            <li class="timeline-task">Configurable: maxHops, activationThreshold, blendWeight</li>
+            <li class="timeline-task">Benchmark: vector-only 1.12ms · spreading activation 2.04ms</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent-orange);"></div>
+        <div class="timeline-content">
+          <div class="timeline-phase c-orange">Phase 5 · SDK</div>
+          <div class="timeline-title">Client SDKs + Documentation</div>
+          <ul class="timeline-tasks">
+            <li class="timeline-task">TypeScript SDK (@1mbrain/sdk) — 4 tests</li>
+            <li class="timeline-task">HermesMemoryAdapter (@1mbrain/sdk/hermes) — 11 tests</li>
+            <li class="timeline-task">Python SDK (onemillionbrain, sync + async) — 13 tests</li>
+            <li class="timeline-task">SDK Quickstart Docs — TS + Python + LangChain + LlamaIndex examples</li>
+            <li class="timeline-task">npm + PyPI publish ready (credentials needed)</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="info-box green" style="margin-top:32px;text-align:center;">
+      🎉 <strong>All 5 phases complete.</strong> 50/50 tests passing. Root typecheck + lint clean. Ready for npm/PyPI publish.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ JS -->
+<script>
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Subtle entrance animation for cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .timeline-content, .arch-box, .flow-node, .test-suite').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease, border-color 0.3s, box-shadow 0.3s';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,2984 @@
+{
+  "name": "adversarial-memory",
+  "description": "Adversarial memory benchmark dataset containing 10 conversations with 120 memory records and 60 questions, testing contradiction handling, noise, and abstention.",
+  "generated_at": "2026-06-19",
+  "fairness_notes": [
+    "Tests capacity to handle stale values, contradicting facts, and noise resistance without graph bias.",
+    "Abstention questions ensure systems know when evidence is insufficient."
+  ],
+  "conversations": [
+    {
+      "conversation_id": "dc_c01_software",
+      "agent_id": "dc_agent_software_01",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "dc_c01_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for SOFTWARE are value Alpha.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for SOFTWARE is value Beta.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the SOFTWARE report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c01_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for SOFTWARE was updated to Gamma.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for SOFTWARE was changed to Delta.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the SOFTWARE registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "software",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c01_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for SOFTWARE is located at building Room 10.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c01_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c01_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for SOFTWARE is Mary Jane.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for SOFTWARE was changed to Peter Parker.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c01_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c01_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the SOFTWARE task is George Lucas.",
+          "tags": [
+            "software",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c01_q1",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c01_q2",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c01_q3",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c01_q4",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c01_q5",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c01_q6",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the SOFTWARE task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c01_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c02_personal_assistant",
+      "agent_id": "dc_agent_personal_assistant_02",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "dc_c02_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for PERSONAL_ASSISTANT are value Alpha.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for PERSONAL_ASSISTANT is value Beta.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the PERSONAL_ASSISTANT report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c02_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for PERSONAL_ASSISTANT was updated to Gamma.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for PERSONAL_ASSISTANT was changed to Delta.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the PERSONAL_ASSISTANT registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "personal_assistant",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c02_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for PERSONAL_ASSISTANT is located at building Room 10.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c02_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c02_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for PERSONAL_ASSISTANT is Mary Jane.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for PERSONAL_ASSISTANT was changed to Peter Parker.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c02_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c02_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the PERSONAL_ASSISTANT task is George Lucas.",
+          "tags": [
+            "personal_assistant",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c02_q1",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c02_q2",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c02_q3",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c02_q4",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c02_q5",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c02_q6",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the PERSONAL_ASSISTANT task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c02_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c03_research",
+      "agent_id": "dc_agent_research_03",
+      "domain": "research",
+      "memory_records": [
+        {
+          "id": "dc_c03_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for RESEARCH are value Alpha.",
+          "tags": [
+            "research",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for RESEARCH is value Beta.",
+          "tags": [
+            "research",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the RESEARCH report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c03_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for RESEARCH was updated to Gamma.",
+          "tags": [
+            "research",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for RESEARCH was changed to Delta.",
+          "tags": [
+            "research",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the RESEARCH registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "research",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c03_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for RESEARCH is located at building Room 10.",
+          "tags": [
+            "research"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c03_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c03_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for RESEARCH is Mary Jane.",
+          "tags": [
+            "research"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for RESEARCH was changed to Peter Parker.",
+          "tags": [
+            "research"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c03_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c03_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the RESEARCH task is George Lucas.",
+          "tags": [
+            "research",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c03_q1",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the RESEARCH task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c03_q2",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the RESEARCH task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c03_q3",
+          "category": "atomic_fact_recall",
+          "question": "Who is in charge of administrative coordination for the RESEARCH task?",
+          "expected_answer": "George Lucas",
+          "acceptable_answer_criteria": [
+            "George Lucas",
+            "George"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m12"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category atomic_fact_recall."
+        },
+        {
+          "question_id": "dc_c03_q4",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the RESEARCH project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c03_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c03_q5",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the RESEARCH project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c03_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c03_q6",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the RESEARCH project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c03_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c03_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c04_travel",
+      "agent_id": "dc_agent_travel_04",
+      "domain": "travel",
+      "memory_records": [
+        {
+          "id": "dc_c04_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for TRAVEL are value Alpha.",
+          "tags": [
+            "travel",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for TRAVEL is value Beta.",
+          "tags": [
+            "travel",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the TRAVEL report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c04_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for TRAVEL was updated to Gamma.",
+          "tags": [
+            "travel",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for TRAVEL was changed to Delta.",
+          "tags": [
+            "travel",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the TRAVEL registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "travel",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c04_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for TRAVEL is located at building Room 10.",
+          "tags": [
+            "travel"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c04_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c04_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for TRAVEL is Mary Jane.",
+          "tags": [
+            "travel"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for TRAVEL was changed to Peter Parker.",
+          "tags": [
+            "travel"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c04_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c04_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the TRAVEL task is George Lucas.",
+          "tags": [
+            "travel",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c04_q1",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c04_q2",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c04_q3",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c04_q4",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c04_q5",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c04_q6",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the TRAVEL project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c04_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c04_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c05_health_admin",
+      "agent_id": "dc_agent_health_admin_05",
+      "domain": "health_admin",
+      "memory_records": [
+        {
+          "id": "dc_c05_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for HEALTH_ADMIN are value Alpha.",
+          "tags": [
+            "health_admin",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for HEALTH_ADMIN is value Beta.",
+          "tags": [
+            "health_admin",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the HEALTH_ADMIN report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c05_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for HEALTH_ADMIN was updated to Gamma.",
+          "tags": [
+            "health_admin",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for HEALTH_ADMIN was changed to Delta.",
+          "tags": [
+            "health_admin",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the HEALTH_ADMIN registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "health_admin",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c05_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for HEALTH_ADMIN is located at building Room 10.",
+          "tags": [
+            "health_admin"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c05_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c05_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for HEALTH_ADMIN is Mary Jane.",
+          "tags": [
+            "health_admin"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for HEALTH_ADMIN was changed to Peter Parker.",
+          "tags": [
+            "health_admin"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c05_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c05_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the HEALTH_ADMIN task is George Lucas.",
+          "tags": [
+            "health_admin",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c05_q1",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the HEALTH_ADMIN project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c05_q2",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the HEALTH_ADMIN project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c05_q3",
+          "category": "paraphrased_semantic_recall",
+          "question": "What is the primary variable value currently designated for the HEALTH_ADMIN project?",
+          "expected_answer": "Gamma",
+          "acceptable_answer_criteria": [
+            "Gamma"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m04"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m01"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category paraphrased_semantic_recall."
+        },
+        {
+          "question_id": "dc_c05_q4",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for HEALTH_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c05_q5",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for HEALTH_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c05_q6",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for HEALTH_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c05_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c05_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c06_finance_admin",
+      "agent_id": "dc_agent_finance_admin_06",
+      "domain": "finance_admin",
+      "memory_records": [
+        {
+          "id": "dc_c06_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for FINANCE_ADMIN are value Alpha.",
+          "tags": [
+            "finance_admin",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for FINANCE_ADMIN is value Beta.",
+          "tags": [
+            "finance_admin",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the FINANCE_ADMIN report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c06_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for FINANCE_ADMIN was updated to Gamma.",
+          "tags": [
+            "finance_admin",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for FINANCE_ADMIN was changed to Delta.",
+          "tags": [
+            "finance_admin",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the FINANCE_ADMIN registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "finance_admin",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c06_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for FINANCE_ADMIN is located at building Room 10.",
+          "tags": [
+            "finance_admin"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c06_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c06_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for FINANCE_ADMIN is Mary Jane.",
+          "tags": [
+            "finance_admin"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for FINANCE_ADMIN was changed to Peter Parker.",
+          "tags": [
+            "finance_admin"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c06_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c06_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the FINANCE_ADMIN task is George Lucas.",
+          "tags": [
+            "finance_admin",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c06_q1",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c06_q2",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c06_q3",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c06_q4",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c06_q5",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        },
+        {
+          "question_id": "dc_c06_q6",
+          "category": "temporal_update",
+          "question": "What is the secondary parameter value active for FINANCE_ADMIN?",
+          "expected_answer": "Delta",
+          "acceptable_answer_criteria": [
+            "Delta"
+          ],
+          "required_memory_ids": [
+            "dc_c06_m05"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c06_m02"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category temporal_update."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c07_education",
+      "agent_id": "dc_agent_education_07",
+      "domain": "education",
+      "memory_records": [
+        {
+          "id": "dc_c07_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for EDUCATION are value Alpha.",
+          "tags": [
+            "education",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for EDUCATION is value Beta.",
+          "tags": [
+            "education",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the EDUCATION report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c07_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for EDUCATION was updated to Gamma.",
+          "tags": [
+            "education",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for EDUCATION was changed to Delta.",
+          "tags": [
+            "education",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the EDUCATION registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "education",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c07_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for EDUCATION is located at building Room 10.",
+          "tags": [
+            "education"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c07_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c07_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for EDUCATION is Mary Jane.",
+          "tags": [
+            "education"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for EDUCATION was changed to Peter Parker.",
+          "tags": [
+            "education"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c07_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c07_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the EDUCATION task is George Lucas.",
+          "tags": [
+            "education",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c07_q1",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        },
+        {
+          "question_id": "dc_c07_q2",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        },
+        {
+          "question_id": "dc_c07_q3",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        },
+        {
+          "question_id": "dc_c07_q4",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        },
+        {
+          "question_id": "dc_c07_q5",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        },
+        {
+          "question_id": "dc_c07_q6",
+          "category": "contradiction_resolution",
+          "question": "Does Mary Jane still serve as the primary external liaison for the EDUCATION engagement?",
+          "expected_answer": "No, it was updated to Peter Parker on June 6.",
+          "acceptable_answer_criteria": [
+            "No, it is Peter Parker",
+            "No",
+            "Peter Parker"
+          ],
+          "required_memory_ids": [
+            "dc_c07_m10",
+            "dc_c07_m09"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category contradiction_resolution."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c08_creative_work",
+      "agent_id": "dc_agent_creative_work_08",
+      "domain": "creative_work",
+      "memory_records": [
+        {
+          "id": "dc_c08_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for CREATIVE_WORK are value Alpha.",
+          "tags": [
+            "creative_work",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for CREATIVE_WORK is value Beta.",
+          "tags": [
+            "creative_work",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the CREATIVE_WORK report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c08_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for CREATIVE_WORK was updated to Gamma.",
+          "tags": [
+            "creative_work",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for CREATIVE_WORK was changed to Delta.",
+          "tags": [
+            "creative_work",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the CREATIVE_WORK registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "creative_work",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c08_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for CREATIVE_WORK is located at building Room 10.",
+          "tags": [
+            "creative_work"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c08_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c08_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for CREATIVE_WORK is Mary Jane.",
+          "tags": [
+            "creative_work"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for CREATIVE_WORK was changed to Peter Parker.",
+          "tags": [
+            "creative_work"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c08_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c08_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the CREATIVE_WORK task is George Lucas.",
+          "tags": [
+            "creative_work",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c08_q1",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        },
+        {
+          "question_id": "dc_c08_q2",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        },
+        {
+          "question_id": "dc_c08_q3",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        },
+        {
+          "question_id": "dc_c08_q4",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        },
+        {
+          "question_id": "dc_c08_q5",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        },
+        {
+          "question_id": "dc_c08_q6",
+          "category": "multi_hop_association",
+          "question": "Where should we go to apply updates to the registry for the CREATIVE_WORK task?",
+          "expected_answer": "Room 10",
+          "acceptable_answer_criteria": [
+            "Room 10",
+            "building Room 10"
+          ],
+          "required_memory_ids": [
+            "dc_c08_m08",
+            "dc_c08_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "hard",
+          "architecture_bias_risk": "medium",
+          "fairness_note": "Verifies provider-neutral evaluation for category multi_hop_association."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c09_software",
+      "agent_id": "dc_agent_software_09",
+      "domain": "software",
+      "memory_records": [
+        {
+          "id": "dc_c09_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for SOFTWARE are value Alpha.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for SOFTWARE is value Beta.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the SOFTWARE report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c09_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for SOFTWARE was updated to Gamma.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for SOFTWARE was changed to Delta.",
+          "tags": [
+            "software",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the SOFTWARE registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "software",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c09_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for SOFTWARE is located at building Room 10.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c09_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c09_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for SOFTWARE is Mary Jane.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for SOFTWARE was changed to Peter Parker.",
+          "tags": [
+            "software"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c09_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c09_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the SOFTWARE task is George Lucas.",
+          "tags": [
+            "software",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c09_q1",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        },
+        {
+          "question_id": "dc_c09_q2",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        },
+        {
+          "question_id": "dc_c09_q3",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        },
+        {
+          "question_id": "dc_c09_q4",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        },
+        {
+          "question_id": "dc_c09_q5",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        },
+        {
+          "question_id": "dc_c09_q6",
+          "category": "noise_resistance",
+          "question": "What is the procedure for enacting modifications on the SOFTWARE registry?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c09_m06"
+          ],
+          "forbidden_memory_ids": [
+            "dc_c09_m07"
+          ],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category noise_resistance."
+        }
+      ]
+    },
+    {
+      "conversation_id": "dc_c10_personal_assistant",
+      "agent_id": "dc_agent_personal_assistant_10",
+      "domain": "personal_assistant",
+      "memory_records": [
+        {
+          "id": "dc_c10_m01",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:00:00Z",
+          "content": "The main parameters designated for PERSONAL_ASSISTANT are value Alpha.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t1",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m02",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:05:00Z",
+          "content": "The secondary configuration option for PERSONAL_ASSISTANT is value Beta.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t2",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m03",
+          "type": "semantic",
+          "timestamp": "2026-06-01T10:10:00Z",
+          "content": "Distractor: The color of the PERSONAL_ASSISTANT report sheet is yellow.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t3",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c10_m04",
+          "type": "semantic",
+          "timestamp": "2026-06-02T10:00:00Z",
+          "content": "On June 2, the main parameter configuration for PERSONAL_ASSISTANT was updated to Gamma.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t4",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m05",
+          "type": "semantic",
+          "timestamp": "2026-06-03T11:00:00Z",
+          "content": "On June 3, the secondary configuration option for PERSONAL_ASSISTANT was changed to Delta.",
+          "tags": [
+            "personal_assistant",
+            "param"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t5",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m06",
+          "type": "procedural",
+          "timestamp": "2026-06-04T09:00:00Z",
+          "content": "To apply modifications to the PERSONAL_ASSISTANT registry: 1. check credentials, 2. submit form, 3. wait for email.",
+          "tags": [
+            "personal_assistant",
+            "process"
+          ],
+          "importance": 0.85,
+          "metadata": {
+            "source_turn": "t6",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m07",
+          "type": "semantic",
+          "timestamp": "2026-06-04T09:05:00Z",
+          "content": "Distractor: Email server is active on port 25.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.3,
+          "metadata": {
+            "source_turn": "t7",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c10_m08",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:00:00Z",
+          "content": "The registry workspace for PERSONAL_ASSISTANT is located at building Room 10.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t8",
+            "speaker": "user"
+          },
+          "associations": [
+            {
+              "target_id": "dc_c10_m06",
+              "strength": 0.7
+            }
+          ]
+        },
+        {
+          "id": "dc_c10_m09",
+          "type": "semantic",
+          "timestamp": "2026-06-05T10:10:00Z",
+          "content": "The client contact liaison for PERSONAL_ASSISTANT is Mary Jane.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.7,
+          "metadata": {
+            "source_turn": "t9",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m10",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:00:00Z",
+          "content": "On June 6, the client contact liaison for PERSONAL_ASSISTANT was changed to Peter Parker.",
+          "tags": [
+            "personal_assistant"
+          ],
+          "importance": 0.9,
+          "metadata": {
+            "source_turn": "t10",
+            "speaker": "user"
+          }
+        },
+        {
+          "id": "dc_c10_m11",
+          "type": "semantic",
+          "timestamp": "2026-06-06T12:05:00Z",
+          "content": "Distractor: Peter Parker works as a freelance photographer.",
+          "tags": [
+            "noise"
+          ],
+          "importance": 0.2,
+          "metadata": {
+            "source_turn": "t11",
+            "speaker": "assistant"
+          }
+        },
+        {
+          "id": "dc_c10_m12",
+          "type": "semantic",
+          "timestamp": "2026-06-07T13:00:00Z",
+          "content": "The manager for the PERSONAL_ASSISTANT task is George Lucas.",
+          "tags": [
+            "personal_assistant",
+            "manager"
+          ],
+          "importance": 0.8,
+          "metadata": {
+            "source_turn": "t12",
+            "speaker": "user"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "question_id": "dc_c10_q1",
+          "category": "procedural_recall",
+          "question": "What steps are necessary to execute the PERSONAL_ASSISTANT update?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email.",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c10_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category procedural_recall."
+        },
+        {
+          "question_id": "dc_c10_q2",
+          "category": "procedural_recall",
+          "question": "What steps are necessary to execute the PERSONAL_ASSISTANT update?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email.",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c10_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category procedural_recall."
+        },
+        {
+          "question_id": "dc_c10_q3",
+          "category": "procedural_recall",
+          "question": "What steps are necessary to execute the PERSONAL_ASSISTANT update?",
+          "expected_answer": "1. check credentials, 2. submit form, 3. wait for email.",
+          "acceptable_answer_criteria": [
+            "check credentials",
+            "submit form",
+            "wait for email"
+          ],
+          "required_memory_ids": [
+            "dc_c10_m06"
+          ],
+          "forbidden_memory_ids": [],
+          "difficulty": "medium",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category procedural_recall."
+        },
+        {
+          "question_id": "dc_c10_q4",
+          "category": "abstention",
+          "question": "Which telephone contact number should we call to reach the director of PERSONAL_ASSISTANT?",
+          "expected_answer": "not enough information",
+          "acceptable_answer_criteria": [
+            "not enough information",
+            "unknown",
+            "insufficient evidence"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "dc_c10_m12"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category abstention."
+        },
+        {
+          "question_id": "dc_c10_q5",
+          "category": "abstention",
+          "question": "Which telephone contact number should we call to reach the director of PERSONAL_ASSISTANT?",
+          "expected_answer": "not enough information",
+          "acceptable_answer_criteria": [
+            "not enough information",
+            "unknown",
+            "insufficient evidence"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "dc_c10_m12"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category abstention."
+        },
+        {
+          "question_id": "dc_c10_q6",
+          "category": "abstention",
+          "question": "Which telephone contact number should we call to reach the director of PERSONAL_ASSISTANT?",
+          "expected_answer": "not enough information",
+          "acceptable_answer_criteria": [
+            "not enough information",
+            "unknown",
+            "insufficient evidence"
+          ],
+          "required_memory_ids": [],
+          "forbidden_memory_ids": [
+            "dc_c10_m12"
+          ],
+          "difficulty": "hard",
+          "architecture_bias_risk": "low",
+          "fairness_note": "Verifies provider-neutral evaluation for category abstention."
+        }
+      ]
+    }
+  ]
+}
