@@ -57,3 +57,12 @@ metrics_summary.json
 *.sqlite
 *.tsbuildinfo
 packages/benchmarks/results/
+packages/benchmarks/reports/
+memory-benchmarks/
+download_benchmarks.py
+1MBrain_Benchmark_Request.md
+1MBrain_PRD.md
+recommend_claude.md
+MD_Page_Ingestion_Memory_Agent.md
+AGENT_INTEGRATION_GUIDE.md
+AGENT_INSTRUCTIONS.md

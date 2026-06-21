@@ -120,7 +120,7 @@ async function main() {
   app.get('/', (c) => {
     return c.json({
       name: '1MBrain',
-      tagline: 'A portable, holographic memory layer for any AI agent.',
+      tagline: 'A portable, semantic graph memory layer for any AI agent.',
       version: '0.1.0',
       docs: '/health',
       endpoints: {

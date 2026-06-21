@@ -12,7 +12,7 @@ const SAMPLE_HTML = `<!DOCTYPE html>
 <body>
   <article>
     <h1>Breaking: AI Memory System 1MBrain Released</h1>
-    <p>The 1MBrain system is a portable, holographic memory layer for AI agents.
+    <p>The 1MBrain system is a portable, semantic graph memory layer for AI agents.
     It supports both SQLite and PostgreSQL as storage backends with vector search capabilities.
     The system uses spreading activation to find semantically related memories.</p>
     <p>Developers can integrate using TypeScript or Python SDKs.
@@ -25,12 +25,12 @@ const SAMPLE_HTML = `<!DOCTYPE html>
 const MOCK_LLM_RESPONSE = JSON.stringify({
   facts: [
     {
-      claim: '1MBrain is a portable, holographic memory layer for AI agents.',
+      claim: '1MBrain is a portable, semantic graph memory layer for AI agents.',
       type: 'semantic',
       importance: 0.85,
       confidence: 0.92,
       tags: ['1mbrain', 'ai', 'memory'],
-      evidence: '1MBrain system is a portable, holographic memory layer',
+      evidence: '1MBrain system is a portable, semantic graph memory layer',
       shouldRemember: true,
     },
     {

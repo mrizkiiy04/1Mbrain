@@ -1,6 +1,6 @@
 # 1MBrain Python SDK
 
-Python client for the [1MBrain](https://github.com/mrizkiiy04/1mbrain) REST API — a portable, holographic memory layer for AI agents.
+Python client for the [1MBrain](https://github.com/mrizkiiy04/1mbrain) REST API — a portable, semantic graph memory layer for AI agents.
 
 ## Installation
 

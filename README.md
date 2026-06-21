@@ -1,6 +1,6 @@
 # 1MBrain
 
-> A portable, holographic memory layer for any AI agent.
+> A portable, semantic graph memory layer for any AI agent.
 
 [![NPM Version](https://img.shields.io/npm/v/@1mbrain/sdk.svg)](https://www.npmjs.com/package/@1mbrain/sdk)
 [![PyPI Version](https://img.shields.io/pypi/v/onemillionbrain.svg)](https://pypi.org/project/onemillionbrain/)

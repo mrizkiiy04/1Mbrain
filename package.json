@@ -2,7 +2,7 @@
   "name": "1mbrain",
   "version": "0.1.0",
   "private": true,
-  "description": "A portable, holographic memory layer for any AI agent.",
+  "description": "A portable, semantic graph memory layer for any AI agent.",
   "license": "MIT",
   "workspaces": [
     "packages/*",
