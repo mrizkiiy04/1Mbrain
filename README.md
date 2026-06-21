@@ -12,9 +12,9 @@
 
 ## What is 1MBrain?
 
-1MBrain is a framework-agnostic **infrastructure layer for AI agent memory**. Any agent (Claude, GPT, LangChain, LlamaIndex, CrewAI, AutoGen) or gateway interface (Telegram/Discord bots, custom scripts) can call 1MBrain's API to **remember**, **recall**, and **forget**, instead of reinventing ad-hoc memory storage.
+1MBrain is a framework-agnostic **infrastructure layer for AI agent memory**. Any conversational agent (Claude, GPT, LangChain, CrewAI), gateway interface (Telegram/Discord bots), or autonomous coding assistant (**Hermes, Devin, Cursor, Aider, OpenDevin**) can call 1MBrain's API to **remember**, **recall**, and **forget**, instead of reinventing ad-hoc memory storage. 
 
-By utilizing the **Agent ID Namespace**, you can partition memories completely. This allows a single 1MBrain instance to serve multiple agents, bots, or individual chat users concurrently.
+By utilizing the **Agent ID Namespace**, you can partition memories completely. This allows a single 1MBrain instance to serve multiple agents, bots, or individual chat users concurrently across different sessions.
 
 ### 🌟 Key Features
 
@@ -22,6 +22,7 @@ By utilizing the **Agent ID Namespace**, you can partition memories completely. 
 | --- | --- |
 | **Associative Retrieval** | Connects memories in a graph with spreading activation, surfacing related memories beyond standard cosine similarity bounds. |
 | **Time-Aware Supersedence** | Engine automatically tracks chronological state updates, suppressing stale memories using an Ebbinghaus decay curve without deleting historical data. |
+| **Automated Background Consolidation** | 1MBrain acts like a human brain during "sleep", running background jobs to cluster and decay old episodic memories into summarized semantic rules. |
 | **Automated Web-to-MD Ingest** | Built-in pipeline (`packages/ingest`) that fetches URLs, extracts readable content, and converts to Markdown. |
 | **Pulse Brain Dashboard** | Real-time network graph visualization of active memory nodes. |
 | **Memory Passport** | Encrypted export and import of memory states between agents with Google Drive backup integration. |
@@ -39,7 +40,7 @@ Install the official NPM package:
 npm install @1mbrain/sdk
 ```
 
-**Usage:**
+**Standard Usage:**
 ```ts
 import { OneMBrainClient } from '@1mbrain/sdk';
 
@@ -63,6 +64,38 @@ const results = await brain.recall({
   limit: 5,
   useSpreadingActivation: true
 });
+```
+
+**Using the Native Hermes Adapter:**
+If you are building an autonomous agent using the Hermes framework (or need automatic memory type categorization), use our dedicated adapter:
+
+```ts
+import { HermesMemoryAdapter } from '@1mbrain/sdk/hermes';
+
+const memory = new HermesMemoryAdapter({
+  apiUrl: 'http://localhost:3100',
+  apiKey: 'your-api-key',
+  agentId: 'hermes-agent-1',
+});
+
+// Automatically categorizes as episodic memory
+await memory.rememberTurn({
+  userMessage: "What is the pricing?",
+  assistantReply: "It starts at $10/month.",
+});
+
+// Automatically categorizes as procedural memory
+await memory.rememberProcedure('push_to_github', 'Create PRD → push markdown deliverable');
+
+// Recall and build an LLM system prompt context instantly
+const contextStr = await memory.buildContext('how do I push to github?');
+```
+
+**Automated Web Ingestion:**
+Pass any URL to the pipeline to auto-scrape, LLM-extract facts, and store them deduplicated:
+```ts
+const result = await memory.learnFromUrl('https://example.com/docs');
+console.log(`Learned ${result.storedCount} facts from ${result.title}`);
 ```
 
 ### Python SDK
@@ -107,8 +140,8 @@ To host your own 1MBrain API server and dashboard:
 
 1. **Clone & Install**
    ```bash
-   git clone https://github.com/stolenhourdev/1mbrain.git
-   cd 1mbrain
+   git clone https://github.com/mrizkiiy04/1Mbrain.git
+   cd 1Mbrain
    npm install
    ```
 2. **Configure & Start Redis**
@@ -145,18 +178,20 @@ Based on the latest rigorous `memory-bench-realistic-medium` evaluation using Op
 
 # 🇮🇩 Bahasa Indonesia
 
-> Lapisan memori holografis portabel untuk berbagai AI agent.
+> Lapisan memori semantik berstruktur *graph* portabel untuk berbagai AI agent.
 
 ## Apa itu 1MBrain?
 
-1MBrain adalah infrastruktur memori yang tidak terikat pada framework spesifik. Baik Anda menggunakan agen AI seperti Claude, GPT, LangChain, atau sekadar antarmuka *gateway* seperti bot Telegram/Discord, Anda dapat langsung memanggil API 1MBrain untuk menyimpan (**remember**), mengingat (**recall**), dan melupakan (**forget**) konteks, alih-alih membangun database secara manual.
+1MBrain adalah infrastruktur memori yang tidak terikat pada framework spesifik. Baik Anda menggunakan agen AI percakapan (Claude, GPT, LangChain, CrewAI), antarmuka *gateway* (bot Telegram/Discord), maupun agen asisten *coding* otonom (**Hermes, Devin, Cursor, Aider, OpenDevin**), Anda dapat langsung memanggil API 1MBrain untuk menyimpan (**remember**), mengingat (**recall**), dan melupakan (**forget**) konteks, alih-alih membangun database secara manual.
 
-Setiap memori diisolasi penuh melalui **Agent ID Namespace**, sehingga satu server 1MBrain dapat melayani puluhan atau ratusan bot/pengguna secara mandiri dan aman.
+Setiap memori diisolasi penuh melalui **Agent ID Namespace**, sehingga satu server 1MBrain dapat melayani puluhan atau ratusan bot/pengguna secara mandiri lintas-sesi.
 
 ### 🌟 Fitur Utama
 
 - **Associative Retrieval:** Menghubungkan memori dalam struktur *graph* melalui *spreading activation*, sehingga informasi yang saling terkait bisa diambil secara akurat walaupun secara vektor kosinus tidak terlalu mirip.
 - **Time-Aware Supersedence:** Sistem otomatis menekan memori *stale* (kadaluarsa) saat ada informasi terbaru, tanpa harus menghapus riwayat masa lalu (menggunakan kurva Ebbinghaus decay).
+- **Automated Background Consolidation:** 1MBrain bertindak seperti otak manusia saat "tidur", menjalankan tugas latar belakang untuk mengelompokkan dan meringkas memori episodik lama menjadi aturan semantik.
+- **Automated Web-to-MD Ingest:** Pipa bawaan (`packages/ingest`) yang secara otomatis mengambil URL, mengekstrak konten yang relevan, mengubah ke Markdown, lalu menyerap faktanya.
 - **Pulse Brain Dashboard:** Visualisasi jaring *graph* memori Anda secara *real-time*.
 - **Memory Passport:** Ekspor dan impor kondisi memori antar-agen dengan dukungan enkripsi tangguh serta pencadangan (*backup*) ke Google Drive.
 
@@ -167,12 +202,12 @@ Setiap memori diisolasi penuh melalui **Agent ID Namespace**, sehingga satu serv
 npm install @1mbrain/sdk
 ```
 
+*(Lihat blok kode pada bagian bahasa Inggris di atas untuk contoh penggunaan standar, `HermesMemoryAdapter` khusus, dan integrasi otomatis `learnFromUrl`)*.
+
 ### Menggunakan Python (PyPI)
 ```bash
 pip install onemillionbrain
 ```
-
-*(Silakan merujuk ke blok kode pada bagian bahasa Inggris di atas untuk contoh implementasi kodenya).*
 
 ## 📊 Tolok Ukur Kinerja (Benchmark)
 
@@ -185,4 +220,4 @@ pip install onemillionbrain
 ## Lisensi
 MIT License. Silakan lihat [LICENSE](LICENSE) untuk detail.
 
-Dibangun dengan 💙 oleh [stolenhourdev](https://www.threads.com/@stolenhourdev)
+Dibangun dengan 💙 oleh [mrizkiiy04](https://github.com/mrizkiiy04)
