@@ -6,6 +6,7 @@
  */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { createPassportEnvelope, ImportPassportSchema, openPassportEnvelope } from '@1mbrain/core';
 import type { MemoryEngine, MemoryPassportEnvelope } from '@1mbrain/core';
 import type { AuthContext } from '../middleware/auth.js';
@@ -138,33 +139,39 @@ export function createBackupRoutes() {
     }
 
     const optionsParsed = ImportPassportSchema.safeParse(body.options || {});
+
     if (!optionsParsed.success) {
-      return c.json(
-        {
-          error: 'Validation failed',
-          details: optionsParsed.error.flatten().fieldErrors,
-        },
-        400,
-      );
+      throw new HTTPException(400, { message: 'Invalid import options' });
     }
 
-    const accessToken = await getGoogleAccessToken();
-    const envelope = await downloadDriveBackup(accessToken, body.fileId.trim());
-    const passport = openPassportEnvelope(envelope, requireEnv('EXPORT_ENCRYPTION_KEY'));
-    const result = await engine.importPassport(
-      passport,
-      optionsParsed.data.targetAgentId || auth.agentId,
-      optionsParsed.data.conflictStrategy,
-    );
+    let targetAgentId = auth.agentId;
+    // Allow master key to override targetAgentId
+    if ((auth as any).isMaster && optionsParsed.data.targetAgentId) {
+      targetAgentId = optionsParsed.data.targetAgentId;
+    }
 
-    return c.json({
-      success: true,
-      data: result,
-      meta: {
-        fileId: body.fileId.trim(),
-        targetAgentId: optionsParsed.data.targetAgentId || auth.agentId,
-      },
-    });
+    try {
+      const accessToken = await getGoogleAccessToken();
+      const envelope = await downloadDriveBackup(accessToken, body.fileId.trim());
+
+      const passport = openPassportEnvelope(envelope, requireEnv('EXPORT_ENCRYPTION_KEY'));
+      const result = await engine.importPassport(
+        passport,
+        targetAgentId,
+        optionsParsed.data.conflictStrategy,
+      );
+
+      return c.json({
+        success: true,
+        data: result,
+        meta: {
+          fileId: body.fileId.trim(),
+          targetAgentId: targetAgentId,
+        },
+      });
+    } catch (e: any) {
+      return c.json({ error: e.message }, 500);
+    }
   });
 
   return app;

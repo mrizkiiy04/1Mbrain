@@ -86,11 +86,11 @@ function getInitialValue(key: string, fallback: string) {
   return window.localStorage.getItem(key) || fallback;
 }
 
-function toWebSocketUrl(apiUrl: string, apiKey: string, agentId: string, type: string) {
+function toWebSocketUrl(apiUrl: string, agentId: string, type: string) {
   const url = new URL('/v1/dashboard/stream', apiUrl);
   url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
-  url.searchParams.set('apiKey', apiKey);
-  url.searchParams.set('agentId', agentId);
+  // Note: apiKey is no longer passed in the URL for security reasons.
+  // It is sent via a handshake message upon connection.
   if (type !== 'all') {
     url.searchParams.set('type', type);
   }
@@ -105,10 +105,10 @@ export default function DashboardPage() {
     ),
   );
   const [apiKey, setApiKey] = useState(() =>
-    getInitialValue('1mbrain:apiKey', process.env.NEXT_PUBLIC_1MBRAIN_API_KEY || ''),
+    getInitialValue('1mbrain:apiKey', ''),
   );
   const [agentId, setAgentId] = useState(() =>
-    getInitialValue('1mbrain:agentId', process.env.NEXT_PUBLIC_1MBRAIN_AGENT_ID || 'default'),
+    getInitialValue('1mbrain:agentId', 'default'),
   );
   const [typeFilter, setTypeFilter] = useState<MemoryType | 'all'>('all');
   const [search, setSearch] = useState('');
@@ -265,14 +265,22 @@ export default function DashboardPage() {
     socketRef.current?.close();
     setConnectionState('connecting');
 
-    const socket = new WebSocket(toWebSocketUrl(apiUrl, apiKey, agentId, typeFilter));
+    const socket = new WebSocket(toWebSocketUrl(apiUrl, agentId, typeFilter));
     socketRef.current = socket;
 
-    socket.onopen = () => setConnectionState('connected');
+    socket.onopen = () => {
+      // Send handshake auth message immediately upon connection
+      socket.send(JSON.stringify({ type: 'auth', apiKey, agentId }));
+    };
     socket.onclose = () => setConnectionState((state) => (state === 'paused' ? 'paused' : 'idle'));
     socket.onerror = () => setConnectionState('error');
     socket.onmessage = (message) => {
       const event = JSON.parse(String(message.data)) as StreamEvent;
+
+      if (event.type === 'connected') {
+        setConnectionState('connected');
+        return;
+      }
 
       if (event.type === 'ping') {
         socket.send(JSON.stringify({ type: 'pong' }));

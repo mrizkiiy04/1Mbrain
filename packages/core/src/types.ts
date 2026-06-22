@@ -39,6 +39,16 @@ export interface Association {
   createdAt: Date;
 }
 
+export interface ApiKeyRecord {
+  id: string;
+  keyHash: string;
+  agentId: string;
+  name: string;
+  createdAt: Date;
+  lastUsedAt: Date | null;
+  isActive: boolean;
+}
+
 // ─── API Request/Response Types ─────────────────────────
 
 export interface CreateMemoryInput {
@@ -167,6 +177,17 @@ export interface DatabaseProvider {
     },
   ): Promise<Array<{ memory: Memory; similarity: number }>>;
 
+  // Native text search
+  searchByText(
+    agentId: string,
+    query: string,
+    options: {
+      limit?: number;
+      type?: MemoryType;
+      tags?: string[];
+    },
+  ): Promise<Array<{ memory: Memory; score: number }>>;
+
   // Associations
   createAssociation(association: Omit<Association, 'createdAt'>): Promise<Association>;
   getAssociations(memoryId: string): Promise<Association[]>;
@@ -176,6 +197,8 @@ export interface DatabaseProvider {
   listAgentIds(): Promise<string[]>;
   getAllMemories(agentId: string): Promise<Memory[]>;
   getAllAssociations(agentId: string): Promise<Association[]>;
+  getGraphSize(agentId: string): Promise<{ nodes: number; edges: number }>;
+  getAllNodes(agentId: string): Promise<Memory[]>;
   bulkCreateMemories(
     memories: Array<Omit<Memory, 'createdAt' | 'lastAccessedAt'>>,
   ): Promise<Memory[]>;
@@ -186,6 +209,13 @@ export interface DatabaseProvider {
   // Decay
   applyDecay(decayRate: number, minScore: number): Promise<number>;
   applyAssociationDecay(decayRate: number, minStrength: number): Promise<number>;
+
+  // API Keys
+  getApiKeyByHash(keyHash: string): Promise<ApiKeyRecord | null>;
+  getApiKeysByAgent(agentId: string): Promise<ApiKeyRecord[]>;
+  createApiKey(record: Omit<ApiKeyRecord, 'createdAt' | 'lastUsedAt'>): Promise<ApiKeyRecord>;
+  revokeApiKey(id: string): Promise<boolean>;
+  updateApiKeyLastUsed(id: string): Promise<void>;
 
   // Lifecycle
   initialize(): Promise<void>;

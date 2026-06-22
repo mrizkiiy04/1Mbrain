@@ -34,7 +34,7 @@ export function createMemoryRoutes() {
 
     const parsed = CreateMemorySchema.safeParse({
       ...body,
-      agentId: body.agentId || auth.agentId,
+      agentId: auth.agentId,
     });
 
     if (!parsed.success) {
@@ -66,7 +66,7 @@ export function createMemoryRoutes() {
 
     const parsed = SearchMemorySchema.safeParse({
       ...c.req.query(),
-      agentId: c.req.query('agentId') || auth.agentId,
+      agentId: auth.agentId,
     });
 
     if (!parsed.success) {

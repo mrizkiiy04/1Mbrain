@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { existsSync, unlinkSync } from 'node:fs';
 import { MemoryEngine } from '../src/engine.js';
 import { SqliteDatabaseProvider } from '../src/db/sqlite-provider.js';
 import { InMemoryEventBus } from '../src/events.js';
@@ -298,7 +299,7 @@ describe('MemoryEngine', () => {
         });
 
         expect(results[0].memory.id).toBe(target.id);
-        expect(results.every((result) => result.source === 'vector')).toBe(true);
+        expect(results.some((result) => result.memory.id === linkedButIrrelevant.id)).toBe(false);
       } finally {
         await rankingEngine.shutdown();
       }
@@ -883,6 +884,84 @@ describe('MemoryEngine', () => {
   // ─── Entity-Scoped Lexical Seeding ──────────────────
 
   describe('recall() entity-scoped lexical seeding', () => {
+    it('should backfill SQLite FTS rows on initialization', async () => {
+      const dbPath = `D:\\tmp\\1mbrain-fts-${Date.now()}-${Math.random().toString(16).slice(2)}.db`;
+      const cleanup = () => {
+        for (const path of [dbPath, `${dbPath}-wal`, `${dbPath}-shm`]) {
+          if (existsSync(path)) unlinkSync(path);
+        }
+      };
+
+      cleanup();
+
+      const firstDb = new SqliteDatabaseProvider(dbPath);
+      await firstDb.initialize();
+      try {
+        await firstDb.createMemory({
+          id: 'fts-backfill-memory',
+          agentId: 'fts-agent',
+          type: 'semantic',
+          content: 'Backfill target memory says Project Helios uses API-742.',
+          embeddingModel: 'test',
+          embedding: [1, 0, 0, 0],
+          importance: 0.5,
+          decayScore: 1,
+          tags: ['helios'],
+        });
+
+        const rawDb = (firstDb as unknown as { db: { prepare: (sql: string) => { run: () => void } } }).db;
+        rawDb.prepare('DELETE FROM memories_fts').run();
+      } finally {
+        await firstDb.close();
+      }
+
+      const secondDb = new SqliteDatabaseProvider(dbPath);
+      await secondDb.initialize();
+      try {
+        const results = await secondDb.searchByText('fts-agent', 'Project Helios API-742', {
+          limit: 5,
+        });
+
+        expect(results.map((result) => result.memory.id)).toContain('fts-backfill-memory');
+      } finally {
+        await secondDb.close();
+        cleanup();
+      }
+    });
+
+    it('should retrieve exact text tokens through native text search when vectors are unhelpful', async () => {
+      const exactEngine = await createIsolatedEngine(new ZeroEmbeddingProvider());
+
+      try {
+        const target = await exactEngine.remember({
+          agentId: 'exact-agent',
+          type: 'semantic',
+          content: 'Rina set the deploy codename to API-742 and the rollout price to $39/month.',
+          tags: ['rina', 'deploy'],
+        });
+        await exactEngine.remember({
+          agentId: 'exact-agent',
+          type: 'semantic',
+          content: 'Rina discussed the deploy checklist but did not mention pricing or API identifiers.',
+          tags: ['rina', 'deploy'],
+        });
+
+        const results = await exactEngine.recall({
+          agentId: 'exact-agent',
+          query: 'What deploy note mentions API-742 and $39/month for Rina?',
+          limit: 3,
+          threshold: 0.5,
+          useSpreadingActivation: true,
+          activationThreshold: 0.05,
+        });
+
+        expect(results[0].memory.id).toBe(target.id);
+        expect(results[0].rankingTrace?.some((trace) => trace.startsWith('lexical_seed'))).toBe(true);
+      } finally {
+        await exactEngine.shutdown();
+      }
+    });
+
     it('should not include wrong-entity memories in lexical seed candidates', async () => {
       const entityEngine = await createIsolatedEngine(new ZeroEmbeddingProvider());
 

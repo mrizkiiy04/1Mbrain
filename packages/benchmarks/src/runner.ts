@@ -2,6 +2,11 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { performance } from 'node:perf_hooks';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
+
+const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+dotenv.config({ path: resolve(PACKAGE_ROOT, '../../.env') });
+
 import { createSyntheticAgentMemoryDataset } from './datasets/synthetic-agent-memory.js';
 import { createFocusedMiniDataset, createFixtureDataset } from './datasets/focused-mini.js';
 import {
@@ -21,8 +26,6 @@ import {
 } from './provider.js';
 import { OneMBrainBenchmarkAdapter } from './adapters/1mbrain.js';
 import { VectorBaselineAdapter } from './adapters/vector-baseline.js';
-import { QdrantBenchmarkAdapter } from './adapters/qdrant.js';
-import { Mem0BenchmarkAdapter } from './adapters/mem0.js';
 import { UnavailableAdapter } from './adapters/unavailable.js';
 import {
   applyLlmEvaluation,
@@ -33,7 +36,6 @@ import {
   type LlmCaseEvaluation,
 } from './llm-evaluator.js';
 
-const PACKAGE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function loadBenchmarkDataset(): BenchmarkDataset {
   const datasetName = process.env['BENCH_DATASET'] ?? 'synthetic';
@@ -398,8 +400,6 @@ async function main() {
     new OneMBrainBenchmarkAdapter('1mbrain_graph_light'),
     new OneMBrainBenchmarkAdapter('1mbrain_vector_only'),
     new VectorBaselineAdapter(),
-    new QdrantBenchmarkAdapter(),
-    new Mem0BenchmarkAdapter(),
     new UnavailableAdapter('zep_graphiti', 'Zep/Graphiti', 'Zep provider integration not configured'),
     new UnavailableAdapter('letta', 'Letta', 'Letta integration not configured'),
     new UnavailableAdapter('langmem', 'LangMem', 'LangMem integration not configured'),

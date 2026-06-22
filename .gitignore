@@ -52,7 +52,7 @@ venv/
 # Local Debug & Artifacts
 debug-*.js
 debug-*.ts
-task.md
+#task.md
 metrics_summary.json
 *.sqlite
 *.tsbuildinfo

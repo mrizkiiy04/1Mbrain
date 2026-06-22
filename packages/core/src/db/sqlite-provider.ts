@@ -17,6 +17,7 @@ import type {
   Association,
   AssociationOrigin,
   AssociationRelationType,
+  ApiKeyRecord,
 } from '../types.js';
 import { createChildLogger } from '../logger.js';
 
@@ -101,6 +102,52 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       CREATE INDEX IF NOT EXISTS idx_api_keys_hash ON api_keys(key_hash);
       CREATE INDEX IF NOT EXISTS idx_api_keys_agent ON api_keys(agent_id);
     `);
+
+    this.createFullTextSearch();
+  }
+
+  private createFullTextSearch(): void {
+    this.db.exec(`
+      CREATE VIRTUAL TABLE IF NOT EXISTS memories_fts USING fts5(
+        id UNINDEXED,
+        agent_id UNINDEXED,
+        type UNINDEXED,
+        content,
+        tags
+      );
+
+      CREATE TRIGGER IF NOT EXISTS memories_fts_after_insert
+      AFTER INSERT ON memories
+      BEGIN
+        INSERT INTO memories_fts (id, agent_id, type, content, tags)
+        VALUES (new.id, new.agent_id, new.type, new.content, new.tags);
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS memories_fts_after_delete
+      AFTER DELETE ON memories
+      BEGIN
+        DELETE FROM memories_fts WHERE id = old.id;
+      END;
+
+      CREATE TRIGGER IF NOT EXISTS memories_fts_after_update
+      AFTER UPDATE OF agent_id, type, content, tags ON memories
+      BEGIN
+        DELETE FROM memories_fts WHERE id = old.id;
+        INSERT INTO memories_fts (id, agent_id, type, content, tags)
+        VALUES (new.id, new.agent_id, new.type, new.content, new.tags);
+      END;
+    `);
+
+    this.db
+      .prepare(
+        `INSERT INTO memories_fts (id, agent_id, type, content, tags)
+         SELECT m.id, m.agent_id, m.type, m.content, m.tags
+         FROM memories m
+         WHERE NOT EXISTS (
+           SELECT 1 FROM memories_fts f WHERE f.id = m.id
+         )`,
+      )
+      .run();
   }
 
   // ─── Memory CRUD ──────────────────────────────────────
@@ -291,6 +338,62 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
 
   // ─── Associations ─────────────────────────────────────
 
+  async searchByText(
+    agentId: string,
+    query: string,
+    options: {
+      limit?: number;
+      type?: MemoryType;
+      tags?: string[];
+    } = {},
+  ): Promise<Array<{ memory: Memory; score: number }>> {
+    const { limit = 10, type, tags } = options;
+    const matchQuery = toFtsMatchQuery(query);
+    if (!matchQuery) return [];
+
+    let whereClause = 'memories_fts MATCH ? AND m.agent_id = ?';
+    const params: unknown[] = [matchQuery, agentId];
+
+    if (type) {
+      whereClause += ' AND m.type = ?';
+      params.push(type);
+    }
+
+    const rows = this.db
+      .prepare(
+        `SELECT m.*, bm25(memories_fts) AS text_rank
+         FROM memories_fts
+         JOIN memories m ON m.id = memories_fts.id
+         WHERE ${whereClause}
+         ORDER BY text_rank ASC
+         LIMIT ?`,
+      )
+      .all(...params, Math.max(limit * 3, limit)) as Array<MemoryRow & { text_rank: number }>;
+
+    const filtered = tags?.length
+      ? rows.filter((row) => {
+          const memTags = JSON.parse(row.tags) as string[];
+          return tags.some((tag) => memTags.includes(tag));
+        })
+      : rows;
+
+    const topRows = filtered.slice(0, limit);
+    if (topRows.length > 0) {
+      const ids = topRows.map((row) => row.id);
+      const placeholders = ids.map(() => '?').join(',');
+      this.db
+        .prepare(
+          `UPDATE memories SET last_accessed_at = datetime('now'), decay_score = MIN(1.0, decay_score + 0.02) WHERE id IN (${placeholders})`,
+        )
+        .run(...ids);
+    }
+
+    return topRows.map((row, index) => ({
+      memory: this.rowToMemory(row),
+      score: 1 / (index + 1),
+    }));
+  }
+
   async createAssociation(association: Omit<Association, 'createdAt'>): Promise<Association> {
     const now = new Date().toISOString();
 
@@ -326,7 +429,7 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       .prepare(`SELECT * FROM associations WHERE source_id = ? OR target_id = ?`)
       .all(memoryId, memoryId) as AssociationRow[];
 
-    return rows.map(this.rowToAssociation);
+    return rows.map(this.mapAssociationRow);
   }
 
   async deleteAssociations(memoryId: string): Promise<number> {
@@ -335,6 +438,58 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       .run(memoryId, memoryId);
 
     return result.changes;
+  }
+
+  // ─── API Keys ──────────────────────────────────────────
+
+  async getApiKeyByHash(keyHash: string): Promise<ApiKeyRecord | null> {
+    const stmt = this.db.prepare('SELECT * FROM api_keys WHERE key_hash = ? AND is_active = 1');
+    const row = stmt.get(keyHash) as ApiKeyRow | undefined;
+    if (!row) return null;
+    return this.mapApiKeyRow(row);
+  }
+
+  async getApiKeysByAgent(agentId: string): Promise<ApiKeyRecord[]> {
+    const stmt = this.db.prepare('SELECT * FROM api_keys WHERE agent_id = ? ORDER BY created_at DESC');
+    const rows = stmt.all(agentId) as ApiKeyRow[];
+    return rows.map((r) => this.mapApiKeyRow(r));
+  }
+
+  async createApiKey(record: Omit<ApiKeyRecord, 'createdAt' | 'lastUsedAt'>): Promise<ApiKeyRecord> {
+    const id = record.id || uuidv4();
+    const createdAt = new Date().toISOString();
+
+    const stmt = this.db.prepare(`
+      INSERT INTO api_keys (id, key_hash, agent_id, name, created_at, is_active)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    stmt.run(
+      id,
+      record.keyHash,
+      record.agentId,
+      record.name,
+      createdAt,
+      record.isActive ? 1 : 0
+    );
+
+    return {
+      ...record,
+      id,
+      createdAt: new Date(createdAt),
+      lastUsedAt: null,
+    };
+  }
+
+  async revokeApiKey(id: string): Promise<boolean> {
+    const stmt = this.db.prepare('UPDATE api_keys SET is_active = 0 WHERE id = ?');
+    const result = stmt.run(id);
+    return result.changes > 0;
+  }
+
+  async updateApiKeyLastUsed(id: string): Promise<void> {
+    const stmt = this.db.prepare('UPDATE api_keys SET last_used_at = ? WHERE id = ?');
+    stmt.run(new Date().toISOString(), id);
   }
 
   // ─── Bulk Operations ──────────────────────────────────
@@ -364,7 +519,7 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       )
       .all(agentId) as AssociationRow[];
 
-    return rows.map(this.rowToAssociation);
+    return rows.map(this.mapAssociationRow);
   }
 
   async bulkCreateMemories(
@@ -457,6 +612,16 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
     return result.changes;
   }
 
+  async getGraphSize(agentId: string): Promise<{ nodes: number; edges: number }> {
+    const nodes = (this.db.prepare('SELECT COUNT(*) as count FROM memories WHERE agent_id = ?').get(agentId) as any).count;
+    const edges = (this.db.prepare('SELECT COUNT(*) as count FROM associations WHERE source_id IN (SELECT id FROM memories WHERE agent_id = ?)').get(agentId) as any).count;
+    return { nodes, edges };
+  }
+
+  async getAllNodes(agentId: string): Promise<Memory[]> {
+    return this.getAllMemories(agentId);
+  }
+
   // ─── Lifecycle ────────────────────────────────────────
 
   async close(): Promise<void> {
@@ -483,7 +648,7 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
     };
   }
 
-  private rowToAssociation(row: AssociationRow): Association {
+  private mapAssociationRow(row: AssociationRow): Association {
     return {
       sourceId: row.source_id,
       targetId: row.target_id,
@@ -491,6 +656,18 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       origin: row.origin as AssociationOrigin,
       relationType: (row.relation_type ?? 'relates_to') as AssociationRelationType,
       createdAt: new Date(row.created_at),
+    };
+  }
+
+  private mapApiKeyRow(row: ApiKeyRow): ApiKeyRecord {
+    return {
+      id: row.id,
+      keyHash: row.key_hash,
+      agentId: row.agent_id,
+      name: row.name,
+      createdAt: new Date(row.created_at),
+      lastUsedAt: row.last_used_at ? new Date(row.last_used_at) : null,
+      isActive: row.is_active === 1,
     };
   }
 
@@ -523,6 +700,19 @@ function cosineSimilarity(a: number[], b: number[]): number {
 
 // ─── Row Types ──────────────────────────────────────────
 
+function toFtsMatchQuery(query: string): string {
+  const tokens = Array.from(
+    new Set(
+      query
+        .toLowerCase()
+        .replace(/'s\b/g, '')
+        .match(/[a-z0-9]+(?:[.$:%/-][a-z0-9]+)*/g) ?? [],
+    ),
+  ).filter((token) => token.length > 1);
+
+  return tokens.map((token) => `"${token.replace(/"/g, '""')}"`).join(' OR ');
+}
+
 interface MemoryRow {
   id: string;
   agent_id: string;
@@ -545,4 +735,14 @@ interface AssociationRow {
   origin: string;
   relation_type: string;
   created_at: string;
+}
+
+interface ApiKeyRow {
+  id: string;
+  key_hash: string;
+  agent_id: string;
+  name: string;
+  created_at: string;
+  last_used_at: string | null;
+  is_active: number;
 }

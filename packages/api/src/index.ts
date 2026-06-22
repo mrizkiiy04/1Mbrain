@@ -19,25 +19,27 @@ import {
   createChildLogger,
 } from '@1mbrain/core';
 import { ConsolidationEngine, createConsolidationScheduler } from '@1mbrain/consolidation';
-import type { MemoryEngine as MemoryEngineType } from '@1mbrain/core';
-import type { EventBus } from '@1mbrain/core';
+import type { MemoryEngine as MemoryEngineType, DatabaseProvider, EventBus } from '@1mbrain/core';
 import { authMiddleware } from './middleware/auth.js';
+import type { AuthContext } from './middleware/auth.js';
 import { requestLogger } from './middleware/logger.js';
+import { rateLimitMiddleware } from './middleware/rate-limit.js';
 import { createMemoryRoutes } from './routes/memories.js';
-import { createMem0CompatRoutes } from './routes/mem0-compat.js';
 import { createPassportRoutes } from './routes/passport.js';
 import { createBackupRoutes } from './routes/backup.js';
 import { createDashboardRoutes } from './routes/dashboard.js';
 import { createIngestRoutes } from './routes/ingest.js';
 import { createConsolidateRoutes } from './routes/consolidate.js';
+import { createAdminRoutes } from './routes/admin.js';
 
 const log = createChildLogger('server');
 
 type AppEnv = {
   Variables: {
-    auth: { agentId: string; apiKey: string };
+    auth: AuthContext;
     engine: MemoryEngineType;
     eventBus: EventBus;
+    db: DatabaseProvider;
   };
 };
 
@@ -84,11 +86,13 @@ async function main() {
   // Global middleware
   app.use('*', cors());
   app.use('*', requestLogger);
+  app.use('*', rateLimitMiddleware);
 
-  // Inject engine into context for all routes
+  // Inject engine and db into context for all routes
   app.use('*', async (c, next) => {
     c.set('engine', engine);
     c.set('eventBus', eventBus);
+    c.set('db', db);
     await next();
   });
 
@@ -133,16 +137,21 @@ async function main() {
     });
   });
 
-  // ─── Protected Routes ───────────────────────────────
+  // ─── Protected Routes ───────────────────────────────────
 
-  app.use('/v1/*', authMiddleware);
-
-  app.route('/', createMem0CompatRoutes());
+  app.use('/v1/*', async (c, next) => {
+    // WebSocket authentication is handled via handshake message in dashboard.ts
+    if (c.req.path === '/v1/dashboard/stream') {
+      return next();
+    }
+    return authMiddleware(c, next);
+  });
 
   app.route('/v1/memories', createMemoryRoutes());
   app.route('/v1', createConsolidateRoutes(consolidationEngine));
   app.route('/v1', createPassportRoutes());
   app.route('/v1', createBackupRoutes());
+  app.route('/v1/admin', createAdminRoutes());
 
   // ─── Ingest Routes ──────────────────────────────────
   // The pipeline self-calls the memory API — pass internal URL + a trusted key.

@@ -25,6 +25,7 @@ import { createChildLogger } from './logger.js';
 import { RankingPolicy, analyzeQueryIntent, significantTokens, tokenCoverage } from './ranking-policy.js';
 
 const log = createChildLogger('memory-engine');
+const RRF_K = 60;
 
 export class MemoryEngine {
   private readonly db: DatabaseProvider;
@@ -179,19 +180,30 @@ export class MemoryEngine {
     // Extract subqueries if the query looks like a multi-hop question (e.g. "that", "which")
     const subQueries = extractSubQueries(input.query);
     const queryTokens = significantTokens(input.query);
+    const textSearchPromise =
+      input.useSpreadingActivation !== false
+        ? this.db.searchByText(input.agentId, input.query, {
+            limit: Math.max(candidateLimit, limit * 2),
+            type: input.type,
+            tags: input.tags,
+          })
+        : Promise.resolve([]);
     
     // Generate query embedding with lightweight expansion
     // Embeds both the raw query and a slightly reformulated version, then averages them.
     // This improves recall for paraphrase/synonym mismatches without requiring a separate LLM call.
     const queryEmbedding = await this.buildExpandedQueryEmbedding(input.query);
 
-    // Pass 1: Vector similarity search
-    const rawVectorResults = await this.db.searchByVector(input.agentId, queryEmbedding, {
-      limit: vectorSearchLimit,
-      threshold: vectorThreshold,
-      type: input.type,
-      tags: input.tags,
-    });
+    // Pass 1: Dense vector search plus native sparse text search.
+    const [rawVectorResults, rawTextResults] = await Promise.all([
+      this.db.searchByVector(input.agentId, queryEmbedding, {
+        limit: vectorSearchLimit,
+        threshold: vectorThreshold,
+        type: input.type,
+        tags: input.tags,
+      }),
+      textSearchPromise,
+    ]);
     const vectorResults = rawVectorResults
       .filter((result) => includeStaleCandidates || !isStaleMemory(result.memory))
       .slice(0, candidateLimit);
@@ -199,41 +211,64 @@ export class MemoryEngine {
     const resultsById = new Map<string, SearchResult>();
     const vectorScores = new Map<string, number>();
 
-    for (const result of vectorResults) {
-      vectorScores.set(result.memory.id, result.similarity);
-      resultsById.set(result.memory.id, {
-        memory: result.memory,
-        score: result.similarity,
-        source: 'vector',
-      });
-    }
-
+    let lexicalResults: Array<{ memory: Memory; score: number }> = [];
     if (input.useSpreadingActivation !== false) {
-      const lexicalResults = await this.lexicalCandidateSearch(
+      lexicalResults = await this.lexicalCandidateSearch(
         input,
         includeStaleCandidates,
         Math.max(candidateLimit, limit * 2),
+        rawTextResults,
       );
+    }
 
-      for (const result of lexicalResults) {
-        const existing = resultsById.get(result.memory.id);
-        const lexicalBoost = result.score * 0.22;
-        const trace = `lexical_seed:+${lexicalBoost.toFixed(3)}`;
+    const sortedVector = [...vectorResults].sort((a, b) => b.similarity - a.similarity);
+    const sortedLexical = [...lexicalResults].sort((a, b) => b.score - a.score);
 
-        if (existing) {
-          existing.score += lexicalBoost;
-          existing.rankingTrace = [...(existing.rankingTrace ?? []), trace];
-          continue;
-        }
+    const vectorRanks = new Map<string, number>();
+    sortedVector.forEach((r, i) => vectorRanks.set(r.memory.id, i + 1));
 
-        resultsById.set(result.memory.id, {
-          memory: result.memory,
-          score: Math.max(0.05, Math.min(0.35, result.score * 0.35)),
-          source: 'lexical',
-          rankingTrace: [trace],
-        });
+    const lexicalRanks = new Map<string, number>();
+    sortedLexical.forEach((r, i) => lexicalRanks.set(r.memory.id, i + 1));
+
+    const k = 60;
+    const rrfBase = 1 / (k + 1);
+    const allIds = new Set([...vectorRanks.keys(), ...lexicalRanks.keys()]);
+
+    for (const id of allIds) {
+      const vRank = vectorRanks.get(id);
+      const lRank = lexicalRanks.get(id);
+
+      const vScoreRrf = vRank ? 1 / (k + vRank) : 0;
+      const lScoreRrf = lRank ? 1 / (k + lRank) : 0;
+
+      const rrfScore = vScoreRrf + lScoreRrf;
+      const normalizedScore = Math.min(1.0, rrfScore / rrfBase);
+
+      let source: 'vector' | 'lexical' | 'combined' = 'combined';
+      if (vRank && !lRank) source = 'vector';
+      if (!vRank && lRank) source = 'lexical';
+
+      const memory = vRank
+        ? sortedVector.find((r) => r.memory.id === id)!.memory
+        : sortedLexical.find((r) => r.memory.id === id)!.memory;
+
+      if (vRank) {
+        vectorScores.set(id, sortedVector.find((r) => r.memory.id === id)!.similarity);
       }
+
+      const trace: string[] = [];
+      if (vRank) trace.push(`vector_rank:${vRank}`);
+      if (lRank) trace.push(`lexical_seed:rrf`);
+
+      resultsById.set(id, {
+        memory,
+        score: normalizedScore,
+        source,
+        rankingTrace: trace,
+      });
+    }
       
+    if (input.useSpreadingActivation !== false) {
       // R4.2 Add sub-queries as additional lexical seeds
       for (const subQ of subQueries) {
         const subLexical = await this.lexicalCandidateSearch({ ...input, query: subQ }, includeStaleCandidates, 5);
@@ -333,6 +368,7 @@ export class MemoryEngine {
     input: SearchMemoryInput,
     includeStaleCandidates: boolean,
     limit: number,
+    textCandidates?: Array<{ memory: Memory; score: number }>,
   ): Promise<Array<{ memory: Memory; score: number }>> {
     const queryProfile = buildLexicalProfile(input.query);
     if (queryProfile.tokens.length === 0 && queryProfile.exactTerms.length === 0) return [];
@@ -342,8 +378,25 @@ export class MemoryEngine {
     // Raise threshold when query has strong entity signals to reduce forbidden-memory leakage
     const minScore = hasQueryEntities ? 0.36 : 0.32;
 
-    const memories = await this.db.getAllMemories(input.agentId);
-    const candidates = memories
+    const nativeTextCandidates =
+      textCandidates ??
+      (await this.db.searchByText(input.agentId, input.query, {
+        limit: Math.max(limit * 2, limit),
+        type: input.type,
+        tags: input.tags,
+      }));
+    const textRankById = new Map(
+      nativeTextCandidates.map((candidate, index) => [
+        candidate.memory.id,
+        {
+          rank: index + 1,
+          score: candidate.score,
+        },
+      ]),
+    );
+
+    const candidates = nativeTextCandidates
+      .map((candidate) => candidate.memory)
       .filter((memory) => !input.type || memory.type === input.type)
       .filter((memory) => !input.tags?.length || input.tags.some((tag) => memory.tags.includes(tag)))
       .filter((memory) => includeStaleCandidates || !isStaleMemory(memory))
@@ -360,8 +413,19 @@ export class MemoryEngine {
         // Memory has its own entities but none match query entities — likely wrong entity
         return false;
       })
-      .map((memory) => ({ memory, score: lexicalEvidenceScore(queryProfile, memory) }))
-      .filter((result) => result.score >= minScore);
+      .map((memory) => {
+        const lexicalScore = lexicalEvidenceScore(queryProfile, memory);
+        const textRank = textRankById.get(memory.id);
+        const normalizedRrf =
+          textRank === undefined ? 0 : reciprocalRankScore(textRank.rank) / reciprocalRankScore(1);
+
+        return {
+          memory,
+          score: lexicalScore * 0.78 + normalizedRrf * 0.22,
+          lexicalScore,
+        };
+      })
+      .filter((result) => result.lexicalScore >= minScore);
 
     candidates.sort((a, b) => b.score - a.score);
     return candidates.slice(0, limit);
@@ -1120,6 +1184,10 @@ function exactTermFamily(term: string): string {
   if (/^\d+:\d+$/.test(term)) return 'duration';
   if (/\bhba1c\b/.test(term)) return 'code';
   return 'number';
+}
+
+function reciprocalRankScore(rank: number): number {
+  return 1 / (RRF_K + rank);
 }
 
 function getMemoryTime(memory: Memory): number {

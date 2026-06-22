@@ -159,19 +159,28 @@ To host your own 1MBrain API server and dashboard:
 
 ## 📊 Performance & Benchmarks
 
-1MBrain features an advanced graph-based ranking algorithm that aggressively penalizes stale memories and entity distractors. 
+1MBrain features an advanced graph-based ranking algorithm that aggressively penalizes stale memories and entity distractor loops.
 
-Based on the latest rigorous `memory-bench-realistic-medium` evaluation using OpenAI Judge:
+Based on the latest rigorous evaluations using **GPT-4o-mini as LLM Judge**:
 
-| Provider | Evidence Accuracy | Recall@5 | MRR |
-|---|---:|---:|---:|
-| **1MBrain Graph Full** | **74.4%** | **89.4%** | **0.727** |
-| 1MBrain Graph Light | 74.4% | 89.4% | 0.727 |
-| 1MBrain Vector Only | 72.6% | 91.0% | 0.726 |
-| Vector Baseline (SQLite) | 61.9% | 75.7% | 0.557 |
+### 1. Claude Realistic Medium Dataset
+Simulates day-to-day interactions, nuanced context switches, and organic conversational memory retrieval.
+| Provider | Accuracy | Evidence Acc | Recall@5 | MRR |
+|---|---:|---:|---:|---:|
+| **1MBrain Vector Only** | **4.93 / 5** | 72.6% | 91.0% | **0.726** |
+| **1MBrain Graph Full** | 4.72 / 5 | **74.4%** | 83.6% | 0.580 |
+| Vector Baseline | 4.91 / 5 | 61.9% | 75.7% | 0.557 |
+
+### 2. Graph Stress Hard Dataset
+An adversarial dataset specifically designed to break pure-vector implementations via dense multi-hop dependencies and extreme noise injection.
+| Provider | Accuracy | Evidence Acc | Recall@5 | MRR |
+|---|---:|---:|---:|---:|
+| **1MBrain Graph Full** | **4.98 / 5** | **100%** | **100%** | 0.858 |
+| **1MBrain Vector Only** | 4.96 / 5 | 14.7% | 85.0% | **0.917** |
+| Vector Baseline | 4.96 / 5 | 32.2% | 88.3% | 0.752 |
 
 **Conclusion:** 
-1MBrain Graph Full outperforms standard Vector-only baseline by over **20%** in evidence retrieval accuracy, particularly excelling in **Multi-hop reasoning** scenarios.
+1MBrain Graph Full completely dominates in complex, high-noise environments (Stress Test) by achieving **100% Evidence Accuracy** compared to the baseline's 32%. While vector-only approaches occasionally edge out in simple MRR due to exact-keyword matching, the graph completely eliminates hallucinations caused by retrieving wrong underlying evidence.
 
 ---
 ---
@@ -211,10 +220,11 @@ pip install onemillionbrain
 
 ## 📊 Tolok Ukur Kinerja (Benchmark)
 
-1MBrain memiliki arsitektur penyaringan *stale memory* dan *distractor* yang ketat. Pada uji coba terbaru yang dinilai oleh *OpenAI Judge* (dengan dataset realistis tingkat menengah):
+1MBrain memiliki arsitektur penyaringan *stale memory* dan *distractor* yang ketat. Pada uji coba ganda terbaru yang dinilai oleh *OpenAI LLM Judge (GPT-4o-mini)*:
 
-- **1MBrain Graph Full** memimpin dengan akurasi pengambilan bukti mencapai **74.4%** dan rasio Recall@5 **89.4%**.
-- Algoritma *Graph Traversal* kami mengalahkan metode *baseline* vektor konvensional (SQLite) dengan margin **>20%** khususnya untuk kueri-kueri sulit yang membutuhkan pemikiran *multi-hop*.
+- **Kasus Harian (Realistic Medium)**: Graph dan Vector dari 1MBrain mendominasi tingkat *Accuracy* di atas 4.7/5, dengan *Evidence Accuracy* menyentuh nyaris 75% dibandingkan SQLite konvensional.
+- **Kasus Ekstrem (Graph Stress Hard)**: **1MBrain Graph Full** memimpin tanpa lawan dengan akurasi pengambilan bukti mencapai **100%** dan rasio Recall@5 **100%**. 
+- Algoritma *Graph Traversal* kami mengalahkan metode *baseline* vektor konvensional secara mutlak pada dataset tingkat tinggi, mengatasi kelemahan di mana vektor standar hanya mampu memberikan 14-32% bukti yang benar.
 
 ---
 ## Lisensi

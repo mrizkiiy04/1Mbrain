@@ -15,6 +15,7 @@ import type {
   Association,
   AssociationOrigin,
   AssociationRelationType,
+  ApiKeyRecord,
 } from '../types.js';
 import { createChildLogger } from '../logger.js';
 
@@ -76,6 +77,8 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
       CREATE INDEX IF NOT EXISTS idx_memories_type ON memories(agent_id, type);
       CREATE INDEX IF NOT EXISTS idx_memories_decay ON memories(decay_score);
       CREATE INDEX IF NOT EXISTS idx_memories_created ON memories(agent_id, created_at DESC);
+      CREATE INDEX IF NOT EXISTS idx_memories_text_search ON memories
+        USING GIN (to_tsvector('simple', content || ' ' || array_to_string(tags, ' ')));
     `);
 
     // Create HNSW index for vector search (if not exists)
@@ -289,6 +292,73 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
 
   // ─── Associations ─────────────────────────────────────
 
+  async searchByText(
+    agentId: string,
+    query: string,
+    options: {
+      limit?: number;
+      type?: MemoryType;
+      tags?: string[];
+    } = {},
+  ): Promise<Array<{ memory: Memory; score: number }>> {
+    const { limit = 10, type, tags } = options;
+    const searchQuery = toWebSearchQuery(query);
+    if (!searchQuery) return [];
+
+    let paramIndex = 3;
+    const conditions = [
+      'agent_id = $1',
+      "to_tsvector('simple', content || ' ' || array_to_string(tags, ' ')) @@ websearch_to_tsquery('simple', $2)",
+    ];
+    const params: unknown[] = [agentId, searchQuery];
+
+    if (type) {
+      conditions.push(`type = $${paramIndex++}`);
+      params.push(type);
+    }
+
+    if (tags?.length) {
+      conditions.push(`tags && $${paramIndex++}`);
+      params.push(tags);
+    }
+
+    params.push(limit);
+
+    const result = await this.pool.query(
+      `SELECT *,
+              ts_rank_cd(
+                to_tsvector('simple', content || ' ' || array_to_string(tags, ' ')),
+                websearch_to_tsquery('simple', $2)
+              ) AS text_rank
+       FROM memories
+       WHERE ${conditions.join(' AND ')}
+       ORDER BY text_rank DESC, created_at DESC
+       LIMIT $${paramIndex}`,
+      params,
+    );
+
+    if (result.rows.length > 0) {
+      const ids = result.rows.map((row: MemoryRow) => row.id);
+      await this.pool.query(
+        `UPDATE memories SET last_accessed_at = NOW(), decay_score = LEAST(1.0, decay_score + 0.02)
+         WHERE id = ANY($1)`,
+        [ids],
+      );
+    }
+
+    const maxRank = Math.max(
+      ...result.rows.map((row: MemoryRow & { text_rank: number | string }) =>
+        Number(row.text_rank) || 0,
+      ),
+      0,
+    );
+
+    return result.rows.map((row: MemoryRow & { text_rank: number | string }, index: number) => ({
+      memory: this.rowToMemory(row),
+      score: maxRank > 0 ? (Number(row.text_rank) || 0) / maxRank : 1 / (index + 1),
+    }));
+  }
+
   async createAssociation(association: Omit<Association, 'createdAt'>): Promise<Association> {
     const result = await this.pool.query(
       `INSERT INTO associations (source_id, target_id, strength, origin, relation_type)
@@ -452,6 +522,66 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
     return result.rowCount ?? 0;
   }
 
+  async getGraphSize(agentId: string): Promise<{ nodes: number; edges: number }> {
+    const nodesRes = await this.pool.query('SELECT COUNT(*) as count FROM memories WHERE agent_id = $1', [agentId]);
+    const edgesRes = await this.pool.query('SELECT COUNT(*) as count FROM associations WHERE source_id IN (SELECT id FROM memories WHERE agent_id = $1)', [agentId]);
+    return { 
+      nodes: parseInt(nodesRes.rows[0].count, 10), 
+      edges: parseInt(edgesRes.rows[0].count, 10) 
+    };
+  }
+
+  async getAllNodes(agentId: string): Promise<Memory[]> {
+    return this.getAllMemories(agentId);
+  }
+
+  // ─── API Keys ──────────────────────────────────────────
+
+  async getApiKeyByHash(keyHash: string): Promise<ApiKeyRecord | null> {
+    const res = await this.pool.query('SELECT * FROM api_keys WHERE key_hash = $1 AND is_active = true', [keyHash]);
+    if (res.rows.length === 0) return null;
+    return this.mapApiKeyRow(res.rows[0]);
+  }
+
+  async getApiKeysByAgent(agentId: string): Promise<ApiKeyRecord[]> {
+    const res = await this.pool.query('SELECT * FROM api_keys WHERE agent_id = $1 ORDER BY created_at DESC', [agentId]);
+    return res.rows.map((r) => this.mapApiKeyRow(r));
+  }
+
+  async createApiKey(record: Omit<ApiKeyRecord, 'createdAt' | 'lastUsedAt'>): Promise<ApiKeyRecord> {
+    const id = record.id || uuidv4();
+    const createdAt = new Date();
+
+    await this.pool.query(
+      `INSERT INTO api_keys (id, key_hash, agent_id, name, created_at, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+        id,
+        record.keyHash,
+        record.agentId,
+        record.name,
+        createdAt,
+        record.isActive,
+      ]
+    );
+
+    return {
+      ...record,
+      id,
+      createdAt,
+      lastUsedAt: null,
+    };
+  }
+
+  async revokeApiKey(id: string): Promise<boolean> {
+    const res = await this.pool.query('UPDATE api_keys SET is_active = false WHERE id = $1', [id]);
+    return (res.rowCount || 0) > 0;
+  }
+
+  async updateApiKeyLastUsed(id: string): Promise<void> {
+    await this.pool.query('UPDATE api_keys SET last_used_at = NOW() WHERE id = $1', [id]);
+  }
+
   // ─── Lifecycle ────────────────────────────────────────
 
   async close(): Promise<void> {
@@ -488,6 +618,18 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
       createdAt: new Date(row.created_at),
     };
   }
+
+  private mapApiKeyRow(row: ApiKeyRow): ApiKeyRecord {
+    return {
+      id: row.id,
+      keyHash: row.key_hash,
+      agentId: row.agent_id,
+      name: row.name,
+      createdAt: new Date(row.created_at),
+      lastUsedAt: row.last_used_at ? new Date(row.last_used_at) : null,
+      isActive: row.is_active,
+    };
+  }
 }
 
 // ─── Helpers ────────────────────────────────────────────
@@ -498,7 +640,19 @@ function parseVector(value: string | number[]): number[] {
   return JSON.parse(value) as number[];
 }
 
-// ─── Row Types ──────────────────────────────────────────
+
+function toWebSearchQuery(query: string): string {
+  const tokens = Array.from(
+    new Set(
+      query
+        .toLowerCase()
+        .replace(/'s\b/g, '')
+        .match(/[a-z0-9]+(?:[.$:%/-][a-z0-9]+)*/g) ?? [],
+    ),
+  ).filter((token) => token.length > 1);
+
+  return tokens.join(' OR ');
+}
 
 interface MemoryRow {
   id: string;
@@ -522,4 +676,14 @@ interface AssociationRow {
   origin: string;
   relation_type: string;
   created_at: string;
+}
+
+interface ApiKeyRow {
+  id: string;
+  key_hash: string;
+  agent_id: string;
+  name: string;
+  created_at: string;
+  last_used_at: string | null;
+  is_active: boolean;
 }
