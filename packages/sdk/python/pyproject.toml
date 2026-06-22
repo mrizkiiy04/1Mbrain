@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "onemillionbrain"
-version = "0.1.6"
+version = "0.1.7"
 description = "Python client SDK for the 1MBrain REST API — portable memory layer for AI agents."
 readme = "README.md"
 license = { text = "MIT" }

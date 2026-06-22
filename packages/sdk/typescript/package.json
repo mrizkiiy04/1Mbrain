@@ -1,6 +1,6 @@
 {
   "name": "@1mbrain/sdk",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "The official SDK for 1MBrain REST API.",
   "license": "MIT",
   "type": "module",
