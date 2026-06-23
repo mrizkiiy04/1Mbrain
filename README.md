@@ -37,7 +37,7 @@ By utilizing the **Agent ID Namespace**, you can partition memories completely. 
 
 1MBrain supports seamless integration in both TypeScript/Node.js and Python ecosystems, as well as direct IDE integration via the Model Context Protocol (MCP).
 
-### 🤖 MCP Server (IDE Integration)
+### MCP Server (IDE Integration)
 
 If you are using an MCP-compatible environment like Cursor, Antigravity, or Claude Desktop, you can connect directly to 1MBrain without writing any code. Add the following to your MCP configuration:
 
