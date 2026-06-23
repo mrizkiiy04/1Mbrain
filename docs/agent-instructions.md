@@ -19,6 +19,7 @@ CRITICAL INSTRUCTIONS FOR USING YOUR MEMORY:
 4. DO NOT DELETE STALE FACTS: If the user changes their mind (e.g., "I used to like Apple, now I like Samsung"), simply `remember` the new fact. 1MBrain's chronological supersedence engine will automatically decay the old fact and prioritize the new one.
 5. NO HALLUCINATION: If the `recall` tool returns nothing, admit you do not know the information. Do not invent past interactions.
 6. USE URL INGESTION: If the user provides a link/URL for you to read, DO NOT manually fetch or extract the HTML. Use the `ingestUrl` tool/method provided by the SDK to hand the link to 1MBrain. 1MBrain will automatically fetch, clean, chunk, and store the facts for you.
+7. CROSS-AGENT SEARCH: If you need to search for information across all agents (e.g. asking a global question or querying knowledge from another agent namespace), you can set `crossAgent: true` in your `recall` tool/method call. Use this sparingly when specifically instructed to do so.
 ```
 
 ---
@@ -71,11 +72,14 @@ await client.remember({
   importance: 0.8
 });
 
-// Recall
+// Recall (Agent-specific)
 const results = await client.recall({ query: 'UI preferences' });
 if (results.confidence === 'low') {
   console.log("No relevant memory found.");
 }
+
+// Recall (Cross-Agent)
+const globalResults = await client.recall({ query: 'System rules', crossAgent: true });
 ```
 
 ### C. Python SDK

@@ -77,6 +77,7 @@ export interface SearchMemoryInput {
   maxHops?: number;
   activationThreshold?: number;
   blendWeight?: number;
+  crossAgent?: boolean;
 }
 
 export interface SearchResult {
@@ -161,7 +162,7 @@ export interface MemoryEvent {
 export interface DatabaseProvider {
   // Memory CRUD
   createMemory(memory: Omit<Memory, 'createdAt' | 'lastAccessedAt'>): Promise<Memory>;
-  getMemoryById(id: string, agentId: string): Promise<Memory | null>;
+  getMemoryById(id: string, agentId?: string): Promise<Memory | null>;
   updateMemory(id: string, agentId: string, updates: Partial<Memory>): Promise<Memory | null>;
   deleteMemory(id: string, agentId: string): Promise<boolean>;
 
@@ -174,6 +175,7 @@ export interface DatabaseProvider {
       threshold?: number;
       type?: MemoryType;
       tags?: string[];
+      crossAgent?: boolean;
     },
   ): Promise<Array<{ memory: Memory; similarity: number }>>;
 
@@ -185,6 +187,7 @@ export interface DatabaseProvider {
       limit?: number;
       type?: MemoryType;
       tags?: string[];
+      crossAgent?: boolean;
     },
   ): Promise<Array<{ memory: Memory; score: number }>>;
 

@@ -190,10 +190,15 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
     };
   }
 
-  async getMemoryById(id: string, agentId: string): Promise<Memory | null> {
+  async getMemoryById(id: string, agentId?: string): Promise<Memory | null> {
+    const query = agentId 
+      ? 'SELECT * FROM memories WHERE id = ? AND agent_id = ?'
+      : 'SELECT * FROM memories WHERE id = ?';
+    const params = agentId ? [id, agentId] : [id];
+
     const row = this.db
-      .prepare('SELECT * FROM memories WHERE id = ? AND agent_id = ?')
-      .get(id, agentId) as MemoryRow | undefined;
+      .prepare(query)
+      .get(...params) as MemoryRow | undefined;
 
     if (!row) return null;
 
@@ -282,13 +287,14 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       threshold?: number;
       type?: MemoryType;
       tags?: string[];
+      crossAgent?: boolean;
     } = {},
   ): Promise<Array<{ memory: Memory; similarity: number }>> {
     const { limit = 10, threshold = 0.3, type, tags } = options;
 
     // Build WHERE clause
-    let whereClause = 'agent_id = ? AND embedding IS NOT NULL';
-    const params: unknown[] = [agentId];
+    let whereClause = options.crossAgent ? 'embedding IS NOT NULL' : 'agent_id = ? AND embedding IS NOT NULL';
+    const params: unknown[] = options.crossAgent ? [] : [agentId];
 
     if (type) {
       whereClause += ' AND type = ?';
@@ -345,14 +351,15 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
       limit?: number;
       type?: MemoryType;
       tags?: string[];
+      crossAgent?: boolean;
     } = {},
   ): Promise<Array<{ memory: Memory; score: number }>> {
     const { limit = 10, type, tags } = options;
     const matchQuery = toFtsMatchQuery(query);
     if (!matchQuery) return [];
 
-    let whereClause = 'memories_fts MATCH ? AND m.agent_id = ?';
-    const params: unknown[] = [matchQuery, agentId];
+    let whereClause = options.crossAgent ? 'memories_fts MATCH ?' : 'memories_fts MATCH ? AND m.agent_id = ?';
+    const params: unknown[] = options.crossAgent ? [matchQuery] : [matchQuery, agentId];
 
     if (type) {
       whereClause += ' AND m.type = ?';

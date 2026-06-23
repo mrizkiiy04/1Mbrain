@@ -65,7 +65,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             query: { type: 'string', description: 'Search query' },
             limit: { type: 'number', description: 'Max results' },
-            agentId: { type: 'string', description: 'Optional explicit agent ID' }
+            agentId: { type: 'string', description: 'Optional explicit agent ID' },
+            crossAgent: { type: 'boolean', description: 'If true, searches across all agents' }
           },
           required: ['query'],
         },
@@ -141,6 +142,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           query: String(args.query),
           limit: args.limit ? Number(args.limit) : undefined,
           agentId,
+          crossAgent: args.crossAgent ? Boolean(args.crossAgent) : undefined,
         });
         return {
           content: [{ type: 'text', text: JSON.stringify(results, null, 2) }],

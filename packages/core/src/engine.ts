@@ -186,6 +186,7 @@ export class MemoryEngine {
             limit: Math.max(candidateLimit, limit * 2),
             type: input.type,
             tags: input.tags,
+            crossAgent: input.crossAgent,
           })
         : Promise.resolve([]);
     
@@ -201,6 +202,7 @@ export class MemoryEngine {
         threshold: vectorThreshold,
         type: input.type,
         tags: input.tags,
+        crossAgent: input.crossAgent,
       }),
       textSearchPromise,
     ]);
@@ -305,7 +307,8 @@ export class MemoryEngine {
         activationThreshold,
         true,
         includeStaleCandidates,
-        queryTokens // R4.1 Guided traversal
+        queryTokens, // R4.1 Guided traversal
+        input.crossAgent
       );
 
       for (const activated of activationResults) {
@@ -384,6 +387,7 @@ export class MemoryEngine {
         limit: Math.max(limit * 2, limit),
         type: input.type,
         tags: input.tags,
+        crossAgent: input.crossAgent,
       }));
     const textRankById = new Map(
       nativeTextCandidates.map((candidate, index) => [
@@ -721,6 +725,7 @@ export class MemoryEngine {
     explicitOnly = false,
     allowStalePaths = false,
     queryTokens: string[] = [],
+    crossAgent: boolean = false,
   ): Promise<SearchResult[]> {
     const activated = new Map<string, number>(); // memoryId → activation score
     const expanded = new Set<string>();
@@ -754,7 +759,7 @@ export class MemoryEngine {
           
           let guidedBoost = 1.0;
           if (queryTokens.length > 0) {
-            const memory = await this.db.getMemoryById(neighborId, agentId);
+            const memory = await this.db.getMemoryById(neighborId, crossAgent ? undefined : agentId);
             if (memory) {
               const coverage = tokenCoverage(queryTokens, memory.content);
               if (coverage > 0) {
@@ -787,7 +792,7 @@ export class MemoryEngine {
       // R2.2 Association Expansion Budget
       if (score < Math.max(threshold, 0.3)) continue;
 
-      const memory = await this.db.getMemoryById(memoryId, agentId);
+      const memory = await this.db.getMemoryById(memoryId, crossAgent ? undefined : agentId);
       if (memory) {
         results.push({
           memory,

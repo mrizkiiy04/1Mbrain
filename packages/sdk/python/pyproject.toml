@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "onemillionbrain"
-version = "0.1.8"
+version = "0.1.9"
 description = "A portable, semantic graph memory layer for any AI agent."
 readme = "README.md"
 license = { text = "MIT" }

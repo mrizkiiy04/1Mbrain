@@ -116,6 +116,7 @@ class OneMBrainClient:
         activation_threshold: Optional[float] = None,
         blend_weight: Optional[float] = None,
         agent_id: Optional[str] = None,
+        cross_agent: Optional[bool] = None,
     ) -> list[RecallResult]:
         """Search memories using vector similarity + spreading activation."""
         if isinstance(query, str):
@@ -128,6 +129,7 @@ class OneMBrainClient:
                 activation_threshold=activation_threshold,
                 blend_weight=blend_weight,
                 agent_id=agent_id,
+                cross_agent=cross_agent,
             )
         else:
             inp = query
@@ -396,6 +398,7 @@ class AsyncOneMBrainClient:
         activation_threshold: Optional[float] = None,
         blend_weight: Optional[float] = None,
         agent_id: Optional[str] = None,
+        cross_agent: Optional[bool] = None,
     ) -> list[RecallResult]:
         """Async — Search memories."""
         if isinstance(query, str):
@@ -408,6 +411,7 @@ class AsyncOneMBrainClient:
                 activation_threshold=activation_threshold,
                 blend_weight=blend_weight,
                 agent_id=agent_id,
+                cross_agent=cross_agent,
             )
         else:
             inp = query

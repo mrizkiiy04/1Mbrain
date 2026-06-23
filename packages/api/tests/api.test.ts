@@ -32,8 +32,15 @@ class MockEmbeddingProvider implements EmbeddingProvider {
 
 // ─── Tests ──────────────────────────────────────────────
 
+type TestEnv = {
+  Variables: {
+    engine: MemoryEngine;
+    db: SqliteDatabaseProvider;
+  };
+};
+
 describe('API Routes', () => {
-  let app: Hono;
+  let app: Hono<TestEnv>;
   let engine: MemoryEngine;
   let db: SqliteDatabaseProvider;
 
@@ -55,10 +62,11 @@ describe('API Routes', () => {
     process.env.GDRIVE_ACCESS_TOKEN = 'gdrive-access-token';
     process.env.GDRIVE_BACKUP_FOLDER_ID = 'folder-id';
 
-    app = new Hono();
+    app = new Hono<TestEnv>();
 
     app.use('*', async (c, next) => {
       c.set('engine', engine);
+      c.set('db', db);
       await next();
     });
 
@@ -119,7 +127,7 @@ describe('API Routes', () => {
         },
       });
 
-      expect(res.status).toBe(403);
+      expect(res.status).toBe(401);
     });
   });
 

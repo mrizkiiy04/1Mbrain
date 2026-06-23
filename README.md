@@ -30,6 +30,7 @@ By utilizing the **Agent ID Namespace**, you can partition memories completely. 
 | **Automated Web-to-MD Ingest** | Built-in pipeline (`packages/ingest`) that fetches URLs, extracts readable content, and converts to Markdown. |
 | **Pulse Brain Dashboard** | Real-time network graph visualization of active memory nodes. |
 | **Memory Passport** | Encrypted export and import of memory states between agents with Google Drive backup integration. |
+| **Universal Cross-Agent Search** | Opt-in parameter to break namespace boundaries and search memories across all agents globally within the database. |
 
 ---
 
@@ -227,6 +228,7 @@ Setiap memori diisolasi penuh melalui **Agent ID Namespace**, sehingga satu serv
 - **Automated Web-to-MD Ingest:** Pipa bawaan (`packages/ingest`) yang secara otomatis mengambil URL, mengekstrak konten yang relevan, mengubah ke Markdown, lalu menyerap faktanya.
 - **Pulse Brain Dashboard:** Visualisasi jaring *graph* memori Anda secara *real-time*.
 - **Memory Passport:** Ekspor dan impor kondisi memori antar-agen dengan dukungan enkripsi tangguh serta pencadangan (*backup*) ke Google Drive.
+- **Universal Cross-Agent Search:** Fitur opsional (*opt-in*) untuk menembus batasan namespace dan mencari konteks memori lintas-agen secara global di dalam database.
 
 ## 🚀 Instalasi & Penggunaan
 

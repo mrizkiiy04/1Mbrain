@@ -150,6 +150,7 @@ class RecallInput:
         activation_threshold: Optional[float] = None,
         blend_weight: Optional[float] = None,
         agent_id: Optional[str] = None,
+        cross_agent: Optional[bool] = None,
     ) -> None:
         self.query = query
         self.limit = limit
@@ -159,6 +160,7 @@ class RecallInput:
         self.activation_threshold = activation_threshold
         self.blend_weight = blend_weight
         self.agent_id = agent_id
+        self.cross_agent = cross_agent
 
     def to_params(self, agent_id: str) -> dict[str, str]:
         params: dict[str, str] = {
@@ -176,6 +178,8 @@ class RecallInput:
             params["activationThreshold"] = str(self.activation_threshold)
         if self.blend_weight is not None:
             params["blendWeight"] = str(self.blend_weight)
+        if self.cross_agent is not None:
+            params["crossAgent"] = str(self.cross_agent).lower()
         return params
 
 

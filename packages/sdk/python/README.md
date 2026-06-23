@@ -117,7 +117,7 @@ def recall_tool(query: str) -> str:
 | Method | Signature | Returns |
 |--------|-----------|---------|
 | `remember` | `(content, *, type, importance, tags, metadata, agent_id)` | `Memory` |
-| `recall` | `(query, *, limit, type, tags, max_hops, activation_threshold, blend_weight, agent_id)` | `list[RecallResult]` |
+| `recall` | `(query, *, limit, type, tags, max_hops, activation_threshold, blend_weight, agent_id, cross_agent)` | `list[RecallResult]` |
 | `forget` | `(memory_id, *, agent_id)` | `bool` |
 | `associate` | `(source_id, target_id, *, strength, origin, agent_id)` | `AssociateResult` |
 
