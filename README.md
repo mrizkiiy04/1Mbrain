@@ -35,7 +35,27 @@ By utilizing the **Agent ID Namespace**, you can partition memories completely. 
 
 ## 🚀 Installation & Quick Start
 
-1MBrain supports seamless integration in both TypeScript/Node.js and Python ecosystems.
+1MBrain supports seamless integration in both TypeScript/Node.js and Python ecosystems, as well as direct IDE integration via the Model Context Protocol (MCP).
+
+### 🤖 MCP Server (IDE Integration)
+
+If you are using an MCP-compatible environment like Cursor, Antigravity, or Claude Desktop, you can connect directly to 1MBrain without writing any code. Add the following to your MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "1mbrain": {
+      "command": "npx",
+      "args": ["-y", "@1mbrain/mcp-server"],
+      "env": {
+        "ONEMBRAIN_API_URL": "http://localhost:3100",
+        "ONEMBRAIN_API_KEY": "your-api-key",
+        "ONEMBRAIN_DEFAULT_AGENT_ID": "cursor-agent"
+      }
+    }
+  }
+}
+```
 
 ### TypeScript / Node.js SDK
 
