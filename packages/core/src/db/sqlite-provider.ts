@@ -191,10 +191,11 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
   }
 
   async getMemoryById(id: string, agentId?: string): Promise<Memory | null> {
-    const query = agentId 
+    const isUniversal = agentId === 'all' || agentId === '';
+    const query = agentId && !isUniversal
       ? 'SELECT * FROM memories WHERE id = ? AND agent_id = ?'
       : 'SELECT * FROM memories WHERE id = ?';
-    const params = agentId ? [id, agentId] : [id];
+    const params = agentId && !isUniversal ? [id, agentId] : [id];
 
     const row = this.db
       .prepare(query)
@@ -259,19 +260,31 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
     if (fields.length === 0) return existing;
 
     fields.push("last_accessed_at = datetime('now')");
-    values.push(id, agentId);
-
-    this.db
-      .prepare(`UPDATE memories SET ${fields.join(', ')} WHERE id = ? AND agent_id = ?`)
-      .run(...values);
+    
+    const isUniversal = agentId === 'all' || agentId === '';
+    if (isUniversal) {
+      values.push(id);
+      this.db
+        .prepare(`UPDATE memories SET ${fields.join(', ')} WHERE id = ?`)
+        .run(...values);
+    } else {
+      values.push(id, agentId);
+      this.db
+        .prepare(`UPDATE memories SET ${fields.join(', ')} WHERE id = ? AND agent_id = ?`)
+        .run(...values);
+    }
 
     return this.getMemoryById(id, agentId);
   }
 
   async deleteMemory(id: string, agentId: string): Promise<boolean> {
-    const result = this.db
-      .prepare('DELETE FROM memories WHERE id = ? AND agent_id = ?')
-      .run(id, agentId);
+    const isUniversal = agentId === 'all' || agentId === '';
+    let result;
+    if (isUniversal) {
+      result = this.db.prepare('DELETE FROM memories WHERE id = ?').run(id);
+    } else {
+      result = this.db.prepare('DELETE FROM memories WHERE id = ? AND agent_id = ?').run(id, agentId);
+    }
 
     log.debug({ id, agentId, deleted: result.changes > 0 }, 'Memory deleted');
     return result.changes > 0;

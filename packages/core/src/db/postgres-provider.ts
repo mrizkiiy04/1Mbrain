@@ -156,12 +156,17 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
   }
 
   async getMemoryById(id: string, agentId: string): Promise<Memory | null> {
-    const result = await this.pool.query(
-      `UPDATE memories SET last_accessed_at = NOW(), decay_score = LEAST(1.0, decay_score + 0.05)
-       WHERE id = $1 AND agent_id = $2
-       RETURNING *`,
-      [id, agentId],
-    );
+    const isUniversal = agentId === 'all' || agentId === '';
+    const query = isUniversal
+      ? `UPDATE memories SET last_accessed_at = NOW(), decay_score = LEAST(1.0, decay_score + 0.05)
+         WHERE id = $1
+         RETURNING *`
+      : `UPDATE memories SET last_accessed_at = NOW(), decay_score = LEAST(1.0, decay_score + 0.05)
+         WHERE id = $1 AND agent_id = $2
+         RETURNING *`;
+    const params = isUniversal ? [id] : [id, agentId];
+
+    const result = await this.pool.query(query, params);
 
     if (result.rows.length === 0) return null;
     return this.rowToMemory(result.rows[0]);
@@ -208,11 +213,20 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
       values.push(updates.embeddingModel ?? null);
     }
 
-    values.push(id, agentId);
+    const isUniversal = agentId === 'all' || agentId === '';
+    const whereClause = isUniversal
+      ? `WHERE id = $${paramIndex++}`
+      : `WHERE id = $${paramIndex++} AND agent_id = $${paramIndex}`;
+    
+    if (isUniversal) {
+      values.push(id);
+    } else {
+      values.push(id, agentId);
+    }
 
     const result = await this.pool.query(
       `UPDATE memories SET ${setClauses.join(', ')}
-       WHERE id = $${paramIndex++} AND agent_id = $${paramIndex}
+       ${whereClause}
        RETURNING *`,
       values,
     );
@@ -222,10 +236,13 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
   }
 
   async deleteMemory(id: string, agentId: string): Promise<boolean> {
-    const result = await this.pool.query('DELETE FROM memories WHERE id = $1 AND agent_id = $2', [
-      id,
-      agentId,
-    ]);
+    const isUniversal = agentId === 'all' || agentId === '';
+    const query = isUniversal
+      ? 'DELETE FROM memories WHERE id = $1'
+      : 'DELETE FROM memories WHERE id = $1 AND agent_id = $2';
+    const params = isUniversal ? [id] : [id, agentId];
+
+    const result = await this.pool.query(query, params);
 
     log.debug({ id, agentId, deleted: (result.rowCount ?? 0) > 0 }, 'Memory deleted');
     return (result.rowCount ?? 0) > 0;

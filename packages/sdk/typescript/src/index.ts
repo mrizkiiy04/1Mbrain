@@ -226,7 +226,7 @@ export class OneMBrainClient {
   private resolveAgentId(agentId?: string): string {
     const resolved = agentId ?? this.agentId;
 
-    if (!resolved) {
+    if (resolved === undefined || resolved === null) {
       throw new Error('agentId is required');
     }
 

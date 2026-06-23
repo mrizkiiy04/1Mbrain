@@ -180,13 +180,15 @@ export class MemoryEngine {
     // Extract subqueries if the query looks like a multi-hop question (e.g. "that", "which")
     const subQueries = extractSubQueries(input.query);
     const queryTokens = significantTokens(input.query);
+    const isCrossAgent = input.crossAgent || input.agentId === 'all';
+    
     const textSearchPromise =
       input.useSpreadingActivation !== false
         ? this.db.searchByText(input.agentId, input.query, {
             limit: Math.max(candidateLimit, limit * 2),
             type: input.type,
             tags: input.tags,
-            crossAgent: input.crossAgent,
+            crossAgent: isCrossAgent,
           })
         : Promise.resolve([]);
     
@@ -202,7 +204,7 @@ export class MemoryEngine {
         threshold: vectorThreshold,
         type: input.type,
         tags: input.tags,
-        crossAgent: input.crossAgent,
+        crossAgent: isCrossAgent,
       }),
       textSearchPromise,
     ]);
