@@ -14,6 +14,10 @@
 
 1MBrain is a framework-agnostic **infrastructure layer for AI agent memory**. Any conversational agent (Claude, GPT, LangChain, CrewAI), gateway interface (Telegram/Discord bots), or autonomous coding assistant (**Hermes, Devin, Cursor, Aider, OpenDevin**) can call 1MBrain's API to **remember**, **recall**, and **forget**, instead of reinventing ad-hoc memory storage. 
 
+> [!IMPORTANT]
+> **Are you an AI Agent or Developer integrating 1MBrain?**
+> Please read the [Official Agent Instructions & Integration Guide](docs/agent-instructions.md) for the system protocol, SDK examples, and MCP Server configuration.
+
 By utilizing the **Agent ID Namespace**, you can partition memories completely. This allows a single 1MBrain instance to serve multiple agents, bots, or individual chat users concurrently across different sessions.
 
 ### 🌟 Key Features

@@ -20,12 +20,13 @@ function makeMockMemory(overrides: Partial<Memory> = {}): Memory {
     lastAccessedAt: NOW,
     tags: ['episodic', 'conversation-turn'],
     embeddingModel: 'text-embedding-3-small',
+    embedding: null,
     ...overrides,
   };
 }
 
 function makeMockResult(memory: Memory): SearchResult {
-  return { memory, score: 0.88 };
+  return { memory, score: 0.88, source: 'vector' };
 }
 
 // ---------------------------------------------------------------------------

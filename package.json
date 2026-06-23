@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "npm run dev --workspace=packages/api",
     "dev:dashboard": "npm run dev --workspace=packages/dashboard",
+    "dev:mcp": "npm run dev --workspace=packages/mcp-server",
     "build": "npm run build --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "bench": "npm run bench --workspace=packages/benchmarks",

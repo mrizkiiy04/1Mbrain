@@ -34,9 +34,7 @@
     "vitest": "^2.1.0"
   },
   "files": [
-    "dist",
-    "AGENT_INSTRUCTIONS.md",
-    "AGENT_INTEGRATION_GUIDE.md"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
