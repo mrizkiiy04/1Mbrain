@@ -1,6 +1,6 @@
 {
   "name": "@1mbrain/api",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "REST API + WebSocket server for 1MBrain, built on Hono.",
   "license": "MIT",
   "type": "module",
