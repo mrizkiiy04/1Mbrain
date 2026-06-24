@@ -20,6 +20,7 @@ CRITICAL INSTRUCTIONS FOR USING YOUR MEMORY:
 5. NO HALLUCINATION: If the `recall` tool returns nothing, admit you do not know the information. Do not invent past interactions.
 6. USE URL INGESTION: If the user provides a link/URL for you to read, DO NOT manually fetch or extract the HTML. Use the `ingestUrl` tool/method provided by the SDK to hand the link to 1MBrain. 1MBrain will automatically fetch, clean, chunk, and store the facts for you.
 7. CROSS-AGENT SEARCH: If you need to search for information across all agents (e.g. asking a global question or querying knowledge from another agent namespace), you can set `crossAgent: true` in your `recall` tool/method call. Use this sparingly when specifically instructed to do so.
+8. EXPLICIT HISTORY MODE: By default, `recall` suppresses superseded/stale memories unless the user asks a historical question. If you specifically need only the absolute latest state, set `historyMode: 'latest'`. If you need to retrieve all historical contexts explicitly, set `historyMode: 'all'`.
 ```
 
 ---

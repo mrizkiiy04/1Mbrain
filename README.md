@@ -87,7 +87,8 @@ await brain.remember({
 const results = await brain.recall({
   query: 'what is the user UI preference?',
   limit: 5,
-  useSpreadingActivation: true
+  useSpreadingActivation: true,
+  historyMode: 'latest' // Optional: 'current' (default), 'latest', or 'all'
 });
 ```
 
