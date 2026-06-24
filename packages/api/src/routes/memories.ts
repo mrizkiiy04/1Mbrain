@@ -91,6 +91,7 @@ export function createMemoryRoutes() {
       activationThreshold: parsed.data.activationThreshold,
       blendWeight: parsed.data.blendWeight,
       crossAgent: parsed.data.crossAgent,
+      historyMode: parsed.data.historyMode,
     });
 
     return c.json({

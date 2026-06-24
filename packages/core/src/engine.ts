@@ -171,7 +171,9 @@ export class MemoryEngine {
     const activationThreshold = input.activationThreshold ?? 0.15;
     const blendWeight = input.blendWeight ?? 0.35;
     const queryIntent = analyzeQueryIntent(input.query);
-    const includeStaleCandidates = shouldIncludeStaleCandidates(input.query);
+    const includeStaleCandidates =
+      input.historyMode === 'all' ||
+      (input.historyMode !== 'latest' && shouldIncludeStaleCandidates(input.query));
     const candidateLimit = input.useSpreadingActivation !== false ? Math.max(limit, limit * 3) : limit;
     // R3.3: Increase overfetch multiplier from 4x to 6x so required memories are less likely
     // to be crowded out by distractors before RankingPolicy gets a chance to re-rank them.

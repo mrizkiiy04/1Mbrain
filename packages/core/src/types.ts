@@ -78,6 +78,7 @@ export interface SearchMemoryInput {
   activationThreshold?: number;
   blendWeight?: number;
   crossAgent?: boolean;
+  historyMode?: 'current' | 'latest' | 'all';
 }
 
 export interface SearchResult {

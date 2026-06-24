@@ -74,6 +74,7 @@ export const SearchMemorySchema = z.object({
   activationThreshold: z.coerce.number().min(0).max(1).default(0.15),
   blendWeight: z.coerce.number().min(0).max(1).default(0.35),
   crossAgent: BooleanQuerySchema.optional(),
+  historyMode: z.enum(['current', 'latest', 'all']).default('current'),
 });
 
 // ─── Create Association ─────────────────────────────────
