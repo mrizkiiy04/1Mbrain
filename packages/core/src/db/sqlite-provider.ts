@@ -18,6 +18,8 @@ import type {
   AssociationOrigin,
   AssociationRelationType,
   ApiKeyRecord,
+  IngestionSource,
+  IngestionSourceClaim,
 } from '../types.js';
 import { createChildLogger } from '../logger.js';
 
@@ -101,6 +103,21 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
 
       CREATE INDEX IF NOT EXISTS idx_api_keys_hash ON api_keys(key_hash);
       CREATE INDEX IF NOT EXISTS idx_api_keys_agent ON api_keys(agent_id);
+    `);
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS ingestion_sources (
+        agent_id TEXT NOT NULL,
+        source_hash TEXT NOT NULL,
+        url TEXT NOT NULL,
+        title TEXT NOT NULL,
+        status TEXT NOT NULL CHECK(status IN ('processing', 'completed')),
+        stored_count INTEGER NOT NULL DEFAULT 0,
+        lease_expires_at TEXT,
+        created_at TEXT NOT NULL,
+        completed_at TEXT,
+        PRIMARY KEY (agent_id, source_hash)
+      );
+      CREATE INDEX IF NOT EXISTS idx_ingestion_sources_status ON ingestion_sources(status, lease_expires_at);
     `);
 
     this.createFullTextSearch();
@@ -511,6 +528,65 @@ export class SqliteDatabaseProvider implements DatabaseProvider {
     const stmt = this.db.prepare('UPDATE api_keys SET last_used_at = ? WHERE id = ?');
     stmt.run(new Date().toISOString(), id);
   }
+  async claimIngestionSource(
+    input: Pick<IngestionSource, 'agentId' | 'sourceHash' | 'url' | 'title'>,
+    leaseMs = 10 * 60 * 1000,
+  ): Promise<IngestionSourceClaim> {
+    const now = new Date();
+    const leaseExpiresAt = new Date(now.getTime() + leaseMs);
+    const claim = this.db.transaction((): IngestionSourceClaim => {
+      const row = this.db
+        .prepare('SELECT * FROM ingestion_sources WHERE agent_id = ? AND source_hash = ?')
+        .get(input.agentId, input.sourceHash) as IngestionSourceRow | undefined;
+
+      if (!row) {
+        this.db.prepare(
+          `INSERT INTO ingestion_sources
+            (agent_id, source_hash, url, title, status, stored_count, lease_expires_at, created_at)
+           VALUES (?, ?, ?, ?, 'processing', 0, ?, ?)`,
+        ).run(input.agentId, input.sourceHash, input.url, input.title, leaseExpiresAt.toISOString(), now.toISOString());
+        return { status: 'acquired' };
+      }
+
+      const source = ingestionSourceFromRow(row);
+      if (source.status === 'completed') return { status: 'completed', source };
+      if (source.leaseExpiresAt && source.leaseExpiresAt.getTime() > now.getTime()) {
+        return { status: 'in_progress', source };
+      }
+
+      this.db.prepare(
+        `UPDATE ingestion_sources
+         SET url = ?, title = ?, lease_expires_at = ?, created_at = ?
+         WHERE agent_id = ? AND source_hash = ?`,
+      ).run(input.url, input.title, leaseExpiresAt.toISOString(), now.toISOString(), input.agentId, input.sourceHash);
+      return { status: 'acquired' };
+    });
+
+    return claim();
+  }
+
+  async completeIngestionSource(agentId: string, sourceHash: string, storedCount: number): Promise<void> {
+    const now = new Date().toISOString();
+    this.db.prepare(
+      `UPDATE ingestion_sources
+       SET status = 'completed', stored_count = ?, lease_expires_at = NULL, completed_at = ?
+       WHERE agent_id = ? AND source_hash = ?`,
+    ).run(storedCount, now, agentId, sourceHash);
+  }
+
+  async releaseIngestionSource(agentId: string, sourceHash: string): Promise<void> {
+    this.db.prepare(
+      `DELETE FROM ingestion_sources
+       WHERE agent_id = ? AND source_hash = ? AND status = 'processing'`,
+    ).run(agentId, sourceHash);
+  }
+
+  async getIngestionSource(agentId: string, sourceHash: string): Promise<IngestionSource | null> {
+    const row = this.db
+      .prepare('SELECT * FROM ingestion_sources WHERE agent_id = ? AND source_hash = ?')
+      .get(agentId, sourceHash) as IngestionSourceRow | undefined;
+    return row ? ingestionSourceFromRow(row) : null;
+  }
 
   // ─── Bulk Operations ──────────────────────────────────
 
@@ -765,4 +841,29 @@ interface ApiKeyRow {
   created_at: string;
   last_used_at: string | null;
   is_active: number;
+}
+interface IngestionSourceRow {
+  agent_id: string;
+  source_hash: string;
+  url: string;
+  title: string;
+  status: 'processing' | 'completed';
+  stored_count: number;
+  lease_expires_at: string | null;
+  created_at: string;
+  completed_at: string | null;
+}
+
+function ingestionSourceFromRow(row: IngestionSourceRow): IngestionSource {
+  return {
+    agentId: row.agent_id,
+    sourceHash: row.source_hash,
+    url: row.url,
+    title: row.title,
+    status: row.status,
+    storedCount: row.stored_count,
+    leaseExpiresAt: row.lease_expires_at ? new Date(row.lease_expires_at) : null,
+    createdAt: new Date(row.created_at),
+    completedAt: row.completed_at ? new Date(row.completed_at) : null,
+  };
 }

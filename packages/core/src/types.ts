@@ -52,6 +52,8 @@ export interface ApiKeyRecord {
 // ─── API Request/Response Types ─────────────────────────
 
 export interface CreateMemoryInput {
+  /** Internal idempotency key. Public REST clients cannot set this field. */
+  id?: string;
   agentId: string;
   type: MemoryType;
   content: string;
@@ -64,6 +66,23 @@ export interface CreateMemoryInput {
     strength?: number;
     relationType?: AssociationRelationType;
   }>;
+}
+
+export interface IngestionSource {
+  agentId: string;
+  sourceHash: string;
+  url: string;
+  title: string;
+  status: 'processing' | 'completed';
+  storedCount: number;
+  leaseExpiresAt: Date | null;
+  createdAt: Date;
+  completedAt: Date | null;
+}
+
+export interface IngestionSourceClaim {
+  status: 'acquired' | 'completed' | 'in_progress';
+  source?: IngestionSource;
 }
 
 export interface SearchMemoryInput {
@@ -220,6 +239,15 @@ export interface DatabaseProvider {
   createApiKey(record: Omit<ApiKeyRecord, 'createdAt' | 'lastUsedAt'>): Promise<ApiKeyRecord>;
   revokeApiKey(id: string): Promise<boolean>;
   updateApiKeyLastUsed(id: string): Promise<void>;
+
+  // Ingestion source idempotency. A source is keyed by its owning agent and content hash.
+  claimIngestionSource(
+    input: Pick<IngestionSource, 'agentId' | 'sourceHash' | 'url' | 'title'>,
+    leaseMs?: number,
+  ): Promise<IngestionSourceClaim>;
+  completeIngestionSource(agentId: string, sourceHash: string, storedCount: number): Promise<void>;
+  releaseIngestionSource(agentId: string, sourceHash: string): Promise<void>;
+  getIngestionSource(agentId: string, sourceHash: string): Promise<IngestionSource | null>;
 
   // Lifecycle
   initialize(): Promise<void>;

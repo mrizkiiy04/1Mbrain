@@ -288,6 +288,29 @@ class OneMBrainClient:
         data = self._post("/v1/ingest/url", payload, agent_id=resolved)
         return data.get("data", data)
 
+    def ingest_markdown(
+        self,
+        *,
+        title: str,
+        url: str,
+        markdown: str,
+        confidence_threshold: Optional[float] = None,
+        max_chunk_chars: Optional[int] = None,
+        deduplicate: Optional[bool] = None,
+        agent_id: Optional[str] = None,
+    ) -> dict:
+        """Ingest trusted, already-clean Markdown without fetching a URL."""
+        resolved = self._resolve_agent_id(agent_id)
+        payload: dict = {"title": title, "url": url, "markdown": markdown, "agentId": resolved}
+        if confidence_threshold is not None:
+            payload["confidenceThreshold"] = confidence_threshold
+        if max_chunk_chars is not None:
+            payload["maxChunkChars"] = max_chunk_chars
+        if deduplicate is not None:
+            payload["deduplicate"] = deduplicate
+        data = self._post("/v1/ingest/markdown", payload, agent_id=resolved)
+        return data.get("data", data)
+
     def _resolve_agent_id(self, agent_id: Optional[str]) -> str:
         resolved = agent_id or self._agent_id
         if not resolved:
@@ -536,6 +559,29 @@ class AsyncOneMBrainClient:
             payload["deduplicate"] = deduplicate
 
         data = await self._post("/v1/ingest/url", payload, agent_id=resolved)
+        return data.get("data", data)
+
+    async def ingest_markdown(
+        self,
+        *,
+        title: str,
+        url: str,
+        markdown: str,
+        confidence_threshold: Optional[float] = None,
+        max_chunk_chars: Optional[int] = None,
+        deduplicate: Optional[bool] = None,
+        agent_id: Optional[str] = None,
+    ) -> dict:
+        """Async: ingest trusted, already-clean Markdown without fetching a URL."""
+        resolved = self._resolve_agent_id(agent_id)
+        payload: dict = {"title": title, "url": url, "markdown": markdown, "agentId": resolved}
+        if confidence_threshold is not None:
+            payload["confidenceThreshold"] = confidence_threshold
+        if max_chunk_chars is not None:
+            payload["maxChunkChars"] = max_chunk_chars
+        if deduplicate is not None:
+            payload["deduplicate"] = deduplicate
+        data = await self._post("/v1/ingest/markdown", payload, agent_id=resolved)
         return data.get("data", data)
 
     def _resolve_agent_id(self, agent_id: Optional[str]) -> str:

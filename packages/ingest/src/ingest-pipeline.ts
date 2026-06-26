@@ -16,14 +16,14 @@
  */
 
 import { fetchPage } from './fetcher.js';
-import { extractMarkdown } from './md-extractor.js';
+import { extractMarkdown, extractMarkdownContent } from './md-extractor.js';
 import { cleanMarkdown } from './markdown-cleaner.js';
 import { chunkMarkdown } from './chunker.js';
 import { extractFactsFromChunk } from './fact-extractor.js';
 import { isBlockedUrl, isBlockedClaim, isChunkWorthExtracting } from './content-filter.js';
 import { getDefaultLLMClient } from './llm-client.js';
 import { getDefaultLedger } from './source-ledger.js';
-import type { IngestUrlOptions, IngestResult } from './types.js';
+import type { IngestUrlOptions, IngestMarkdownOptions, IngestResult } from './types.js';
 
 const DEFAULT_CONFIDENCE_THRESHOLD = 0.75;
 const DEFAULT_MAX_CHUNK_CHARS = 1800;
@@ -58,6 +58,8 @@ export async function ingestUrl(
     maxChunkChars = DEFAULT_MAX_CHUNK_CHARS,
     deduplicateByHash = DEFAULT_DEDUPLICATE,
     fetchTimeoutMs = DEFAULT_FETCH_TIMEOUT_MS,
+    sourceStore,
+    factStore,
   } = options;
 
   const llm = getDefaultLLMClient();
@@ -65,31 +67,35 @@ export async function ingestUrl(
 
   // ── Step 1: URL filter ──────────────────────────────────
 
-  const urlCheck = isBlockedUrl(url);
-  if (urlCheck.blocked) {
-    return fail(url, `URL blocked: ${urlCheck.reason}`);
+  if (!options.markdownInput) {
+    const urlCheck = isBlockedUrl(url);
+    if (urlCheck.blocked) return fail(url, `URL blocked: ${urlCheck.reason}`);
   }
 
   // ── Step 2: Fetch HTML ──────────────────────────────────
 
-  let html: string;
-  let finalUrl: string;
-
-  try {
-    const fetchResult = await fetchPage(url, fetchTimeoutMs);
-    html = fetchResult.html;
-    finalUrl = fetchResult.finalUrl;
-  } catch (err) {
-    return fail(url, `Fetch failed: ${(err as Error).message}`);
-  }
-
-  // ── Step 3: Extract Markdown ────────────────────────────
-
+  let finalUrl = url;
   let page;
-  try {
-    page = await extractMarkdown(html, finalUrl);
-  } catch (err) {
-    return fail(url, `Markdown extraction failed: ${(err as Error).message}`);
+  if (options.markdownInput) {
+    try {
+      page = await extractMarkdownContent(options.markdownInput.markdown, url, options.markdownInput.title);
+    } catch (err) {
+      return fail(url, `Markdown preparation failed: ${(err as Error).message}`);
+    }
+  } else {
+    let html: string;
+    try {
+      const fetchResult = await fetchPage(url, fetchTimeoutMs);
+      html = fetchResult.html;
+      finalUrl = fetchResult.finalUrl;
+    } catch (err) {
+      return fail(url, `Fetch failed: ${(err as Error).message}`);
+    }
+    try {
+      page = await extractMarkdown(html, finalUrl);
+    } catch (err) {
+      return fail(url, `Markdown extraction failed: ${(err as Error).message}`);
+    }
   }
 
   // ── Step 4: Deduplication ───────────────────────────────
@@ -111,6 +117,27 @@ export async function ingestUrl(
         memoryIds: [],
       };
     }
+  }
+
+  let sourceClaimed = false;
+  if (sourceStore) {
+    const claim = await sourceStore.claim({
+      agentId,
+      sourceHash: page.sourceHash,
+      url: finalUrl,
+      title: page.title,
+    });
+    if (claim === 'completed') {
+      return {
+        ok: true, title: page.title, url: finalUrl, sourceHash: page.sourceHash,
+        chunkCount: 0, extractedCount: 0, storedCount: 0, skippedCount: 0,
+        errorCount: 0, deduplicated: true, memoryIds: [],
+      };
+    }
+    if (claim === 'in_progress') {
+      return fail(finalUrl, 'This source is already being ingested. Retry after the active ingest finishes.');
+    }
+    sourceClaimed = true;
   }
 
   // ── Step 5: Clean ───────────────────────────────────────
@@ -136,6 +163,7 @@ export async function ingestUrl(
   let skippedCount = 0;
   let errorCount = 0;
   const memoryIds: string[] = [];
+  let deduplicatedFactCount = 0;
 
   for (const chunk of chunks) {
     // Skip low-value chunks before hitting LLM
@@ -177,7 +205,50 @@ export async function ingestUrl(
         continue;
       }
 
-      // POST to 1MBrain memory API
+      const metadata = {
+        sourceTitle: page.title,
+        sourceUrl: finalUrl,
+        sourceDomain: new URL(finalUrl).hostname,
+        sourceHash: page.sourceHash,
+        capturedAt: page.capturedAt,
+        chunkIndex: chunk.index,
+        evidence: fact.evidence,
+        confidence: fact.confidence,
+        ingestionMode: 'markdown-page',
+        extractorVersion: '1.1.0',
+      };
+      const tags = [
+        ...fact.tags,
+        'source:web-page',
+        `domain:${new URL(finalUrl).hostname}`,
+        `ingest:${new Date().toISOString().slice(0, 10)}`,
+      ];
+
+      if (factStore) {
+        try {
+          const stored = await factStore.store({
+            id: await deterministicMemoryId(agentId, page.sourceHash, chunk.index, fact.claim),
+            agentId,
+            type: fact.type,
+            content: fact.claim,
+            importance: fact.importance,
+            tags,
+            metadata,
+          });
+          memoryIds.push(stored.id);
+          if (stored.deduplicated) deduplicatedFactCount++;
+          else storedCount++;
+        } catch {
+          errorCount++;
+        }
+        continue;
+      }
+
+      // POST to a remote 1MBrain memory API when no server-side fact store is available.
+      if (!apiUrl || !apiKey) {
+        errorCount++;
+        continue;
+      }
       try {
         const res = await fetch(`${apiUrl}/v1/memories`, {
           method: 'POST',
@@ -190,24 +261,8 @@ export async function ingestUrl(
             content: fact.claim,
             type: fact.type,
             importance: fact.importance,
-            tags: [
-              ...fact.tags,
-              'source:web-page',
-              `domain:${new URL(finalUrl).hostname}`,
-              `ingest:${new Date().toISOString().slice(0, 10)}`,
-            ],
-            metadata: {
-              sourceTitle: page.title,
-              sourceUrl: finalUrl,
-              sourceDomain: new URL(finalUrl).hostname,
-              sourceHash: page.sourceHash,
-              capturedAt: page.capturedAt,
-              chunkIndex: chunk.index,
-              evidence: fact.evidence,
-              confidence: fact.confidence,
-              ingestionMode: 'markdown-page',
-              extractorVersion: '1.0.0',
-            },
+            tags,
+            metadata,
           }),
         });
 
@@ -228,11 +283,25 @@ export async function ingestUrl(
 
   // ── Step 8: Mark as seen ────────────────────────────────
 
-  if (storedCount > 0 || extractedCount > 0) {
+  const completed = errorCount === 0 && (storedCount > 0 || deduplicatedFactCount > 0);
+  if (sourceStore && sourceClaimed) {
+    if (completed) {
+      await sourceStore.complete({
+        agentId,
+        sourceHash: page.sourceHash,
+        storedCount: memoryIds.length,
+      });
+    } else {
+      await sourceStore.release({ agentId, sourceHash: page.sourceHash });
+    }
+  }
+
+  // A zero-store attempt is intentionally retryable: do not poison the local ledger.
+  if (completed) {
     await ledger.markSeen(page.sourceHash, {
       url: finalUrl,
       title: page.title,
-      factCount: storedCount,
+      factCount: memoryIds.length,
     });
   }
 
@@ -248,7 +317,25 @@ export async function ingestUrl(
     errorCount,
     deduplicated: false,
     memoryIds,
+    deduplicatedFactCount,
   };
+}
+
+export async function ingestMarkdown(options: IngestMarkdownOptions): Promise<IngestResult> {
+  return ingestUrl(options.url, { ...options, markdownInput: { title: options.title, markdown: options.markdown } });
+}
+
+async function deterministicMemoryId(
+  agentId: string,
+  sourceHash: string,
+  chunkIndex: number,
+  claim: string,
+): Promise<string> {
+  const { createHash } = await import('crypto');
+  const hash = createHash('sha256')
+    .update(`${agentId}\u0000${sourceHash}\u0000${chunkIndex}\u0000${claim.trim().toLowerCase()}`, 'utf8')
+    .digest('hex');
+  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-5${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
 }
 
 // ─── Helpers ─────────────────────────────────────────────

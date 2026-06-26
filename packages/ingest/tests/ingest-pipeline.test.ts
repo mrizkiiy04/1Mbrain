@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ingestUrl } from '../src/ingest-pipeline.js';
+import { ingestMarkdown, ingestUrl } from '../src/ingest-pipeline.js';
 import { setDefaultLLMClient } from '../src/llm-client.js';
 import { setDefaultLedger, SourceLedger } from '../src/source-ledger.js';
 import type { LLMClient } from '../src/llm-client.js';
@@ -210,5 +210,49 @@ describe('ingestUrl', () => {
     });
 
     expect(result.ok).toBe(false);
+  });
+
+  it('ingests markdown through the same durable source and fact stores', async () => {
+    const claim = vi.fn().mockResolvedValue('acquired');
+    const complete = vi.fn().mockResolvedValue(undefined);
+    const store = vi.fn().mockResolvedValue({ id: 'stored-fact', deduplicated: false });
+
+    const result = await ingestMarkdown({
+      agentId: 'test-agent',
+      title: 'Weekly research digest',
+      url: 'urn:document:weekly-research-digest',
+      markdown: `${SAMPLE_HTML.replace(/<[^>]+>/g, ' ')} ${'evidence '.repeat(20)}`,
+      sourceStore: { claim, complete, release: vi.fn() },
+      factStore: { store },
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.storedCount).toBeGreaterThan(0);
+    expect(claim).toHaveBeenCalledOnce();
+    expect(complete).toHaveBeenCalledWith(expect.objectContaining({ storedCount: result.memoryIds.length }));
+    expect(store).toHaveBeenCalled();
+  });
+
+  it('does not complete or mark a source when all facts are rejected', async () => {
+    setDefaultLLMClient({
+      chat: vi.fn().mockResolvedValue({
+        content: JSON.stringify({ facts: [{ claim: 'Uncertain fact', type: 'semantic', importance: 0.5, confidence: 0.1, tags: [], evidence: '', shouldRemember: false }] }),
+        finishReason: 'stop',
+      }),
+    } as unknown as LLMClient);
+    const release = vi.fn().mockResolvedValue(undefined);
+    const ledger = makeInMemoryLedger();
+    setDefaultLedger(ledger);
+
+    const result = await ingestMarkdown({
+      agentId: 'test-agent', title: 'Rejected digest', url: 'urn:document:rejected',
+      markdown: `# Digest\n${'This is content with enough length to be processed. '.repeat(8)}`,
+      sourceStore: { claim: vi.fn().mockResolvedValue('acquired'), complete: vi.fn(), release },
+      factStore: { store: vi.fn() },
+    });
+
+    expect(result.storedCount).toBe(0);
+    expect(release).toHaveBeenCalledOnce();
+    expect(await ledger.hasSeen(result.sourceHash)).toBe(false);
   });
 });

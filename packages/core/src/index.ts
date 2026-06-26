@@ -12,6 +12,8 @@ export type {
   AssociationOrigin,
   AssociationRelationType,
   CreateMemoryInput,
+  IngestionSource,
+  IngestionSourceClaim,
   SearchMemoryInput,
   SearchResult,
   CreateAssociationInput,

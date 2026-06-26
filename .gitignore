@@ -51,7 +51,9 @@ venv/
 
 # Local Debug & Artifacts
 debug-*.js
+1mbrain-codebase-recommendations.md
 debug-*.ts
+update.md
 task.md
 implementation_plan.md
 walkthrough.md

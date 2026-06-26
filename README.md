@@ -27,7 +27,7 @@ By utilizing the **Agent ID Namespace**, you can partition memories completely. 
 | **Associative Retrieval** | Connects memories in a graph with spreading activation, surfacing related memories beyond standard cosine similarity bounds. |
 | **Time-Aware Supersedence** | Engine automatically tracks chronological state updates, suppressing stale memories using an Ebbinghaus decay curve without deleting historical data. |
 | **Automated Background Consolidation** | 1MBrain acts like a human brain during "sleep", running background jobs to cluster and decay old episodic memories into summarized semantic rules. |
-| **Automated Web-to-MD Ingest** | Built-in pipeline (`packages/ingest`) that fetches URLs, extracts readable content, and converts to Markdown. |
+| **URL + Markdown Ingest** | Built-in pipeline (`packages/ingest`) that fetches URLs or accepts trusted Markdown, extracts factual claims, and deduplicates sources server-side. |
 | **Pulse Brain Dashboard** | Real-time network graph visualization of active memory nodes. |
 | **Memory Passport** | Encrypted export and import of memory states between agents with Google Drive backup integration. |
 | **Universal Cross-Agent Search** | Opt-in parameter to break namespace boundaries and search memories across all agents globally within the database. |
@@ -123,6 +123,17 @@ Pass any URL to the pipeline to auto-scrape, LLM-extract facts, and store them d
 const result = await memory.learnFromUrl('https://example.com/docs');
 console.log(`Learned ${result.storedCount} facts from ${result.title}`);
 ```
+
+**Trusted Markdown Ingestion:**
+```ts
+const result = await brain.ingestMarkdown({
+  title: 'Weekly research digest',
+  url: 'urn:document:weekly-research-digest',
+  markdown: '# Digest\n- A verified finding.',
+});
+```
+
+See [page ingestion](docs/page-ingestion.md) for API, retry, and provider configuration details.
 
 ### Python SDK
 

@@ -50,7 +50,7 @@ export class MemoryEngine {
     const embedding = await this.embedder.embed(input.content);
 
     const memory = await this.db.createMemory({
-      id: uuidv4(),
+      id: input.id ?? uuidv4(),
       agentId: input.agentId,
       type: input.type,
       content: input.content,

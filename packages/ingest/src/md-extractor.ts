@@ -28,6 +28,22 @@ async function sha256(input: string): Promise<string> {
  * @param html - Raw HTML string
  * @param url - URL the page was fetched from (used by Readability for relative URLs)
  */
+export async function extractMarkdownContent(
+  markdown: string,
+  url: string,
+  title = '',
+): Promise<ExtractedPage> {
+  const textContent = markdown.replace(/\s+/g, ' ').trim();
+  return {
+    title: title.trim(),
+    url,
+    markdown,
+    textContent,
+    capturedAt: new Date().toISOString(),
+    sourceHash: await sha256(`${url}::${textContent}`),
+  };
+}
+
 export async function extractMarkdown(html: string, url: string): Promise<ExtractedPage> {
   // Parse HTML via JSDOM so Readability can work with it
   const dom = new JSDOM(html, { url });

@@ -71,13 +71,38 @@ export interface SourceLedgerEntry {
 
 // ─── Ingest Pipeline ──────────────────────────────────────
 
+export interface IngestSourceStore {
+  claim(input: { agentId: string; sourceHash: string; url: string; title: string }): Promise<'acquired' | 'completed' | 'in_progress'>;
+  complete(input: { agentId: string; sourceHash: string; storedCount: number }): Promise<void>;
+  release(input: { agentId: string; sourceHash: string }): Promise<void>;
+}
+
+export interface IngestFactStoreInput {
+  id: string;
+  agentId: string;
+  type: MemoryType;
+  content: string;
+  importance: number;
+  tags: string[];
+  metadata: Record<string, unknown>;
+}
+
+export interface IngestFactStoreResult {
+  id: string;
+  deduplicated: boolean;
+}
+
+export interface IngestFactStore {
+  store(input: IngestFactStoreInput): Promise<IngestFactStoreResult>;
+}
+
 export interface IngestUrlOptions {
   /** Agent ID that will own the ingested memories */
   agentId: string;
   /** API base URL of the 1MBrain server */
-  apiUrl: string;
+  apiUrl?: string;
   /** API key for authentication */
-  apiKey: string;
+  apiKey?: string;
   /**
    * Minimum LLM confidence to store a fact (default: 0.75).
    * Facts below this threshold are silently skipped.
@@ -97,6 +122,18 @@ export interface IngestUrlOptions {
    * Request timeout for fetching the page in milliseconds (default: 15000).
    */
   fetchTimeoutMs?: number;
+  /** Optional server-side persistence boundary. When supplied, avoids self-HTTP storage calls. */
+  sourceStore?: IngestSourceStore;
+  factStore?: IngestFactStore;
+  /** Internal normalized-content input used by ingestMarkdown(). */
+  markdownInput?: { title: string; markdown: string };
+}
+
+export interface IngestMarkdownOptions extends IngestUrlOptions {
+  title: string;
+  /** Stable URL or URN that identifies the input document. */
+  url: string;
+  markdown: string;
 }
 
 export interface IngestResult {
@@ -116,8 +153,10 @@ export interface IngestResult {
   errorCount: number;
   /** Whether this URL was skipped due to deduplication */
   deduplicated?: boolean;
-  /** IDs of memories stored in this run */
+  /** IDs of memories stored or idempotently reused in this run */
   memoryIds: string[];
+  /** Facts already persisted by a prior attempt and safely reused. */
+  deduplicatedFactCount?: number;
   /** Human-readable error message if ok=false */
   error?: string;
 }

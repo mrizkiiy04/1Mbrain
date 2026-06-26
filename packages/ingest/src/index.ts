@@ -8,11 +8,16 @@
  */
 
 // ─── Main Pipeline ────────────────────────────────────────
-export { ingestUrl } from './ingest-pipeline.js';
+export { ingestUrl, ingestMarkdown } from './ingest-pipeline.js';
 
 // ─── Types ────────────────────────────────────────────────
 export type {
   IngestUrlOptions,
+  IngestMarkdownOptions,
+  IngestSourceStore,
+  IngestFactStore,
+  IngestFactStoreInput,
+  IngestFactStoreResult,
   IngestResult,
   ExtractedPage,
   ExtractedFact,

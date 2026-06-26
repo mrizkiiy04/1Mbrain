@@ -16,6 +16,8 @@ import type {
   AssociationOrigin,
   AssociationRelationType,
   ApiKeyRecord,
+  IngestionSource,
+  IngestionSourceClaim,
 } from '../types.js';
 import { createChildLogger } from '../logger.js';
 
@@ -123,6 +125,21 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
 
       CREATE INDEX IF NOT EXISTS idx_api_keys_hash ON api_keys(key_hash);
       CREATE INDEX IF NOT EXISTS idx_api_keys_agent ON api_keys(agent_id);
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS ingestion_sources (
+        agent_id VARCHAR(128) NOT NULL,
+        source_hash VARCHAR(64) NOT NULL,
+        url TEXT NOT NULL,
+        title TEXT NOT NULL,
+        status VARCHAR(16) NOT NULL CHECK(status IN ('processing', 'completed')),
+        stored_count INTEGER NOT NULL DEFAULT 0,
+        lease_expires_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        completed_at TIMESTAMPTZ,
+        PRIMARY KEY (agent_id, source_hash)
+      );
+      CREATE INDEX IF NOT EXISTS idx_ingestion_sources_status ON ingestion_sources(status, lease_expires_at);
     `);
   }
 
@@ -598,6 +615,81 @@ export class PostgresDatabaseProvider implements DatabaseProvider {
   async updateApiKeyLastUsed(id: string): Promise<void> {
     await this.pool.query('UPDATE api_keys SET last_used_at = NOW() WHERE id = $1', [id]);
   }
+  async claimIngestionSource(
+    input: Pick<IngestionSource, 'agentId' | 'sourceHash' | 'url' | 'title'>,
+    leaseMs = 10 * 60 * 1000,
+  ): Promise<IngestionSourceClaim> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('BEGIN');
+      const existing = await client.query(
+        'SELECT * FROM ingestion_sources WHERE agent_id = $1 AND source_hash = $2 FOR UPDATE',
+        [input.agentId, input.sourceHash],
+      );
+      const now = new Date();
+      const leaseExpiresAt = new Date(now.getTime() + leaseMs);
+
+      if (existing.rows.length === 0) {
+        await client.query(
+          `INSERT INTO ingestion_sources
+            (agent_id, source_hash, url, title, status, stored_count, lease_expires_at)
+           VALUES ($1, $2, $3, $4, 'processing', 0, $5)`,
+          [input.agentId, input.sourceHash, input.url, input.title, leaseExpiresAt],
+        );
+        await client.query('COMMIT');
+        return { status: 'acquired' };
+      }
+
+      const source = ingestionSourceFromRow(existing.rows[0] as IngestionSourceRow);
+      if (source.status === 'completed') {
+        await client.query('COMMIT');
+        return { status: 'completed', source };
+      }
+      if (source.leaseExpiresAt && source.leaseExpiresAt.getTime() > now.getTime()) {
+        await client.query('COMMIT');
+        return { status: 'in_progress', source };
+      }
+
+      await client.query(
+        `UPDATE ingestion_sources
+         SET url = $1, title = $2, lease_expires_at = $3, created_at = NOW()
+         WHERE agent_id = $4 AND source_hash = $5`,
+        [input.url, input.title, leaseExpiresAt, input.agentId, input.sourceHash],
+      );
+      await client.query('COMMIT');
+      return { status: 'acquired' };
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
+
+  async completeIngestionSource(agentId: string, sourceHash: string, storedCount: number): Promise<void> {
+    await this.pool.query(
+      `UPDATE ingestion_sources
+       SET status = 'completed', stored_count = $1, lease_expires_at = NULL, completed_at = NOW()
+       WHERE agent_id = $2 AND source_hash = $3`,
+      [storedCount, agentId, sourceHash],
+    );
+  }
+
+  async releaseIngestionSource(agentId: string, sourceHash: string): Promise<void> {
+    await this.pool.query(
+      `DELETE FROM ingestion_sources
+       WHERE agent_id = $1 AND source_hash = $2 AND status = 'processing'`,
+      [agentId, sourceHash],
+    );
+  }
+
+  async getIngestionSource(agentId: string, sourceHash: string): Promise<IngestionSource | null> {
+    const result = await this.pool.query(
+      'SELECT * FROM ingestion_sources WHERE agent_id = $1 AND source_hash = $2',
+      [agentId, sourceHash],
+    );
+    return result.rows.length > 0 ? ingestionSourceFromRow(result.rows[0] as IngestionSourceRow) : null;
+  }
 
   // ─── Lifecycle ────────────────────────────────────────
 
@@ -703,4 +795,29 @@ interface ApiKeyRow {
   created_at: string;
   last_used_at: string | null;
   is_active: boolean;
+}
+interface IngestionSourceRow {
+  agent_id: string;
+  source_hash: string;
+  url: string;
+  title: string;
+  status: 'processing' | 'completed';
+  stored_count: number;
+  lease_expires_at: Date | string | null;
+  created_at: Date | string;
+  completed_at: Date | string | null;
+}
+
+function ingestionSourceFromRow(row: IngestionSourceRow): IngestionSource {
+  return {
+    agentId: row.agent_id,
+    sourceHash: row.source_hash,
+    url: row.url,
+    title: row.title,
+    status: row.status,
+    storedCount: row.stored_count,
+    leaseExpiresAt: row.lease_expires_at ? new Date(row.lease_expires_at) : null,
+    createdAt: new Date(row.created_at),
+    completedAt: row.completed_at ? new Date(row.completed_at) : null,
+  };
 }

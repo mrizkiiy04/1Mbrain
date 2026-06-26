@@ -1,8 +1,8 @@
 /**
  * LLM Client
  *
- * A unified chat completion client that inherits the embedding provider
- * configuration already set by the user.
+ * A unified chat completion client with dedicated extraction configuration.
+ * It falls back to embedding configuration for backwards compatibility.
  *
  * Provider selection:
  * - If EMBEDDING_PROVIDER=openai → uses OpenAI Chat API (same API key)
@@ -32,32 +32,31 @@ const DEFAULT_TIMEOUT_MS = 30_000;
  * Inherits provider and credentials from the embedding config.
  */
 export function buildLLMConfigFromEnv(): LLMClientConfig {
-  const provider = (process.env['EMBEDDING_PROVIDER'] ?? 'ollama') as LLMProviderType;
+  const provider = (process.env['INGEST_FACT_EXTRACTION_PROVIDER'] ?? process.env['EMBEDDING_PROVIDER'] ?? 'ollama') as LLMProviderType;
+  if (provider !== 'openai' && provider !== 'ollama') {
+    throw new Error(`Unsupported INGEST_FACT_EXTRACTION_PROVIDER: ${provider}`);
+  }
 
-  const model =
-    process.env['INGEST_FACT_EXTRACTION_MODEL'] ?? DEFAULT_MODELS[provider] ?? 'llama3.2';
+  const model = process.env['INGEST_FACT_EXTRACTION_MODEL'] ?? DEFAULT_MODELS[provider];
 
   if (provider === 'openai') {
-    const apiKey = process.env['OPENAI_API_KEY'];
+    const apiKey = process.env['INGEST_FACT_EXTRACTION_API_KEY'] ?? process.env['OPENAI_API_KEY'];
     if (!apiKey) {
-      throw new Error(
-        'OPENAI_API_KEY is required when EMBEDDING_PROVIDER=openai for fact extraction',
-      );
+      throw new Error('INGEST_FACT_EXTRACTION_API_KEY or OPENAI_API_KEY is required for OpenAI fact extraction');
     }
     return {
       provider: 'openai',
       model,
       apiKey,
-      baseUrl: process.env['OPENAI_BASE_URL'] ?? 'https://api.openai.com',
+      baseUrl: process.env['INGEST_FACT_EXTRACTION_BASE_URL'] ?? process.env['OPENAI_BASE_URL'] ?? 'https://api.openai.com',
       timeoutMs: DEFAULT_TIMEOUT_MS,
     };
   }
 
-  // Ollama (default)
   return {
     provider: 'ollama',
     model,
-    baseUrl: process.env['OLLAMA_BASE_URL'] ?? 'http://localhost:11434',
+    baseUrl: process.env['INGEST_FACT_EXTRACTION_BASE_URL'] ?? process.env['OLLAMA_BASE_URL'] ?? 'http://localhost:11434',
     timeoutMs: DEFAULT_TIMEOUT_MS,
   };
 }

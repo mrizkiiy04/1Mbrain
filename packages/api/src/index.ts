@@ -154,10 +154,8 @@ async function main() {
   app.route('/v1/admin', createAdminRoutes());
 
   // ─── Ingest Routes ──────────────────────────────────
-  // The pipeline self-calls the memory API — pass internal URL + a trusted key.
-  const internalApiUrl = `http://localhost:${process.env['PORT'] ?? '3100'}`;
-  const internalApiKey = process.env['ONEMILLION_API_KEY'] ?? '';
-  app.route('/v1/ingest', createIngestRoutes(internalApiUrl, internalApiKey));
+  // Ingestion stores facts through the in-process engine; it never calls this server over HTTP.
+  app.route('/v1/ingest', createIngestRoutes());
 
   // ─── WebSocket Route (dashboard) ────────────────────
 

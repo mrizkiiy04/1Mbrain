@@ -153,6 +153,19 @@ describe('OneMBrainClient', () => {
     );
   });
 
+  it('posts trusted Markdown to the ingestion endpoint', async () => {
+    const fetchMock = vi.fn(async () =>
+      jsonResponse({ success: true, data: { title: 'Digest', url: 'urn:document:digest', sourceHash: 'a'.repeat(64), chunkCount: 1, extractedCount: 1, storedCount: 1, skippedCount: 0, errorCount: 0, deduplicated: false, memoryIds: ['mem-1'] } }),
+    );
+    const client = new OneMBrainClient({ apiUrl: 'http://localhost:3100', apiKey: 'secret', agentId: 'agent-1', fetch: fetchMock as unknown as typeof fetch });
+
+    await expect(client.ingestMarkdown({ title: 'Digest', url: 'urn:document:digest', markdown: '# Digest\nA useful fact.' })).resolves.toMatchObject({ storedCount: 1 });
+    expect(fetchMock).toHaveBeenCalledWith(
+      'http://localhost:3100/v1/ingest/markdown',
+      expect.objectContaining({ method: 'POST', body: expect.stringContaining('"markdown":"# Digest') }),
+    );
+  });
+
   it('throws typed errors for non-2xx responses', async () => {
     const fetchMock = vi.fn(async () => jsonResponse({ error: 'Invalid API key' }, 403));
     const client = new OneMBrainClient({

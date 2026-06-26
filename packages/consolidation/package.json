@@ -1,6 +1,6 @@
 {
   "name": "@1mbrain/consolidation",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Auto-summarization and long-term memory consolidation for 1MBrain.",
   "license": "MIT",
   "type": "module",

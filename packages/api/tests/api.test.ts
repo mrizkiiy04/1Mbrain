@@ -12,7 +12,9 @@ import { createMemoryRoutes } from '../src/routes/memories.js';
 import { createPassportRoutes } from '../src/routes/passport.js';
 import { createBackupRoutes } from '../src/routes/backup.js';
 import { createConsolidateRoutes } from '../src/routes/consolidate.js';
+import { createIngestRoutes } from '../src/routes/ingest.js';
 import { authMiddleware } from '../src/middleware/auth.js';
+import { setDefaultLLMClient } from '@1mbrain/ingest';
 
 // ─── Mock Embedding Provider ────────────────────────────
 
@@ -101,6 +103,7 @@ describe('API Routes', () => {
     );
     app.route('/v1', createPassportRoutes());
     app.route('/v1', createBackupRoutes());
+    app.route('/v1/ingest', createIngestRoutes());
   });
 
   afterEach(async () => {
@@ -170,6 +173,32 @@ describe('API Routes', () => {
       expect(res.status).toBe(400);
       const data = (await res.json()) as any;
       expect(data.error).toBe('Validation failed');
+    });
+  });
+
+  describe('POST /v1/ingest/markdown', () => {
+    it('stores Markdown once and returns a durable deduplication result on retry', async () => {
+      setDefaultLLMClient({
+        chat: async () => ({
+          content: JSON.stringify({ facts: [{ claim: 'The digest confirms a durable ingestion contract.', type: 'semantic', importance: 0.8, confidence: 0.95, tags: ['digest'], evidence: 'durable ingestion contract', shouldRemember: true }] }),
+          finishReason: 'stop',
+        }),
+      } as any);
+      const body = { title: 'Digest', url: 'urn:document:api-test', markdown: `# Digest
+The first verified finding confirms that durable ingestion preserves source identity across retries.
+The second verified finding records that server-side claims prevent concurrent duplicate processing.
+The third verified finding explains that deterministic fact identifiers make partial retries safe.
+The fourth verified finding states that trusted Markdown follows the same confidence gate as URL content.` };
+      const headers = { 'X-API-Key': 'test-key', 'X-Agent-Id': 'test-agent', 'Content-Type': 'application/json' };
+
+      const first = await app.request('/v1/ingest/markdown', { method: 'POST', headers, body: JSON.stringify(body) });
+      expect(first.status).toBe(201);
+      const firstData = await first.json() as any;
+      expect(firstData.data.storedCount).toBe(1);
+
+      const second = await app.request('/v1/ingest/markdown', { method: 'POST', headers, body: JSON.stringify(body) });
+      expect(second.status).toBe(200);
+      expect((await second.json() as any).data.deduplicated).toBe(true);
     });
   });
 

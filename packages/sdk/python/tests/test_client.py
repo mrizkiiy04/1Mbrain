@@ -230,6 +230,24 @@ def test_consolidate_returns_result() -> None:
     assert result.clusters_processed == 1
 
 
+def test_ingest_markdown_posts_document() -> None:
+    client = make_client()
+    response_envelope = {"success": True, "data": {"storedCount": 1, "memoryIds": ["mem-1"]}}
+
+    with patch("urllib.request.urlopen") as mock_open:
+        mock_open.return_value = mock_response(response_envelope)
+        result = client.ingest_markdown(
+            title="Digest", url="urn:document:digest", markdown="# Digest\nA useful fact."
+        )
+
+    call_args = mock_open.call_args[0][0]
+    body = json.loads(call_args.data.decode())
+    assert call_args.full_url == "http://localhost:3001/v1/ingest/markdown"
+    assert body["title"] == "Digest"
+    assert body["agentId"] == "test-agent"
+    assert result["storedCount"] == 1
+
+
 # ---------------------------------------------------------------------------
 # Error handling
 # ---------------------------------------------------------------------------

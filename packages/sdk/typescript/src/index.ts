@@ -32,6 +32,13 @@ export interface IngestUrlOptions {
   deduplicate?: boolean;
 }
 
+export interface IngestMarkdownOptions extends IngestUrlOptions {
+  title: string;
+  /** Stable URL or URN identifying this document. */
+  url: string;
+  markdown: string;
+}
+
 export interface IngestResult {
   title: string;
   url: string;
@@ -198,6 +205,26 @@ export class OneMBrainClient {
       agentId,
       body: {
         url,
+        agentId,
+        confidenceThreshold: options.confidenceThreshold,
+        maxChunkChars: options.maxChunkChars,
+        deduplicate: options.deduplicate,
+      },
+    });
+
+    return envelope.data;
+  }
+
+  /** Ingest trusted, already-clean Markdown without fetching a URL. */
+  async ingestMarkdown(options: IngestMarkdownOptions): Promise<IngestResult> {
+    const agentId = this.resolveAgentId(options.agentId);
+    const envelope = await this.request<ApiEnvelope<IngestResult>>('/v1/ingest/markdown', {
+      method: 'POST',
+      agentId,
+      body: {
+        title: options.title,
+        url: options.url,
+        markdown: options.markdown,
         agentId,
         confidenceThreshold: options.confidenceThreshold,
         maxChunkChars: options.maxChunkChars,

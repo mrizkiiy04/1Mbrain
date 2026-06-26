@@ -1,6 +1,8 @@
 # Web Page Ingestion Pipeline
 
-The **Web Page Ingestion Pipeline** enables your AI agents, Telegram bots, Discord integrations, or CLI scripts to "learn" from a URL. Instead of saving raw HTML or dumping a massive Markdown file into vector storage, 1MBrain processes the page server-side to extract, validate, and store **only clean, factual claims** as structured memories.
+The ingestion pipeline accepts either a URL or trusted, already-clean Markdown. It extracts, validates, and stores **only clean, factual claims** as structured memories.
+
+Sources are deduplicated server-side by `(agentId, sourceHash)`. A processing lease prevents parallel ingestion; a source that stores no facts or encounters an error is released so it can be retried.
 
 ---
 
@@ -45,8 +47,11 @@ The **Web Page Ingestion Pipeline** enables your AI agents, Telegram bots, Disco
 To enable fact extraction, configure the LLM provider in your server `.env` file:
 
 ```bash
-# Set which embedding provider to use (determines LLM fact extractor too)
-EMBEDDING_PROVIDER="openai" # 'openai' or 'ollama'
+# Dedicated fact extraction provider (falls back to EMBEDDING_PROVIDER)
+INGEST_FACT_EXTRACTION_PROVIDER="openai" # 'openai' or 'ollama'
+INGEST_FACT_EXTRACTION_MODEL="gpt-4o-mini"
+INGEST_FACT_EXTRACTION_API_KEY="your-api-key" # optional fallback: OPENAI_API_KEY
+INGEST_FACT_EXTRACTION_BASE_URL="https://api.openai.com" # optional
 
 # If using OpenAI
 OPENAI_API_KEY="your-openai-api-key"
@@ -157,6 +162,24 @@ print(f"Stored facts count: {result.stored_count}")
 ```
 
 ### Check Ingestion Status (Deduplication Check)
+
+### Ingest trusted Markdown
+
+* **URL:** `POST /v1/ingest/markdown`
+* **Body:**
+
+```json
+{
+  "title": "Weekly Research Digest",
+  "url": "urn:document:weekly-research-digest",
+  "markdown": "# Digest\nVerified findings...",
+  "confidenceThreshold": 0.75,
+  "deduplicate": true
+}
+```
+
+Use this endpoint only for content that is already available and trusted. Use
+`POST /v1/ingest/url` when the source is a URL that the server must fetch.
 
 Before launching a fetch, you can compute a hash or query the ledger to check if a source URL is already ingested.
 
